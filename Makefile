@@ -10,12 +10,12 @@ run:
 
 .PHONY: clean
 clean:
-	cd server && gradle clean
+	gradle clean
 
 .PHONY: test
 test:
-	cd server && gradle test
+	gradle test
 
 .PHONY: build
 build:
-	cd server && gradle build
+	gradle build
