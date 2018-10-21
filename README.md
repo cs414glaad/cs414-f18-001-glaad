@@ -26,15 +26,7 @@ $ make build
 $ make build test
 ```
 
-## Deployment
-
-Add additional notes about how to deploy this on a live system
-
 ## Built With
 
-* [Gradle](https://gradle.org/) - Gradle
-* [JUnit](https://junit.org/junit5/) - JUnit 5
-
-## Acknowledgements
-
-Add useful resources here
+* [Gradle](https://gradle.org/)
+* [JUnit 5](https://junit.org/junit5/)
