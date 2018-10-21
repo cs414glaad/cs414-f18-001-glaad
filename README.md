@@ -11,19 +11,19 @@
 ## Installing
 
 ```
-$ make build
-$ make install
+$ make build install
 ```
 
 ## Building
 
-`$ make build`
+```
+$ make build
+```
 
 ## Testing
 
 ```
-$ make build
-$ make test
+$ make build test
 ```
 
 ## Deployment
