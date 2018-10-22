@@ -7,7 +7,7 @@ version = 0.0
 mainClassName = 'edu.colostate.cs.cs414.f18.the_other_alex.server.Server'
 
 repositories {
-    mavenCentral()
+    jcenter()
 }
 
 dependencies {
