@@ -10,20 +10,22 @@
 
 ## Installing
 
+## Running
+
 ```
-$ make build install
+$ gradle run
 ```
 
 ## Building
 
 ```
-$ make build
+$ gradle build
 ```
 
 ## Testing
 
 ```
-$ make build test
+$ gradle test
 ```
 
 ## Built With

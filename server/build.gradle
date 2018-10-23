@@ -7,12 +7,12 @@ version = 0.0
 mainClassName = 'edu.colostate.cs.cs414.f18.the_other_alex.server.Server'
 
 repositories {
-    mavenCentral()
+    jcenter()
 }
 
 dependencies {
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.1.0'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.1.0'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.3.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.3.0'
 }
 
 jar {
@@ -26,4 +26,13 @@ jar {
 
 test {
     useJUnitPlatform()
+    afterSuite { desc, result ->
+        if (!desc.parent) {
+            println "\nTest result: ${result.resultType}"
+            println "Test summary: ${result.testCount} tests, " +
+                    "${result.successfulTestCount} succeeded, " +
+                    "${result.failedTestCount} failed, " +
+                    "${result.skippedTestCount} skipped"
+        }
+    }
 }
