@@ -23,8 +23,8 @@ public abstract class Piece {
 			ELEPHANT, CHARIOT, HORSE, CANNON, SOLDIER, NULL);
 	protected static final List<String> chariotCanCapture = Arrays.asList(
 			CHARIOT, HORSE, CANNON, SOLDIER, NULL);
-	protected static final List<String> horseCanCapture = Arrays.asList(HORSE,
-			CANNON, SOLDIER, NULL);
+	protected static final List<String> horseCanCapture = Arrays.asList(
+			HORSE, CANNON, SOLDIER, NULL);
 	protected static final List<String> soldierCanCapture = Arrays.asList(
 			GENERAL, SOLDIER, NULL);
 	protected static final List<String> cannonCanCapture = Arrays.asList(
@@ -46,23 +46,29 @@ public abstract class Piece {
 		}
 	}
 
-	public boolean isMoveValid(Cell toCell, Cell fromCell, Piece takenPiece) 
+	public boolean isMoveValid(Cell toCell, Cell fromCell, Cell[][] cells) 
 	{
-		if (toCell.getXCoordinate() == fromCell.getXCoordinate() || 
-				toCell.getYCoordinate() == fromCell.getYCoordinate())
+		int toX = toCell.getCoordinate().getX();
+		int toY = toCell.getCoordinate().getY();
+		int fromX = fromCell.getCoordinate().getX();
+		int fromY = fromCell.getCoordinate().getY();
+		//ensuring the move is not diagonal
+		if (toX == fromX || toY == fromY)
 		{
-			if (this.canCapture(takenPiece)) 
+			//ensuring the cells are adjacent
+			if (Math.abs(toX - fromX) == 1)
 			{
-				return true;
+				return canCapture(toCell.getPiece());
+			}
+			else if (Math.abs(toY - fromY) == 1)
+			{
+				return canCapture(toCell.getPiece());
 			}
 			else
 			{
 				return false;
 			}
-		}
-		else
-		{
-			return false;
+			
 		}
 		return false;
 	}

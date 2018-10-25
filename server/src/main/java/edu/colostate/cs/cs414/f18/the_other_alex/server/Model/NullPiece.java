@@ -6,4 +6,10 @@ public class NullPiece extends Piece {
 	{
 		type = NULL;
 	}
+	
+	@Override
+	public boolean isMoveValid(Cell toCell, Cell fromCell, Cell[][] cells)
+	{
+		return false;
+	}
 }
