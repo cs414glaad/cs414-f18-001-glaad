@@ -13,28 +13,29 @@ public abstract class Piece {
 	protected static final String CANNON = "Cannon";
 	protected static final String SOLDIER = "Soldier";
 	// may be used to help with movement, might decide it's a bad idea
-	protected final String NULL = "Null";
+	protected static final String NULL = "Null piece";
 
 	protected static final List<String> generalCanCapture = Arrays.asList(
-			GENERAL, ADVISOR, ELEPHANT, CHARIOT, HORSE, CANNON, SOLDIER);
+			GENERAL, ADVISOR, ELEPHANT, CHARIOT, HORSE, CANNON, SOLDIER, NULL);
 	protected static final List<String> advisorCanCapture = Arrays.asList(
-			ADVISOR, ELEPHANT, CHARIOT, HORSE, CANNON, SOLDIER);
+			ADVISOR, ELEPHANT, CHARIOT, HORSE, CANNON, SOLDIER, NULL);
 	protected static final List<String> elephantCanCapture = Arrays.asList(
-			ELEPHANT, CHARIOT, HORSE, CANNON, SOLDIER);
+			ELEPHANT, CHARIOT, HORSE, CANNON, SOLDIER, NULL);
 	protected static final List<String> chariotCanCapture = Arrays.asList(
-			CHARIOT, HORSE, CANNON, SOLDIER);
+			CHARIOT, HORSE, CANNON, SOLDIER, NULL);
 	protected static final List<String> horseCanCapture = Arrays.asList(HORSE,
-			CANNON, SOLDIER);
+			CANNON, SOLDIER, NULL);
 	protected static final List<String> soldierCanCapture = Arrays.asList(
-			GENERAL, SOLDIER);
+			GENERAL, SOLDIER, NULL);
 	protected static final List<String> cannonCanCapture = Arrays.asList(
-			ADVISOR, ELEPHANT, CHARIOT, HORSE, CANNON, SOLDIER);
+			ADVISOR, ELEPHANT, CHARIOT, HORSE, CANNON, SOLDIER, NULL);
 
 	protected ArrayList<String> capturableTypes;
 	protected boolean isFlipped;
 	protected String type;
 
-	public boolean canCapture(Piece piece) {
+	public boolean canCapture(Piece piece) 
+	{
 		if (capturableTypes.contains(piece.getType())) 
 		{
 			return true;
@@ -45,11 +46,29 @@ public abstract class Piece {
 		}
 	}
 
-	public boolean isMoveValid() {
+	public boolean isMoveValid(Cell toCell, Cell fromCell, Piece takenPiece) 
+	{
+		if (toCell.getXCoordinate() == fromCell.getXCoordinate() || 
+				toCell.getYCoordinate() == fromCell.getYCoordinate())
+		{
+			if (this.canCapture(takenPiece)) 
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+		else
+		{
+			return false;
+		}
 		return false;
 	}
 
-	public String getType() {
+	public String getType() 
+	{
 		return type;
 	}
 }
