@@ -9,8 +9,4 @@ public class Cannon extends Piece {
 		capturableTypes = new ArrayList<String>(cannonCanCapture);
 	}
 
-	@Override
-	public boolean isMoveValid() {
-		return false;
-	}
 }
