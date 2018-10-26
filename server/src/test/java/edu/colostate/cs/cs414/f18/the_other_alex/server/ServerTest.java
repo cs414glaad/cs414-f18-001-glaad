@@ -8,12 +8,6 @@ public class ServerTest {
 
   @BeforeEach
   void setUp() {
-    server = Server.getInstance();
-  }
-
-  @Test
-  void testStart() {
-    // Assumes doesn't block
-    server.start(); // assert doesn't throw error
+    server = new Server(100);
   }
 }
