@@ -1,18 +1,10 @@
-package edu.colostate.cs.cs414.f18.the_other_alex.testmodel;
+package edu.colostate.cs.cs414.f18.the_other_alex.model;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.*;
 
-import edu.colostate.cs.cs414.f18.the_other_alex.model.Advisor;
-import edu.colostate.cs.cs414.f18.the_other_alex.model.Cannon;
-import edu.colostate.cs.cs414.f18.the_other_alex.model.Cell;
-import edu.colostate.cs.cs414.f18.the_other_alex.model.Chariot;
-import edu.colostate.cs.cs414.f18.the_other_alex.model.Elephant;
-import edu.colostate.cs.cs414.f18.the_other_alex.model.General;
-import edu.colostate.cs.cs414.f18.the_other_alex.model.Horse;
-import edu.colostate.cs.cs414.f18.the_other_alex.model.NullPiece;
-import edu.colostate.cs.cs414.f18.the_other_alex.model.Soldier;
+
 
 public class testPiece {
 	
