@@ -1,4 +1,4 @@
-package edu.colostate.cs.cs414.f18.the_other_alex.server.Model;
+package edu.colostate.cs.cs414.f18.the_other_alex.server.model;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -23,8 +23,8 @@ public abstract class Piece {
 			ELEPHANT, CHARIOT, HORSE, CANNON, SOLDIER, NULL);
 	protected static final List<String> chariotCanCapture = Arrays.asList(
 			CHARIOT, HORSE, CANNON, SOLDIER, NULL);
-	protected static final List<String> horseCanCapture = Arrays.asList(
-			HORSE, CANNON, SOLDIER, NULL);
+	protected static final List<String> horseCanCapture = Arrays.asList(HORSE,
+			CANNON, SOLDIER, NULL);
 	protected static final List<String> soldierCanCapture = Arrays.asList(
 			GENERAL, SOLDIER, NULL);
 	protected static final List<String> cannonCanCapture = Arrays.asList(
@@ -34,67 +34,57 @@ public abstract class Piece {
 	protected boolean isFlipped;
 	protected String type;
 
-	public boolean canCapture(Piece piece) 
-	{
-		if (capturableTypes.contains(piece.getType())) 
-		{
+	public boolean canCapture(Piece piece) {
+		if (capturableTypes.contains(piece.getType())) {
 			return true;
-		} 
-		else 
-		{
+		} else {
 			return false;
 		}
 	}
 
-	public boolean isMoveValid(Cell toCell, Cell fromCell, Cell[][] cells) 
-	{
-		if ((toCell.getPiece() instanceof NullPiece) || toCell.getPiece().getIsFlipped() == true && toCell.getPiece().getIsFlipped() == true)
-		{
+	public boolean isMoveValid(Cell toCell, Cell fromCell, Cell[][] cells) {
+		if ((toCell.getPiece() instanceof NullPiece)
+				|| toCell.getPiece().getIsFlipped() == true
+				&& toCell.getPiece().getIsFlipped() == true) {
+			
+			return ensureMoveIsNotDiagonalOrTooFar(toCell, fromCell);
+
+		}
+
+		else {
+			return false;
+		}
+	}
+
+	private boolean ensureMoveIsNotDiagonalOrTooFar(Cell toCell, Cell fromCell) {
 		int toX = toCell.getCoordinate().getX();
 		int toY = toCell.getCoordinate().getY();
 		int fromX = fromCell.getCoordinate().getX();
 		int fromY = fromCell.getCoordinate().getY();
-		//ensuring the move is not diagonal
-		if (toX == fromX || toY == fromY)
-		{
-				//ensuring the cells are adjacent
-				if (Math.abs(toX - fromX) == 1)
-				{
-					return canCapture(toCell.getPiece());
-				}
-				else if (Math.abs(toY - fromY) == 1)
-				{
-					return canCapture(toCell.getPiece());
-				}
-				else
-				{
-					return false;
-				}
-			
+		// ensuring the move is not diagonal
+		if (toX == fromX || toY == fromY) {
+			// ensuring the cells are adjacent
+			if (Math.abs(toX - fromX) == 1) {
+				return canCapture(toCell.getPiece());
+			} else if (Math.abs(toY - fromY) == 1) {
+				return canCapture(toCell.getPiece());
+			} else {
+				return false;
 			}
-		
-		}
-	
-	else
-		{
-			return false;
 		}
 		return false;
 	}
 
-	public String getType() 
-	{
+	public String getType() {
 		return type;
 	}
-	
-	public void flipPiece()
-	{
+
+	public void flipPiece() {
 		isFlipped = true;
-		//may need to notify observer now
+		// may need to notify observer now
 	}
-	
-	public boolean getIsFlipped()
-	{
+
+	public boolean getIsFlipped() {
 		return isFlipped;
 	}
 }

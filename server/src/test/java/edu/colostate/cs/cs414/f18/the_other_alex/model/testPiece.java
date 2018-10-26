@@ -1,18 +1,18 @@
-package edu.colostate.cs.cs414.f18.the_other_alex.Model;
+package edu.colostate.cs.cs414.f18.the_other_alex.model;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.*;
 
-import edu.colostate.cs.cs414.f18.the_other_alex.server.Model.Advisor;
-import edu.colostate.cs.cs414.f18.the_other_alex.server.Model.Cannon;
-import edu.colostate.cs.cs414.f18.the_other_alex.server.Model.Cell;
-import edu.colostate.cs.cs414.f18.the_other_alex.server.Model.Chariot;
-import edu.colostate.cs.cs414.f18.the_other_alex.server.Model.Elephant;
-import edu.colostate.cs.cs414.f18.the_other_alex.server.Model.General;
-import edu.colostate.cs.cs414.f18.the_other_alex.server.Model.Horse;
-import edu.colostate.cs.cs414.f18.the_other_alex.server.Model.NullPiece;
-import edu.colostate.cs.cs414.f18.the_other_alex.server.Model.Soldier;
+import edu.colostate.cs.cs414.f18.the_other_alex.server.model.Advisor;
+import edu.colostate.cs.cs414.f18.the_other_alex.server.model.Cannon;
+import edu.colostate.cs.cs414.f18.the_other_alex.server.model.Cell;
+import edu.colostate.cs.cs414.f18.the_other_alex.server.model.Chariot;
+import edu.colostate.cs.cs414.f18.the_other_alex.server.model.Elephant;
+import edu.colostate.cs.cs414.f18.the_other_alex.server.model.General;
+import edu.colostate.cs.cs414.f18.the_other_alex.server.model.Horse;
+import edu.colostate.cs.cs414.f18.the_other_alex.server.model.NullPiece;
+import edu.colostate.cs.cs414.f18.the_other_alex.server.model.Soldier;
 
 public class testPiece {
 	
