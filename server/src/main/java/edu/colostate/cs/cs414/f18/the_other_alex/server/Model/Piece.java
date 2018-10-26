@@ -48,6 +48,8 @@ public abstract class Piece {
 
 	public boolean isMoveValid(Cell toCell, Cell fromCell, Cell[][] cells) 
 	{
+		if ((toCell.getPiece() instanceof NullPiece) || toCell.getPiece().getIsFlipped() == true && toCell.getPiece().getIsFlipped() == true)
+		{
 		int toX = toCell.getCoordinate().getX();
 		int toY = toCell.getCoordinate().getY();
 		int fromX = fromCell.getCoordinate().getX();
@@ -55,20 +57,27 @@ public abstract class Piece {
 		//ensuring the move is not diagonal
 		if (toX == fromX || toY == fromY)
 		{
-			//ensuring the cells are adjacent
-			if (Math.abs(toX - fromX) == 1)
-			{
-				return canCapture(toCell.getPiece());
-			}
-			else if (Math.abs(toY - fromY) == 1)
-			{
-				return canCapture(toCell.getPiece());
-			}
-			else
-			{
-				return false;
-			}
+				//ensuring the cells are adjacent
+				if (Math.abs(toX - fromX) == 1)
+				{
+					return canCapture(toCell.getPiece());
+				}
+				else if (Math.abs(toY - fromY) == 1)
+				{
+					return canCapture(toCell.getPiece());
+				}
+				else
+				{
+					return false;
+				}
 			
+			}
+		
+		}
+	
+	else
+		{
+			return false;
 		}
 		return false;
 	}
@@ -76,5 +85,16 @@ public abstract class Piece {
 	public String getType() 
 	{
 		return type;
+	}
+	
+	public void flipPiece()
+	{
+		isFlipped = true;
+		//may need to notify observer now
+	}
+	
+	public boolean getIsFlipped()
+	{
+		return isFlipped;
 	}
 }

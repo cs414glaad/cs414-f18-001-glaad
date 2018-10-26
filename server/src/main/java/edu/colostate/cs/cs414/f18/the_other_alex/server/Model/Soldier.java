@@ -7,6 +7,7 @@ public class Soldier extends Piece {
 	public Soldier()
 	{
 		type = SOLDIER;
+		isFlipped = false;
 		capturableTypes = new ArrayList<String>(soldierCanCapture);
 	}
 }

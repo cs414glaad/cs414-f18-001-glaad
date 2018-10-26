@@ -28,7 +28,9 @@ public class testPiece {
 		cells[1][2] = new Cell(1, 2, new NullPiece());
 		cells[2][0] = new Cell(2, 0, new NullPiece());
 		cells[2][1] = new Cell(2, 1, new General());
+		cells[2][1].getPiece().flipPiece();
 		cells[2][2] = new Cell(2, 2, new Soldier());
+		cells[2][2].getPiece().flipPiece();
 		assertTrue(cells[2][2].getPiece().isMoveValid(cells[2][1], cells[2][2], cells));
 	}
 	
@@ -43,8 +45,10 @@ public class testPiece {
 		cells[1][1] = new Cell(1, 1, new NullPiece());
 		cells[1][2] = new Cell(1, 2, new NullPiece());
 		cells[2][0] = new Cell(2, 0, new Horse());
+		cells[2][0].getPiece().flipPiece();
 		cells[2][1] = new Cell(2, 1, new General());
 		cells[2][2] = new Cell(2, 2, new Cannon());
+		cells[2][2].getPiece().flipPiece();
 		assertTrue(cells[2][2].getPiece().isMoveValid(cells[2][0], cells[2][2], cells));
 	}
 	
@@ -59,8 +63,10 @@ public class testPiece {
 		cells[1][1] = new Cell(1, 1, new NullPiece());
 		cells[1][2] = new Cell(1, 2, new NullPiece());
 		cells[2][0] = new Cell(2, 0, new Horse());
+		cells[2][0].getPiece().flipPiece();
 		cells[2][1] = new Cell(2, 1, new NullPiece());
 		cells[2][2] = new Cell(2, 2, new Cannon());
+		cells[2][2].getPiece().flipPiece();
 		assertFalse(cells[2][2].getPiece().isMoveValid(cells[2][0], cells[2][2], cells));
 	}
 	
@@ -73,10 +79,12 @@ public class testPiece {
 		cells[0][2] = new Cell(0, 2, new NullPiece());
 		cells[1][0] = new Cell(1, 0, new NullPiece());
 		cells[1][1] = new Cell(1, 1, new Elephant());
+		cells[1][1].getPiece().flipPiece();
 		cells[1][2] = new Cell(1, 2, new NullPiece());
 		cells[2][0] = new Cell(2, 0, new NullPiece());
 		cells[2][1] = new Cell(2, 1, new NullPiece());
 		cells[2][2] = new Cell(2, 2, new Chariot());
+		cells[2][2].getPiece().flipPiece();
 		assertFalse(cells[1][1].getPiece().isMoveValid(cells[2][2], cells[1][1], cells));
 	}
 	
@@ -91,8 +99,10 @@ public class testPiece {
 		cells[1][1] = new Cell(1, 1, new NullPiece());
 		cells[1][2] = new Cell(1, 2, new NullPiece());
 		cells[2][0] = new Cell(2, 0, new Horse());
+		cells[2][0].getPiece().flipPiece();
 		cells[2][1] = new Cell(2, 1, new NullPiece());
 		cells[2][2] = new Cell(2, 2, new Chariot());
+		cells[2][2].getPiece().flipPiece();
 		assertFalse(cells[2][2].getPiece().isMoveValid(cells[2][0], cells[2][2], cells));
 	}
 	
@@ -109,6 +119,7 @@ public class testPiece {
 		cells[2][0] = new Cell(2, 0, new NullPiece());
 		cells[2][1] = new Cell(2, 1, new NullPiece());
 		cells[2][2] = new Cell(2, 2, new Advisor());
+		cells[2][2].getPiece().flipPiece();
 		assertTrue(cells[2][2].getPiece().isMoveValid(cells[2][1], cells[2][2], cells));
 	}
 	
@@ -125,6 +136,7 @@ public class testPiece {
 		cells[2][0] = new Cell(2, 0, new NullPiece());
 		cells[2][1] = new Cell(2, 1, new NullPiece());
 		cells[2][2] = new Cell(2, 2, new Advisor());
+		cells[2][2].getPiece().flipPiece();
 		assertTrue(cells[2][2].getPiece().isMoveValid(cells[1][2], cells[2][2], cells));
 	}
 	
@@ -133,7 +145,9 @@ public class testPiece {
 	{
 		Cell[][] cells = new Cell[3][3];
 		cells[0][0] = new Cell(0, 0, new Soldier());
+		cells[0][0].getPiece().flipPiece();
 		cells[0][1] = new Cell(0, 1, new Advisor());
+		cells[0][1].getPiece().flipPiece();
 		cells[0][2] = new Cell(0, 2, new NullPiece());
 		cells[1][0] = new Cell(1, 0, new NullPiece());
 		cells[1][1] = new Cell(1, 1, new NullPiece());
@@ -152,9 +166,11 @@ public class testPiece {
 		cells[0][1] = new Cell(0, 1, new NullPiece());
 		cells[0][2] = new Cell(0, 2, new NullPiece());
 		cells[1][0] = new Cell(1, 0, new Horse());
+		cells[1][0].getPiece().flipPiece();
 		cells[1][1] = new Cell(1, 1, new NullPiece());
 		cells[1][2] = new Cell(1, 2, new NullPiece());
 		cells[2][0] = new Cell(2, 0, new Elephant());
+		cells[2][0].getPiece().flipPiece();
 		cells[2][1] = new Cell(2, 1, new NullPiece());
 		cells[2][2] = new Cell(2, 2, new NullPiece());
 		assertFalse(cells[1][0].getPiece().isMoveValid(cells[2][0], cells[1][0], cells));
@@ -168,9 +184,11 @@ public class testPiece {
 		cells[0][1] = new Cell(0, 1, new NullPiece());
 		cells[0][2] = new Cell(0, 2, new NullPiece());
 		cells[1][0] = new Cell(1, 0, new Horse());
+		cells[1][0].getPiece().flipPiece();
 		cells[1][1] = new Cell(1, 1, new NullPiece());
 		cells[1][2] = new Cell(1, 2, new NullPiece());
 		cells[2][0] = new Cell(2, 0, new Elephant());
+		cells[2][0].getPiece().flipPiece();
 		cells[2][1] = new Cell(2, 1, new NullPiece());
 		cells[2][2] = new Cell(2, 2, new NullPiece());
 		assertTrue(cells[2][0].getPiece().isMoveValid(cells[1][0], cells[2][0], cells));
@@ -184,9 +202,11 @@ public class testPiece {
 		cells[0][1] = new Cell(0, 1, new NullPiece());
 		cells[0][2] = new Cell(0, 2, new NullPiece());
 		cells[1][0] = new Cell(1, 0, new General());
+		cells[1][0].getPiece().flipPiece();
 		cells[1][1] = new Cell(1, 1, new NullPiece());
 		cells[1][2] = new Cell(1, 2, new NullPiece());
 		cells[2][0] = new Cell(2, 0, new General());
+		cells[2][0].getPiece().flipPiece();
 		cells[2][1] = new Cell(2, 1, new NullPiece());
 		cells[2][2] = new Cell(2, 2, new NullPiece());
 		assertTrue(cells[2][0].getPiece().isMoveValid(cells[1][0], cells[2][0], cells));

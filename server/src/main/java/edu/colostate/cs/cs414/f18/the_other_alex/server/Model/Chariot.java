@@ -8,6 +8,7 @@ public class Chariot extends Piece {
 	{
 		type = CHARIOT;
 		capturableTypes = new ArrayList<String>(chariotCanCapture);
+		isFlipped = false;
 	}
 }
 

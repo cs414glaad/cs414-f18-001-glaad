@@ -7,6 +7,7 @@ public class Advisor extends Piece {
 	public Advisor()
 	{
 		type = ADVISOR;
+		isFlipped = false;
 		capturableTypes = new ArrayList<String>(advisorCanCapture);
 	}
 }

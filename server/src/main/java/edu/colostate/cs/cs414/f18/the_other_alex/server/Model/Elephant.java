@@ -8,5 +8,6 @@ public class Elephant extends Piece {
 	{
 		type = ELEPHANT;
 		capturableTypes = new ArrayList<String>(elephantCanCapture);
+		isFlipped = false;
 	}
 }

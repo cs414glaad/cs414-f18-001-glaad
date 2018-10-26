@@ -8,6 +8,7 @@ public class General extends Piece {
 	public General()
 	{
 		type = GENERAL;
+		isFlipped = false;
 		capturableTypes = new ArrayList<String>(generalCanCapture);
 	}
 

@@ -7,6 +7,7 @@ public class Horse extends Piece {
 	public Horse()
 	{
 		type = HORSE;
+		isFlipped = false;
 		capturableTypes = new ArrayList<String>(horseCanCapture);
 	}
 }

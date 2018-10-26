@@ -7,50 +7,58 @@ public class Cannon extends Piece {
 	public Cannon() {
 		type = CANNON;
 		capturableTypes = new ArrayList<String>(cannonCanCapture);
+		isFlipped = false;
 	}
 
 	@Override
 	public boolean isMoveValid(Cell fromCell, Cell toCell, Cell[][] cells)
 	{
+		if ((toCell.getPiece() instanceof NullPiece) || toCell.getPiece().getIsFlipped() == true && toCell.getPiece().getIsFlipped() == true)
+		{
 		
 		int toX = toCell.getCoordinate().getX();
 		int toY = toCell.getCoordinate().getY();
 		int fromX = fromCell.getCoordinate().getX();
 		int fromY = fromCell.getCoordinate().getY();
 		//ensuring the move is not diagonal
-		if (toX == fromX || toY == fromY)
-		{
-			if (toX < fromX)
+			if (toX == fromX || toY == fromY)
 			{
-				if (pieceBetweenOnXAxis(toX, fromX, toY, cells))
+				if (toX < fromX)
 				{
-					return canCapture(toCell.getPiece());
+					if (pieceBetweenOnXAxis(toX, fromX, toY, cells))
+					{
+						return canCapture(toCell.getPiece());
+					}
+				}
+				else if (toX > fromX)
+				{
+					if (pieceBetweenOnXAxis(fromX, toX, toY, cells))
+				 	{
+					 	return canCapture(toCell.getPiece());
+				 	}
+			
+				}
+				else if (toY < fromY)
+				{
+					if (pieceBetweenOnYAxis(toY, fromY, toX, cells))
+				 	{
+						return canCapture(toCell.getPiece());
+				 	}
+				}
+				else if (toY > fromY)
+				{
+					if (pieceBetweenOnYAxis(fromY, toY, toX, cells))
+				 	{
+						return canCapture(toCell.getPiece());
+				 	}
+				}
+				else
+				{// cannot move to where your piece already is
+					return false;
 				}
 			}
-			else if (toX > fromX)
-			{
-				 if (pieceBetweenOnXAxis(fromX, toX, toY, cells))
-				 {
-					 return canCapture(toCell.getPiece());
-				 }
-			
-			}
-			else if (toY < fromY)
-			{
-				if (pieceBetweenOnYAxis(toY, fromY, toX, cells))
-				 {
-					 return canCapture(toCell.getPiece());
-				 }
-			}
-			else if (toY > fromY)
-			{
-				if (pieceBetweenOnYAxis(fromY, toY, toX, cells))
-				 {
-					 return canCapture(toCell.getPiece());
-				 }
-			}
 			else
-			{// cannot move to where your piece already is
+			{
 				return false;
 			}
 		}
