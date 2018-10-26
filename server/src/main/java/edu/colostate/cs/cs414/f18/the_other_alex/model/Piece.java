@@ -1,4 +1,4 @@
-package edu.colostate.cs.cs414.f18.the_other_alex.server.model;
+package edu.colostate.cs.cs414.f18.the_other_alex.model;
 
 import java.util.ArrayList;
 import java.util.Arrays;
