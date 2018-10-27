@@ -1,9 +1,10 @@
 package edu.colostate.cs.cs414.f18.the_other_alex.server;
 
-import edu.colostate.cs.cs414.f18.the_other_alex.model.ModelFacade;
 import spark.Spark;
 
-import static spark.Spark.*;
+import static spark.Spark.get;
+import static spark.Spark.post;
+import static spark.Spark.port;
 
 public class Server {
 
@@ -21,15 +22,15 @@ public class Server {
     Spark.staticFileLocation(path); // ?
 
     get("/", modelManager::root);
-    get("/login", modelManager::login);
-    get("/query", modelManager::query);
-    get("/user", modelManager::user);
-    get("/game", modelManager::game);
+    post("/login", modelManager::login);
+    post("/query", modelManager::query);
+    post("/user", modelManager::user);
+    post("/game", modelManager::game);
   }
 
   public Server(int port) {
     loadState();
-    setPort(port)
+    setPort(port);
     linkRoutes();
   }
 
