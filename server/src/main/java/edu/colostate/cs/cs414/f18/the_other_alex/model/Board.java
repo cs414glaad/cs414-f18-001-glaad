@@ -4,6 +4,8 @@ public class Board {
   private Cell[][] cells;
 
   public void move(Cell fromCell, Cell toCell) {
+    //check to make sure piece in fromCell are different from piece in toCell
+
   }
 
   public boolean anyPossibleMovesLeft() {

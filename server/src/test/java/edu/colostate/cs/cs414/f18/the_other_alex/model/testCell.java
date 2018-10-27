@@ -8,23 +8,20 @@ public class testCell {
 
 	
 	@Test
-	public void testCoordinateConstructorXValue()
-	{
+	public void testCoordinateConstructorXValue(){
 		Cell c = new Cell(4, 3, new NullPiece());
 		assertEquals(3, c.getCoordinate().getCol());
 	}
 	
 	@Test
-	public void testCoordinateConstructorYValue()
-	{
+	public void testCoordinateConstructorYValue(){
 		Cell c = new Cell(4, 3, new NullPiece());
 		assertEquals(4, c.getCoordinate().getRow());
 	}
 	
 	@Test
-	public void testCellWithPiece()
-	{
-		Cell c = new Cell(4, 3, new General());
+	public void testCellWithPiece(){
+		Cell c = new Cell(4, 3, new General(PieceColor.BLACK));
 		assertEquals("General", c.getPiece().getType());
 	}
 }

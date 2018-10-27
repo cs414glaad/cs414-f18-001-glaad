@@ -4,10 +4,9 @@ import java.util.ArrayList;
 
 public class Advisor extends Piece {
 	
-	public Advisor()
-	{
+	public Advisor(PieceColor color){
+		super(color);
 		type = ADVISOR;
-		isFlipped = false;
 		capturableTypes = new ArrayList<String>(advisorCanCapture);
 	}
 }

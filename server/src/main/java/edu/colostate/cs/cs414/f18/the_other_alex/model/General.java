@@ -5,10 +5,9 @@ import java.util.ArrayList;
 public class General extends Piece {
 
 	
-	public General()
-	{
+	public General(PieceColor color){
+		super(color);
 		type = GENERAL;
-		isFlipped = false;
 		capturableTypes = new ArrayList<String>(generalCanCapture);
 	}
 

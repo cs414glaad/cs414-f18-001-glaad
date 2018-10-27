@@ -4,10 +4,9 @@ import java.util.ArrayList;
 
 public class Soldier extends Piece {
 	
-	public Soldier()
-	{
+	public Soldier(PieceColor color){
+		super(color);
 		type = SOLDIER;
-		isFlipped = false;
 		capturableTypes = new ArrayList<String>(soldierCanCapture);
 	}
 }

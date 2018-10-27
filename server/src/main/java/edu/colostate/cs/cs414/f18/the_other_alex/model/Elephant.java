@@ -4,10 +4,9 @@ import java.util.ArrayList;
 
 public class Elephant extends Piece {
 	
-	public Elephant()
-	{
+	public Elephant(PieceColor color){
+		super(color);
 		type = ELEPHANT;
 		capturableTypes = new ArrayList<String>(elephantCanCapture);
-		isFlipped = false;
-	}
+	};
 }
