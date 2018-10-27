@@ -7,9 +7,10 @@ public class Cell {
 	
 	//done like this to make more sense with arrays, since cells[1][2] is 1st row 2nd column, which is 
 	// 2 x one y
-	public Cell(int y, int x, Piece p)
+	//maybe just call this row and column then? Do the same in coordinate?
+	public Cell(int row, int col, Piece p)
 	{
-		coord = new Coordinate(x, y);
+		coord = new Coordinate(col, row);
 		piece = p;
 	}
 	

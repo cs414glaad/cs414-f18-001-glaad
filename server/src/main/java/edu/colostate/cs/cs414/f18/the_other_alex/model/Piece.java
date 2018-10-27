@@ -57,16 +57,16 @@ public abstract class Piece {
 	}
 
 	private boolean ensureMoveIsNotDiagonalOrTooFar(Cell toCell, Cell fromCell) {
-		int toX = toCell.getCoordinate().getX();
-		int toY = toCell.getCoordinate().getY();
-		int fromX = fromCell.getCoordinate().getX();
-		int fromY = fromCell.getCoordinate().getY();
+		int toCol = toCell.getCoordinate().getCol();
+		int toRow = toCell.getCoordinate().getRow();
+		int fromCol = fromCell.getCoordinate().getCol();
+		int fromRow = fromCell.getCoordinate().getRow();
 		// ensuring the move is not diagonal
-		if (toX == fromX || toY == fromY) {
+		if (toCol == fromCol || toRow == fromRow) {
 			// ensuring the cells are adjacent
-			if (Math.abs(toX - fromX) == 1) {
+			if (Math.abs(toCol - fromCol) == 1) {
 				return canCapture(toCell.getPiece());
-			} else if (Math.abs(toY - fromY) == 1) {
+			} else if (Math.abs(toRow - fromRow) == 1) {
 				return canCapture(toCell.getPiece());
 			} else {
 				return false;
