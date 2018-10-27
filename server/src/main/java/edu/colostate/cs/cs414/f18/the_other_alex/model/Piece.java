@@ -33,6 +33,16 @@ public abstract class Piece {
 	protected ArrayList<String> capturableTypes;
 	protected boolean isFlipped;
 	protected String type;
+	protected PieceColor color;
+
+	public Piece(PieceColor color){
+		isFlipped = false;
+		this.color = color;
+	}
+	public Piece(){
+		isFlipped = false;
+		this.color = PieceColor.NONE;
+	}
 
 	public boolean canCapture(Piece piece) {
 		if (capturableTypes.contains(piece.getType())) {
@@ -87,4 +97,6 @@ public abstract class Piece {
 	public boolean getIsFlipped() {
 		return isFlipped;
 	}
+
+	public PieceColor getColor() {return color;}
 }

@@ -4,10 +4,10 @@ import java.util.ArrayList;
 
 public class Cannon extends Piece {
 
-	public Cannon() {
+	public Cannon(PieceColor color) {
+		super(color);
 		type = CANNON;
 		capturableTypes = new ArrayList<String>(cannonCanCapture);
-		isFlipped = false;
 	}
 
 	@Override

@@ -4,10 +4,9 @@ import java.util.ArrayList;
 
 public class Horse extends Piece {
 	
-	public Horse()
-	{
+	public Horse(PieceColor color){
+		super(color);
 		type = HORSE;
-		isFlipped = false;
 		capturableTypes = new ArrayList<String>(horseCanCapture);
 	}
 }
