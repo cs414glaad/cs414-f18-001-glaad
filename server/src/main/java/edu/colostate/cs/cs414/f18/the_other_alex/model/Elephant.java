@@ -8,5 +8,5 @@ public class Elephant extends Piece {
 		super(color);
 		type = ELEPHANT;
 		capturableTypes = new ArrayList<String>(elephantCanCapture);
-	};
+	}
 }

@@ -39,6 +39,10 @@ public abstract class Piece {
 		isFlipped = false;
 		this.color = color;
 	}
+	public Piece(){
+		isFlipped = false;
+		this.color = PieceColor.NONE;
+	}
 
 	public boolean canCapture(Piece piece) {
 		if (capturableTypes.contains(piece.getType())) {
