@@ -11,14 +11,14 @@ public class testCell {
 	public void testCoordinateConstructorXValue()
 	{
 		Cell c = new Cell(4, 3, new NullPiece());
-		assertEquals(3, c.getCoordinate().getX());
+		assertEquals(3, c.getCoordinate().getCol());
 	}
 	
 	@Test
 	public void testCoordinateConstructorYValue()
 	{
 		Cell c = new Cell(4, 3, new NullPiece());
-		assertEquals(4, c.getCoordinate().getY());
+		assertEquals(4, c.getCoordinate().getRow());
 	}
 	
 	@Test

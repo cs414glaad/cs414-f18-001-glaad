@@ -25,46 +25,46 @@ public class Cannon extends Piece {
 
 	private boolean evaluateCorrectnessOfMove(Cell fromCell, Cell toCell,
 			Cell[][] cells) {
-		int toX = toCell.getCoordinate().getX();
-		int toY = toCell.getCoordinate().getY();
-		int fromX = fromCell.getCoordinate().getX();
-		int fromY = fromCell.getCoordinate().getY();
+		int toCol = toCell.getCoordinate().getCol();
+		int toRow = toCell.getCoordinate().getRow();
+		int fromCol = fromCell.getCoordinate().getCol();
+		int fromRow = fromCell.getCoordinate().getRow();
 		// ensuring the move is not diagonal
-		if (toX == fromX || toY == fromY) {
-			return checkForPiecesBetween(toCell, cells, toX, toY, fromX, fromY);
+		if (toCol == fromCol || toRow == fromRow) {
+			return checkForPiecesBetween(toCell, cells, toCol, toRow, fromCol, fromRow);
 		} else {
 			return false;
 		}
 	}
 
-	private boolean checkForPiecesBetween(Cell toCell, Cell[][] cells, int toX,
-			int toY, int fromX, int fromY) {
+	private boolean checkForPiecesBetween(Cell toCell, Cell[][] cells, int toCol,
+			int toRow, int fromCol, int fromRow) {
 		int lowIndex = -1;
 		int highIndex = -1;
-		if (toX != fromX) {
-			if (toX < fromX) {
-				lowIndex = toX;
-				highIndex = fromX;
+		if (toCol != fromCol) {
+			if (toCol < fromCol) {
+				lowIndex = toCol;
+				highIndex = fromCol;
 
 			} else {
-				lowIndex = fromX;
-				highIndex = toX;
+				lowIndex = fromCol;
+				highIndex = toCol;
 			}
-			if (pieceBetweenOnXAxis(lowIndex, highIndex, toY, cells)) {
+			if (pieceBetweenOnXAxis(lowIndex, highIndex, toRow, cells)) {
 				return canCapture(toCell.getPiece());
 			}
 		}
-		if (toY != fromY) {
-			if (toY < fromY) {
-				lowIndex = toY;
-				highIndex = fromY;
+		if (toRow != fromRow) {
+			if (toRow < fromRow) {
+				lowIndex = toRow;
+				highIndex = fromRow;
 				
 			} else {
-				lowIndex = fromY;
-				highIndex = toY;
+				lowIndex = fromRow;
+				highIndex = toRow;
 			}
 			
-			if (pieceBetweenOnYAxis(fromY, toY, toX, cells)) {
+			if (pieceBetweenOnYAxis(fromRow, toRow, toCol, cells)) {
 				return canCapture(toCell.getPiece());
 			}
 		}
