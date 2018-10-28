@@ -37,4 +37,8 @@ public class Game {
   public void notifyObservers() {
 
   }
+
+  public Board getBorad() {
+    return board;
+  }
 }

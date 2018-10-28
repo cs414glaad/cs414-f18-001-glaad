@@ -13,4 +13,8 @@ public class Board {
   public boolean isGameOver() {
     return false;
   }
+
+  public Cell[][] getCells() {
+    return cells;
+  }
 }
