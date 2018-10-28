@@ -8,8 +8,8 @@ public class User {
   private Invite[] pendingReceivedInvites;
   private UserHistory userHistory;
 
-  public boolean sendInvite(String username) {
-    return false;
+  public Invite sendInvite(String username) {
+    return null;
   }
 
   public void changePassword(String username, String newPassword) {

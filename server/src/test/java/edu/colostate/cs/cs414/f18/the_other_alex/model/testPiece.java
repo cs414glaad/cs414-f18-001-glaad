@@ -1,5 +1,6 @@
 package edu.colostate.cs.cs414.f18.the_other_alex.model;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -25,7 +26,7 @@ public class testPiece {
 		cells[2][2].getPiece().flipPiece();
 		assertTrue(cells[2][2].getPiece().isMoveValid(cells[2][1], cells[2][2], cells));
 	}
-	
+
 	@Test
 	public void testCanCannonCaptureHorseValid(){
 		Cell[][] cells = new Cell[3][3];
@@ -42,7 +43,7 @@ public class testPiece {
 		cells[2][2].getPiece().flipPiece();
 		assertTrue(cells[2][2].getPiece().isMoveValid(cells[2][0], cells[2][2], cells));
 	}
-	
+
 	@Test
 	public void testCanCannonCaptureHorseInvalid(){
 		Cell[][] cells = new Cell[3][3];
@@ -59,7 +60,7 @@ public class testPiece {
 		cells[2][2].getPiece().flipPiece();
 		assertFalse(cells[2][2].getPiece().isMoveValid(cells[2][0], cells[2][2], cells));
 	}
-	
+
 	@Test
 	public void testCannotCaptureDiagonalElephantTakesChariot(){
 		Cell[][] cells = new Cell[3][3];
@@ -76,7 +77,7 @@ public class testPiece {
 		cells[2][2].getPiece().flipPiece();
 		assertFalse(cells[1][1].getPiece().isMoveValid(cells[2][2], cells[1][1], cells));
 	}
-	
+
 	@Test
 	public void testCannotTakePieceTwoMovesAwayChariotTakesHorse(){
 		Cell[][] cells = new Cell[3][3];
@@ -93,7 +94,7 @@ public class testPiece {
 		cells[2][2].getPiece().flipPiece();
 		assertFalse(cells[2][2].getPiece().isMoveValid(cells[2][0], cells[2][2], cells));
 	}
-	
+
 	@Test
 	public void testStandardMoveValidXAxis(){
 		Cell[][] cells = new Cell[3][3];
@@ -109,7 +110,7 @@ public class testPiece {
 		cells[2][2].getPiece().flipPiece();
 		assertTrue(cells[2][2].getPiece().isMoveValid(cells[2][1], cells[2][2], cells));
 	}
-	
+
 	@Test
 	public void testStandardMoveValidYAxis(){
 		Cell[][] cells = new Cell[3][3];
@@ -125,7 +126,7 @@ public class testPiece {
 		cells[2][2].getPiece().flipPiece();
 		assertTrue(cells[2][2].getPiece().isMoveValid(cells[1][2], cells[2][2], cells));
 	}
-	
+
 	@Test
 	public void canSoldierCaptureAdvisorInvalid(){
 		Cell[][] cells = new Cell[3][3];
@@ -142,7 +143,7 @@ public class testPiece {
 		cells[2][2] = new Cell(2, 2, new NullPiece());
 		assertFalse(cells[0][0].getPiece().isMoveValid(cells[0][1], cells[0][0], cells));
 	}
-	
+
 	@Test
 	public void canHorseCaptureElephantInvalid(){
 		Cell[][] cells = new Cell[3][3];
@@ -159,7 +160,7 @@ public class testPiece {
 		cells[2][2] = new Cell(2, 2, new NullPiece());
 		assertFalse(cells[1][0].getPiece().isMoveValid(cells[2][0], cells[1][0], cells));
 	}
-	
+
 	@Test
 	public void canElephantCaptureHorseValid(){
 		Cell[][] cells = new Cell[3][3];
@@ -176,7 +177,7 @@ public class testPiece {
 		cells[2][2] = new Cell(2, 2, new NullPiece());
 		assertTrue(cells[2][0].getPiece().isMoveValid(cells[1][0], cells[2][0], cells));
 	}
-	
+
 	@Test
 	public void canGeneralCaptureGeneralValid(){
 		Cell[][] cells = new Cell[3][3];

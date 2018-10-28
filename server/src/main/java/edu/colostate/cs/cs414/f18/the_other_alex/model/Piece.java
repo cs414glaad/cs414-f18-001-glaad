@@ -34,6 +34,7 @@ public abstract class Piece {
 	protected boolean isFlipped;
 	protected String type;
 	protected PieceColor color;
+	private String id;
 
 	public Piece(PieceColor color){
 		isFlipped = false;
@@ -99,4 +100,8 @@ public abstract class Piece {
 	}
 
 	public PieceColor getColor() {return color;}
+
+	public String getId() {
+		return id;
+	}
 }
