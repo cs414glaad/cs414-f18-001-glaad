@@ -2,9 +2,7 @@ package edu.colostate.cs.cs414.f18.the_other_alex.server;
 
 import spark.Spark;
 
-import static spark.Spark.get;
-import static spark.Spark.post;
-import static spark.Spark.port;
+import static spark.Spark.*;
 
 public class Server {
 
