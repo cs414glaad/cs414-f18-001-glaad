@@ -103,4 +103,8 @@ public class ModelManager {
     response.type("text/html");
     return "Testing game\n";
   }
+
+  public void shutdown() {
+    // TODO: save stuff to database or something
+  }
 }
