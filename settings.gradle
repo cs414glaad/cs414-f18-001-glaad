@@ -1,2 +1,4 @@
 include 'server'
 rootProject.name = 'the-other-alex'
+include 'client'
+
