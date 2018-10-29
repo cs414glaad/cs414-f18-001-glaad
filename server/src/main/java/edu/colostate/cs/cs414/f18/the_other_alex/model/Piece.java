@@ -53,10 +53,18 @@ public abstract class Piece {
 		}
 	}
 
+	public boolean arePiecesDifferentColors(Cell toCell, Cell fromCell){
+		if(toCell.getPiece().color == fromCell.getPiece().color){
+			return false;
+		}
+		else{
+			return true;
+		}
+	}
 
 	public boolean isMoveValid(Cell toCell, Cell fromCell, Cell[][] cells) {
 		//making sure that validity is checked with opposing pieces only
-		if(toCell.getPiece().color == fromCell.getPiece().color){
+		if(!arePiecesDifferentColors(toCell,fromCell)){
 			return false;
 		}
 

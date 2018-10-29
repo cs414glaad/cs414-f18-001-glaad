@@ -18,17 +18,18 @@ public class Cannon extends Piece {
 	@Override
 	public boolean isMoveValid(Cell toCell, Cell fromCell, Cell[][] cells) {
 		//making sure that validity is checked with opposing pieces only
-		if(toCell.getPiece().color == fromCell.getPiece().color){
+		if(!arePiecesDifferentColors(toCell,fromCell)){
 			return false;
 		}
+
 		//if we are a cannon and were trying to capture a piece, call the method that checks cannon can capture
 		//if cannon is just trying to move, then use generic move test that all pieces abide by
-		if(!(toCell.getPiece().type.equals("Null piece"))) {
-						return isValidCapture(fromCell, toCell, cells);
-					}
 		if ((toCell.getPiece() instanceof NullPiece)
 				|| toCell.getPiece().getIsFlipped() == true
 				&& toCell.getPiece().getIsFlipped() == true) {
+			if(!(toCell.getPiece().type.equals("Null piece"))) {
+				return isValidCapture(fromCell, toCell, cells);
+			}
 			return ensureMoveIsNotDiagonalOrTooFar(toCell, fromCell);
 
 		}
@@ -39,15 +40,9 @@ public class Cannon extends Piece {
 	}
 
 	public boolean isValidCapture(Cell fromCell, Cell toCell, Cell[][] cells) {
-		if ((toCell.getPiece() instanceof NullPiece)
-				|| toCell.getPiece().getIsFlipped() == true
-				&& toCell.getPiece().getIsFlipped() == true) {
 
 			return evaluateCorrectnessOfMove(fromCell, toCell, cells);
 
-		} else {
-			return false;
-		}
 	}
 
 	private boolean evaluateCorrectnessOfMove(Cell fromCell, Cell toCell,
