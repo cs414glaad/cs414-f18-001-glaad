@@ -5,6 +5,7 @@ public class Game {
   private User reduser;
   private Turn turn;
   private Board board;
+  private GameRecord gameRecord;
 
   public void gameOver() {
 
@@ -36,5 +37,13 @@ public class Game {
 
   public void notifyObservers() {
 
+  }
+
+  public Board getBorad() {
+    return board;
+  }
+
+  public GameRecord getGameRecord() {
+    return gameRecord;
   }
 }

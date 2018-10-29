@@ -6,9 +6,10 @@ public class User {
   private String password;
   private Invite[] pendingInvites;
   private Invite[] pendingReceivedInvites;
+  private UserHistory userHistory;
 
-  public boolean sendInvite(String username) {
-    return false;
+  public Invite sendInvite(String username) {
+    return null;
   }
 
   public void changePassword(String username, String newPassword) {
@@ -17,5 +18,9 @@ public class User {
 
   public void changeEmail(String username, String newEmail) {
 
+  }
+
+  public UserHistory getUserHistory() {
+    return userHistory;
   }
 }
