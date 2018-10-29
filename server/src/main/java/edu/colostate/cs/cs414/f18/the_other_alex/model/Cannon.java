@@ -10,8 +10,35 @@ public class Cannon extends Piece {
 		capturableTypes = new ArrayList<String>(cannonCanCapture);
 	}
 
+
+
+
+
+
 	@Override
-	public boolean isMoveValid(Cell fromCell, Cell toCell, Cell[][] cells) {
+	public boolean isMoveValid(Cell toCell, Cell fromCell, Cell[][] cells) {
+		//making sure that validity is checked with opposing pieces only
+		if(toCell.getPiece().color == fromCell.getPiece().color){
+			return false;
+		}
+		//if we are a cannon and were trying to capture a piece, call the method that checks cannon can capture
+		//if cannon is just trying to move, then use generic move test that all pieces abide by
+		if(!(toCell.getPiece().type.equals("Null piece"))) {
+						return isValidCapture(fromCell, toCell, cells);
+					}
+		if ((toCell.getPiece() instanceof NullPiece)
+				|| toCell.getPiece().getIsFlipped() == true
+				&& toCell.getPiece().getIsFlipped() == true) {
+			return ensureMoveIsNotDiagonalOrTooFar(toCell, fromCell);
+
+		}
+
+		else {
+			return false;
+		}
+	}
+
+	public boolean isValidCapture(Cell fromCell, Cell toCell, Cell[][] cells) {
 		if ((toCell.getPiece() instanceof NullPiece)
 				|| toCell.getPiece().getIsFlipped() == true
 				&& toCell.getPiece().getIsFlipped() == true) {

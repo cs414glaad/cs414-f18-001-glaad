@@ -53,7 +53,13 @@ public abstract class Piece {
 		}
 	}
 
+
 	public boolean isMoveValid(Cell toCell, Cell fromCell, Cell[][] cells) {
+		//making sure that validity is checked with opposing pieces only
+		if(toCell.getPiece().color == fromCell.getPiece().color){
+			return false;
+		}
+
 		if ((toCell.getPiece() instanceof NullPiece)
 				|| toCell.getPiece().getIsFlipped() == true
 				&& toCell.getPiece().getIsFlipped() == true) {
@@ -67,7 +73,7 @@ public abstract class Piece {
 		}
 	}
 
-	private boolean ensureMoveIsNotDiagonalOrTooFar(Cell toCell, Cell fromCell) {
+	protected boolean ensureMoveIsNotDiagonalOrTooFar(Cell toCell, Cell fromCell) {
 		int toCol = toCell.getCoordinate().getCol();
 		int toRow = toCell.getCoordinate().getRow();
 		int fromCol = fromCell.getCoordinate().getCol();
