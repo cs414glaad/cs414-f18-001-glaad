@@ -10,17 +10,46 @@ public class Cannon extends Piece {
 		capturableTypes = new ArrayList<String>(cannonCanCapture);
 	}
 
+
+
+
+
+
 	@Override
-	public boolean isMoveValid(Cell fromCell, Cell toCell, Cell[][] cells) {
+	public boolean isMoveValid(Cell toCell, Cell fromCell, Cell[][] cells) {
+		//making sure that validity is checked with opposing pieces only
+		if (!arePiecesDifferentColors(toCell, fromCell)) {
+			return false;
+		}
+
 		if ((toCell.getPiece() instanceof NullPiece)
 				|| toCell.getPiece().getIsFlipped() == true
 				&& toCell.getPiece().getIsFlipped() == true) {
 
-			return evaluateCorrectnessOfMove(fromCell, toCell, cells);
+			return decideBetweenMoveOrCapture(toCell, fromCell, cells);
 
 		} else {
 			return false;
+
 		}
+	}
+
+
+	private boolean decideBetweenMoveOrCapture(Cell toCell, Cell fromCell, Cell[][] cells){
+		//if we are a cannon and were trying to capture a piece, call the method that checks cannon can capture
+		if(!(toCell.getPiece().type.equals("Null piece"))) {
+			return isValidCapture(fromCell, toCell, cells);
+		}
+
+		//if cannon is just trying to move, then use generic move test that all pieces abide by
+		return ensureMoveIsNotDiagonalOrTooFar(toCell, fromCell);
+	}
+
+
+	private boolean isValidCapture(Cell fromCell, Cell toCell, Cell[][] cells) {
+
+			return evaluateCorrectnessOfMove(fromCell, toCell, cells);
+
 	}
 
 	private boolean evaluateCorrectnessOfMove(Cell fromCell, Cell toCell,
@@ -71,7 +100,7 @@ public class Cannon extends Piece {
 		return false;
 	}
 
-	public boolean pieceBetweenOnXAxis(int lowIndex, int highIndex, int row,
+	private boolean pieceBetweenOnXAxis(int lowIndex, int highIndex, int row,
 			Cell[][] cells) {
 		boolean pieceBetween = false;
 		for (int i = lowIndex + 1; i < highIndex; ++i) {
@@ -88,7 +117,7 @@ public class Cannon extends Piece {
 		return pieceBetween;
 	}
 
-	public boolean pieceBetweenOnYAxis(int lowIndex, int highIndex, int col,
+	private boolean pieceBetweenOnYAxis(int lowIndex, int highIndex, int col,
 			Cell[][] cells) {
 		boolean pieceBetween = false;
 		for (int i = lowIndex + 1; i < highIndex; ++i) {
