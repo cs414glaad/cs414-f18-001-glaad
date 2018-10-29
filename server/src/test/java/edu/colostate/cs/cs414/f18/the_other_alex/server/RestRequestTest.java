@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class RestCallTest {
+class RestRequestTest {
 
   Gson gson;
   JsonParser jsonParser;

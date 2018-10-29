@@ -19,13 +19,8 @@ public class ModelFacade {
       return null; // TODO
   }
 
-  public boolean createUser(String username, String email, String password) {
-    try {
-      modelService.getUserService().registerUser(username, email, password);
-      return true;
-    } catch (Exception e) {
-      return false;
-    }
+  public User createUser(String username, String email, String password) {
+    return modelService.getUserService().registerUser(username, email, password);
   }
 
   public Game getGame(String gameId) {
