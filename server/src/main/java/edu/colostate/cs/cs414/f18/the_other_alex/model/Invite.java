@@ -1,8 +1,11 @@
 package edu.colostate.cs.cs414.f18.the_other_alex.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Invite {
   private User fromUser;
-  private User[] toUsers;
+  private ArrayList<User> toUsers;
 
   public boolean send(String username) {
     return false;
@@ -18,5 +21,13 @@ public class Invite {
 
   public boolean rejectInvite() {
     return false;
+  }
+
+  public User getFromUser() {
+    return fromUser;
+  }
+
+  public ArrayList<User> getToUsers() {
+    return toUsers;
   }
 }
