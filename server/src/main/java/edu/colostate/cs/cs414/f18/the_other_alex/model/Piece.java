@@ -53,7 +53,7 @@ public abstract class Piece {
 		}
 	}
 
-	public boolean arePiecesDifferentColors(Cell toCell, Cell fromCell){
+	protected boolean arePiecesDifferentColors(Cell toCell, Cell fromCell){
 		if(toCell.getPiece().color == fromCell.getPiece().color){
 			return false;
 		}
