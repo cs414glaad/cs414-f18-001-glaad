@@ -22,12 +22,13 @@ public class Board {
   //randomizes placement of pieces onto 4x8 cells array
   private void loadCells() {
     Random randomGenerator = new Random();
-    for (int i = 0; i < 4; i++)
-      for (int j = 0; j < 8; j++) {
-        int randomIndex = randomGenerator.nextInt(pieces.size());
-        Piece piece = pieces.remove(randomIndex);
-        cells[i][j] = new Cell(i, j, piece);
-      }
+    for (int i = 0; i < 4; i++) {
+        for (int j = 0; j < 8; j++) {
+            int randomIndex = randomGenerator.nextInt(pieces.size());
+            Piece piece = pieces.remove(randomIndex);
+            cells[i][j] = new Cell(i, j, piece);
+        }
+    }
   }
 
   //creates list of 16 black and 16 red players (still needs the color argument for piece constructor)
@@ -53,15 +54,26 @@ public class Board {
   }
 
   public void move(Cell fromCell, Cell toCell) throws InvalidMoveException {
-    boolean moveValid = fromCell.getPiece().isMoveValid(fromCell, toCell, cells);
-    if (moveValid) {
-      Piece fromPiece = fromCell.getPiece();
-      toCell.setPiece(fromPiece);
-      fromCell.setPiece(new NullPiece());
-    }
-    else {
-      throw new InvalidMoveException("Invalid move. Select a different move");
-    }
+      //checking if user is attempting to flip a piece
+      if (fromCell == toCell) {
+          if (!fromCell.getPiece().isFlipped) {
+              fromCell.getPiece().flipPiece();
+              return;
+          }
+          else {
+              throw new InvalidMoveException("Invalid move. Select a different move");
+          }
+      }
+      else {
+          boolean moveValid = fromCell.getPiece().isMoveValid(fromCell, toCell, cells);
+          if (moveValid) {
+              Piece fromPiece = fromCell.getPiece();
+              toCell.setPiece(fromPiece);
+              fromCell.setPiece(new NullPiece());
+          } else {
+              throw new InvalidMoveException("Invalid move. Select a different move");
+          }
+      }
   }
 
   public boolean anyPossibleMovesLeft(Turn turn) {
