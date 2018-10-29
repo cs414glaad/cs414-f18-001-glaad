@@ -10,6 +10,10 @@ public class UserService {
     return null;
   }
 
+  public User getUserByEmail(String email) {
+    return null;
+  }
+
   public User registerUser(String username, String email, String password) {
     return null; // TODO
   }
