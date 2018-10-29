@@ -1,4 +1,6 @@
-package edu.colostate.cs.cs414.f18.the_other_alex.model;
+package edu.colostate.cs.cs414.f18.the_other_alex.model.controllers;
+
+import edu.colostate.cs.cs414.f18.the_other_alex.model.*;
 
 public class ModelFacade {
   private ModelService modelService;
