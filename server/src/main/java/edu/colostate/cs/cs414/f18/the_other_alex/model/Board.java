@@ -18,6 +18,7 @@ public class Board {
     loadCells();
   }
 
+
   public Cell[][] getCells() {
     return cells;
   }
@@ -49,7 +50,7 @@ public class Board {
       pieces.add(new Cannon(PieceColor.BLACK));
       pieces.add(new Cannon(PieceColor.RED));
     }
-    for (int i = 0; i < 5; i ++) {
+    for (int i = 0; i < 5; i++) {
       pieces.add(new Soldier(PieceColor.BLACK));
       pieces.add(new Soldier(PieceColor.RED));
     }
@@ -61,8 +62,7 @@ public class Board {
       Piece fromPiece = fromCell.getPiece();
       toCell.setPiece(fromPiece);
       fromCell.setPiece(new NullPiece());
-    }
-    else {
+    } else {
       throw new InvalidMoveException("Invalid move. Select a different move");
     }
   }
@@ -74,5 +74,5 @@ public class Board {
   public boolean isGameOver() {
     return false;
   }
-
 }
+
