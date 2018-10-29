@@ -1,4 +1,8 @@
-package edu.colostate.cs.cs414.f18.the_other_alex.model;
+package edu.colostate.cs.cs414.f18.the_other_alex.model.controllers;
+
+import edu.colostate.cs.cs414.f18.the_other_alex.model.Game;
+import edu.colostate.cs.cs414.f18.the_other_alex.model.GameOutcome;
+import edu.colostate.cs.cs414.f18.the_other_alex.model.User;
 
 public class GameService {
   /**
