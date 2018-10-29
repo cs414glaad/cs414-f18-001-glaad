@@ -15,6 +15,10 @@ public class Board {
     loadCells();
   }
 
+  public Cell[][] getCells() {
+    return cells;
+  }
+
   //randomizes placement of pieces onto 4x8 cells array
   private void loadCells() {
     Random randomGenerator = new Random();
@@ -29,22 +33,22 @@ public class Board {
   //creates list of 16 black and 16 red players (still needs the color argument for piece constructor)
   private void loadPieces() {
     pieces.add(new General(PieceColor.BLACK));
-    pieces.add(new General(PieceColor.WHITE));
+    pieces.add(new General(PieceColor.RED));
     for (int i = 0; i < 2; i++) {
       pieces.add(new Advisor(PieceColor.BLACK));
-      pieces.add(new Advisor(PieceColor.WHITE));
+      pieces.add(new Advisor(PieceColor.RED));
       pieces.add(new Elephant(PieceColor.BLACK));
-      pieces.add(new Elephant(PieceColor.WHITE));
+      pieces.add(new Elephant(PieceColor.RED));
       pieces.add(new Chariot(PieceColor.BLACK));
-      pieces.add(new Chariot(PieceColor.WHITE));
+      pieces.add(new Chariot(PieceColor.RED));
       pieces.add(new Horse(PieceColor.BLACK));
-      pieces.add(new Horse(PieceColor.WHITE));
+      pieces.add(new Horse(PieceColor.RED));
       pieces.add(new Cannon(PieceColor.BLACK));
-      pieces.add(new Cannon(PieceColor.WHITE));
+      pieces.add(new Cannon(PieceColor.RED));
     }
     for (int i = 0; i < 5; i ++) {
       pieces.add(new Soldier(PieceColor.BLACK));
-      pieces.add(new Soldier(PieceColor.WHITE));
+      pieces.add(new Soldier(PieceColor.RED));
     }
   }
 
@@ -60,12 +64,11 @@ public class Board {
     }
   }
 
-  public boolean anyPossibleMovesLeft() {
+  public boolean anyPossibleMovesLeft(Turn turn) {
     return false;
   }
 
   public boolean isGameOver() {
-
     return false;
   }
 
