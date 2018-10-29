@@ -1,5 +1,8 @@
 package edu.colostate.cs.cs414.f18.the_other_alex.model;
 
+import edu.colostate.cs.cs414.f18.the_other_alex.model.exceptions.InvalidMoveException;
+import edu.colostate.cs.cs414.f18.the_other_alex.model.pieces.*;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -15,6 +18,7 @@ public class Board {
     loadCells();
   }
 
+
   public Cell[][] getCells() {
     return cells;
   }
@@ -23,11 +27,11 @@ public class Board {
   private void loadCells() {
     Random randomGenerator = new Random();
     for (int i = 0; i < 4; i++) {
-        for (int j = 0; j < 8; j++) {
-            int randomIndex = randomGenerator.nextInt(pieces.size());
-            Piece piece = pieces.remove(randomIndex);
-            cells[i][j] = new Cell(i, j, piece);
-        }
+      for (int j = 0; j < 8; j++) {
+        int randomIndex = randomGenerator.nextInt(pieces.size());
+        Piece piece = pieces.remove(randomIndex);
+        cells[i][j] = new Cell(i, j, piece);
+      }
     }
   }
 
@@ -47,33 +51,33 @@ public class Board {
       pieces.add(new Cannon(PieceColor.BLACK));
       pieces.add(new Cannon(PieceColor.RED));
     }
-    for (int i = 0; i < 5; i ++) {
+    for (int i = 0; i < 5; i++) {
       pieces.add(new Soldier(PieceColor.BLACK));
       pieces.add(new Soldier(PieceColor.RED));
     }
   }
 
   public void move(Cell fromCell, Cell toCell) throws InvalidMoveException {
-      //checking if user is attempting to flip a piece
-      if (fromCell == toCell) {
-          if (!fromCell.getPiece().isFlipped) {
-              fromCell.getPiece().flipPiece();
-              return;
-          }
-          else {
-              throw new InvalidMoveException("Invalid move. Select a different move");
-          }
+    //checking if user is attempting to flip a piece
+    if (fromCell == toCell) {
+      if (!fromCell.getPiece().isFlipped) {
+        fromCell.getPiece().flipPiece();
+        return;
       }
       else {
-          boolean moveValid = fromCell.getPiece().isMoveValid(fromCell, toCell, cells);
-          if (moveValid) {
-              Piece fromPiece = fromCell.getPiece();
-              toCell.setPiece(fromPiece);
-              fromCell.setPiece(new NullPiece());
-          } else {
-              throw new InvalidMoveException("Invalid move. Select a different move");
-          }
+        throw new InvalidMoveException("Invalid move. Select a different move");
       }
+    }
+    else {
+      boolean moveValid = fromCell.getPiece().isMoveValid(fromCell, toCell, cells);
+      if (moveValid) {
+        Piece fromPiece = fromCell.getPiece();
+        toCell.setPiece(fromPiece);
+        fromCell.setPiece(new NullPiece());
+      } else {
+        throw new InvalidMoveException("Invalid move. Select a different move");
+      }
+    }
   }
 
   public boolean anyPossibleMovesLeft(Turn turn) {
@@ -83,5 +87,5 @@ public class Board {
   public boolean isGameOver() {
     return false;
   }
-
 }
+

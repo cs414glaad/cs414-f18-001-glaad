@@ -1,5 +1,8 @@
-package edu.colostate.cs.cs414.f18.the_other_alex.model;
+package edu.colostate.cs.cs414.f18.the_other_alex.model.pieces;
 
+import edu.colostate.cs.cs414.f18.the_other_alex.model.Cell;
+import edu.colostate.cs.cs414.f18.the_other_alex.model.NullPiece;
+import edu.colostate.cs.cs414.f18.the_other_alex.model.PieceColor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -20,9 +23,9 @@ public class testPiece {
 		cells[1][1] = new Cell(1, 1, new NullPiece());
 		cells[1][2] = new Cell(1, 2, new NullPiece());
 		cells[2][0] = new Cell(2, 0, new NullPiece());
-		cells[2][1] = new Cell(2, 1, new General(PieceColor.NONE));
+		cells[2][1] = new Cell(2, 1, new General(PieceColor.BLACK));
 		cells[2][1].getPiece().flipPiece();
-		cells[2][2] = new Cell(2, 2, new Soldier(PieceColor.NONE));
+		cells[2][2] = new Cell(2, 2, new Soldier(PieceColor.RED));
 		cells[2][2].getPiece().flipPiece();
 		assertTrue(cells[2][2].getPiece().isMoveValid(cells[2][1], cells[2][2], cells));
 	}
@@ -36,10 +39,10 @@ public class testPiece {
 		cells[1][0] = new Cell(1, 0, new NullPiece());
 		cells[1][1] = new Cell(1, 1, new NullPiece());
 		cells[1][2] = new Cell(1, 2, new NullPiece());
-		cells[2][0] = new Cell(2, 0, new Horse(PieceColor.NONE));
+		cells[2][0] = new Cell(2, 0, new Horse(PieceColor.BLACK));
 		cells[2][0].getPiece().flipPiece();
-		cells[2][1] = new Cell(2, 1, new General(PieceColor.NONE));
-		cells[2][2] = new Cell(2, 2, new Cannon(PieceColor.NONE));
+		cells[2][1] = new Cell(2, 1, new General(PieceColor.BLACK));
+		cells[2][2] = new Cell(2, 2, new Cannon(PieceColor.RED));
 		cells[2][2].getPiece().flipPiece();
 		assertTrue(cells[2][2].getPiece().isMoveValid(cells[2][0], cells[2][2], cells));
 	}
@@ -53,10 +56,10 @@ public class testPiece {
 		cells[1][0] = new Cell(1, 0, new NullPiece());
 		cells[1][1] = new Cell(1, 1, new NullPiece());
 		cells[1][2] = new Cell(1, 2, new NullPiece());
-		cells[2][0] = new Cell(2, 0, new Horse(PieceColor.NONE));
+		cells[2][0] = new Cell(2, 0, new Horse(PieceColor.BLACK));
 		cells[2][0].getPiece().flipPiece();
 		cells[2][1] = new Cell(2, 1, new NullPiece());
-		cells[2][2] = new Cell(2, 2, new Cannon(PieceColor.NONE));
+		cells[2][2] = new Cell(2, 2, new Cannon(PieceColor.RED));
 		cells[2][2].getPiece().flipPiece();
 		assertFalse(cells[2][2].getPiece().isMoveValid(cells[2][0], cells[2][2], cells));
 	}
@@ -68,12 +71,12 @@ public class testPiece {
 		cells[0][1] = new Cell(0, 1, new NullPiece());
 		cells[0][2] = new Cell(0, 2, new NullPiece());
 		cells[1][0] = new Cell(1, 0, new NullPiece());
-		cells[1][1] = new Cell(1, 1, new Elephant(PieceColor.NONE));
+		cells[1][1] = new Cell(1, 1, new Elephant(PieceColor.BLACK));
 		cells[1][1].getPiece().flipPiece();
 		cells[1][2] = new Cell(1, 2, new NullPiece());
 		cells[2][0] = new Cell(2, 0, new NullPiece());
 		cells[2][1] = new Cell(2, 1, new NullPiece());
-		cells[2][2] = new Cell(2, 2, new Chariot(PieceColor.NONE));
+		cells[2][2] = new Cell(2, 2, new Chariot(PieceColor.RED));
 		cells[2][2].getPiece().flipPiece();
 		assertFalse(cells[1][1].getPiece().isMoveValid(cells[2][2], cells[1][1], cells));
 	}
@@ -87,10 +90,10 @@ public class testPiece {
 		cells[1][0] = new Cell(1, 0, new NullPiece());
 		cells[1][1] = new Cell(1, 1, new NullPiece());
 		cells[1][2] = new Cell(1, 2, new NullPiece());
-		cells[2][0] = new Cell(2, 0, new Horse(PieceColor.NONE));
+		cells[2][0] = new Cell(2, 0, new Horse(PieceColor.BLACK));
 		cells[2][0].getPiece().flipPiece();
 		cells[2][1] = new Cell(2, 1, new NullPiece());
-		cells[2][2] = new Cell(2, 2, new Chariot(PieceColor.NONE));
+		cells[2][2] = new Cell(2, 2, new Chariot(PieceColor.RED));
 		cells[2][2].getPiece().flipPiece();
 		assertFalse(cells[2][2].getPiece().isMoveValid(cells[2][0], cells[2][2], cells));
 	}
@@ -106,7 +109,7 @@ public class testPiece {
 		cells[1][2] = new Cell(1, 2, new NullPiece());
 		cells[2][0] = new Cell(2, 0, new NullPiece());
 		cells[2][1] = new Cell(2, 1, new NullPiece());
-		cells[2][2] = new Cell(2, 2, new Advisor(PieceColor.NONE));
+		cells[2][2] = new Cell(2, 2, new Advisor(PieceColor.BLACK));
 		cells[2][2].getPiece().flipPiece();
 		assertTrue(cells[2][2].getPiece().isMoveValid(cells[2][1], cells[2][2], cells));
 	}
@@ -122,7 +125,7 @@ public class testPiece {
 		cells[1][2] = new Cell(1, 2, new NullPiece());
 		cells[2][0] = new Cell(2, 0, new NullPiece());
 		cells[2][1] = new Cell(2, 1, new NullPiece());
-		cells[2][2] = new Cell(2, 2, new Advisor(PieceColor.NONE));
+		cells[2][2] = new Cell(2, 2, new Advisor(PieceColor.BLACK));
 		cells[2][2].getPiece().flipPiece();
 		assertTrue(cells[2][2].getPiece().isMoveValid(cells[1][2], cells[2][2], cells));
 	}
@@ -130,9 +133,9 @@ public class testPiece {
 	@Test
 	public void canSoldierCaptureAdvisorInvalid(){
 		Cell[][] cells = new Cell[3][3];
-		cells[0][0] = new Cell(0, 0, new Soldier(PieceColor.NONE));
+		cells[0][0] = new Cell(0, 0, new Soldier(PieceColor.BLACK));
 		cells[0][0].getPiece().flipPiece();
-		cells[0][1] = new Cell(0, 1, new Advisor(PieceColor.NONE));
+		cells[0][1] = new Cell(0, 1, new Advisor(PieceColor.RED));
 		cells[0][1].getPiece().flipPiece();
 		cells[0][2] = new Cell(0, 2, new NullPiece());
 		cells[1][0] = new Cell(1, 0, new NullPiece());
@@ -150,11 +153,11 @@ public class testPiece {
 		cells[0][0] = new Cell(0, 0, new NullPiece());
 		cells[0][1] = new Cell(0, 1, new NullPiece());
 		cells[0][2] = new Cell(0, 2, new NullPiece());
-		cells[1][0] = new Cell(1, 0, new Horse(PieceColor.NONE));
+		cells[1][0] = new Cell(1, 0, new Horse(PieceColor.BLACK));
 		cells[1][0].getPiece().flipPiece();
 		cells[1][1] = new Cell(1, 1, new NullPiece());
 		cells[1][2] = new Cell(1, 2, new NullPiece());
-		cells[2][0] = new Cell(2, 0, new Elephant(PieceColor.NONE));
+		cells[2][0] = new Cell(2, 0, new Elephant(PieceColor.RED));
 		cells[2][0].getPiece().flipPiece();
 		cells[2][1] = new Cell(2, 1, new NullPiece());
 		cells[2][2] = new Cell(2, 2, new NullPiece());
@@ -167,11 +170,11 @@ public class testPiece {
 		cells[0][0] = new Cell(0, 0, new NullPiece());
 		cells[0][1] = new Cell(0, 1, new NullPiece());
 		cells[0][2] = new Cell(0, 2, new NullPiece());
-		cells[1][0] = new Cell(1, 0, new Horse(PieceColor.NONE));
+		cells[1][0] = new Cell(1, 0, new Horse(PieceColor.BLACK));
 		cells[1][0].getPiece().flipPiece();
 		cells[1][1] = new Cell(1, 1, new NullPiece());
 		cells[1][2] = new Cell(1, 2, new NullPiece());
-		cells[2][0] = new Cell(2, 0, new Elephant(PieceColor.NONE));
+		cells[2][0] = new Cell(2, 0, new Elephant(PieceColor.RED));
 		cells[2][0].getPiece().flipPiece();
 		cells[2][1] = new Cell(2, 1, new NullPiece());
 		cells[2][2] = new Cell(2, 2, new NullPiece());
@@ -184,11 +187,11 @@ public class testPiece {
 		cells[0][0] = new Cell(0, 0, new NullPiece());
 		cells[0][1] = new Cell(0, 1, new NullPiece());
 		cells[0][2] = new Cell(0, 2, new NullPiece());
-		cells[1][0] = new Cell(1, 0, new General(PieceColor.NONE));
+		cells[1][0] = new Cell(1, 0, new General(PieceColor.BLACK));
 		cells[1][0].getPiece().flipPiece();
 		cells[1][1] = new Cell(1, 1, new NullPiece());
 		cells[1][2] = new Cell(1, 2, new NullPiece());
-		cells[2][0] = new Cell(2, 0, new General(PieceColor.NONE));
+		cells[2][0] = new Cell(2, 0, new General(PieceColor.RED));
 		cells[2][0].getPiece().flipPiece();
 		cells[2][1] = new Cell(2, 1, new NullPiece());
 		cells[2][2] = new Cell(2, 2, new NullPiece());
@@ -198,6 +201,7 @@ public class testPiece {
 	@BeforeEach
 	public void setUp(){
 		testSoldier = new Soldier(PieceColor.BLACK);
+
 	}
 	@Test
 	public void testSoldierConstructorisFlipped(){
@@ -210,6 +214,38 @@ public class testPiece {
 	@Test
 	public void testSoldierConstructorColor(){
 		assertTrue(testSoldier.getColor() == PieceColor.BLACK);
+	}
+
+	@Test
+	public void testSameTeamCapture(){
+		General testGeneral = new General(PieceColor.BLACK);
+		Cell[][] cells = new Cell[2][1];
+		cells[0][0] = new Cell(0,0, testGeneral);
+		cells[0][0].getPiece().flipPiece();
+		cells[1][0] = new Cell(1,0, testSoldier);
+		cells[1][0].getPiece().flipPiece();
+		assertTrue(cells[1][0].getPiece().isMoveValid(cells[1][0],cells[0][0],cells) == false);
+	}
+
+	@Test
+	public void testCanMoveNullPiece(){
+		NullPiece np = new NullPiece();
+		Cell[][] cells = new Cell[2][1];
+
+		cells[0][0] = new Cell(0,0, np);
+		cells[1][0] = new Cell(0,1, testSoldier);
+
+		assertTrue(cells[0][0].getPiece().isMoveValid(cells[1][0],cells[0][0], cells) == false);
+	}
+
+	@Test
+	public void testCanCannonMove(){
+		Cannon cannon = new Cannon(PieceColor.RED);
+		Cell[][] cells = new Cell[2][1];
+		cells[0][0] = new Cell(0,0,cannon);
+		cells[0][0].getPiece().flipPiece();
+		cells[1][0] = new Cell(1,0,new NullPiece());
+		assertTrue(cells[0][0].getPiece().isMoveValid(cells[1][0],cells[0][0],cells));
 	}
 
 }

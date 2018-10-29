@@ -1,7 +1,7 @@
 package edu.colostate.cs.cs414.f18.the_other_alex.server.resjson;
 
 import edu.colostate.cs.cs414.f18.the_other_alex.model.Cell;
-import edu.colostate.cs.cs414.f18.the_other_alex.model.Piece;
+import edu.colostate.cs.cs414.f18.the_other_alex.model.pieces.Piece;
 import edu.colostate.cs.cs414.f18.the_other_alex.server.DataType;
 
 public class PieceData extends DataType {

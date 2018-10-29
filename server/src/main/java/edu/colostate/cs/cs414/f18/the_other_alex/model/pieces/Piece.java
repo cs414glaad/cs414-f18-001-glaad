@@ -1,4 +1,8 @@
-package edu.colostate.cs.cs414.f18.the_other_alex.model;
+package edu.colostate.cs.cs414.f18.the_other_alex.model.pieces;
+
+import edu.colostate.cs.cs414.f18.the_other_alex.model.Cell;
+import edu.colostate.cs.cs414.f18.the_other_alex.model.NullPiece;
+import edu.colostate.cs.cs414.f18.the_other_alex.model.PieceColor;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -53,7 +57,21 @@ public abstract class Piece {
 		}
 	}
 
+	protected boolean arePiecesDifferentColors(Cell toCell, Cell fromCell){
+		if(toCell.getPiece().color == fromCell.getPiece().color){
+			return false;
+		}
+		else{
+			return true;
+		}
+	}
+
 	public boolean isMoveValid(Cell toCell, Cell fromCell, Cell[][] cells) {
+		//making sure that validity is checked with opposing pieces only
+		if(!arePiecesDifferentColors(toCell,fromCell)){
+			return false;
+		}
+
 		if ((toCell.getPiece() instanceof NullPiece)
 				|| toCell.getPiece().getIsFlipped() == true
 				&& toCell.getPiece().getIsFlipped() == true) {
@@ -67,7 +85,7 @@ public abstract class Piece {
 		}
 	}
 
-	private boolean ensureMoveIsNotDiagonalOrTooFar(Cell toCell, Cell fromCell) {
+	protected boolean ensureMoveIsNotDiagonalOrTooFar(Cell toCell, Cell fromCell) {
 		int toCol = toCell.getCoordinate().getCol();
 		int toRow = toCell.getCoordinate().getRow();
 		int fromCol = fromCell.getCoordinate().getCol();

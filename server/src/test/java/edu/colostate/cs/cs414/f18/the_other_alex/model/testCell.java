@@ -1,5 +1,6 @@
 package edu.colostate.cs.cs414.f18.the_other_alex.model;
 
+import edu.colostate.cs.cs414.f18.the_other_alex.model.pieces.General;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
