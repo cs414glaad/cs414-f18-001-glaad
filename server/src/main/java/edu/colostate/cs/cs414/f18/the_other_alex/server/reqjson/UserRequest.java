@@ -58,6 +58,22 @@ public class UserRequest extends RestRequest {
     return null;
   }
 
+  private void validateInv() throws InvalidApiCallException {
+    if (toUser == null) {
+      invalidCall("toUser required for 'inv' type");
+    }
+  }
+
+  private void validateUser() throws InvalidApiCallException {
+    if (username == null) {
+      invalidCall("username required for 'user' type");
+    } else if (email == null) {
+      invalidCall("email required for 'user' type");
+    } else if (password == null) {
+      invalidCall("password required for 'user' type");
+    }
+  }
+
   @Override
   public void validate() throws InvalidApiCallException {
     if (type == null) {
@@ -65,20 +81,10 @@ public class UserRequest extends RestRequest {
     }
     switch (type) {
       case "inv":
-        if (toUser == null) {
-          invalidCall("toUser required for 'inv' type");
-        }
+        validateInv();
         break;
       case "user":
-        if (username == null) {
-          invalidCall("username required for 'user' type");
-        }
-        if (email == null) {
-          invalidCall("email required for 'user' type");
-        }
-        if (password == null) {
-          invalidCall("password required for 'user' type");
-        }
+        validateUser();
         break;
       default:
         throw new InvalidApiCallException("invalid type for user");
