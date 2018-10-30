@@ -2,13 +2,40 @@ import React, {Component} from 'react';
 import Panel from './Panel.js';
 
 class Invites extends Component{
+  constructor(props){
+    super(props);
+    this.state = {userBox: null};
+    this.handleChange = this.handleChange.bind(this);
+    this.sendInvite = this.sendInvite.bind(this)
+  }
+  handleChange(event){
+    this.setState({userBox: event.target.value})
+  }
+  sendInvite(){
+    //TODO: API Call
+    if( this.state.userBox ){
+      console.log("Inviting " + this.state.userBox);
+    }
+  }
+  acceptInvite(invite){
+    //TODO: API Call
+    console.log(invite)
+  }
+  rejectInvite(invite){
+    //TODO: API Call
+    console.log(invite)
+  }
+  cancelInvite(invite){
+    //TODO: API Call
+    console.log(invite)
+  }
   getReceivedInvite(invite){
     return(
       <li className="list-group-item">
         <div className="row">
           <div className="col-8">{invite.fromUser} has invited you to a game!</div>
-          <button className="btn btn-primary col-2">Accept</button>
-          <button className="btn btn-danger col-2">Reject</button>
+          <button className="btn btn-primary col-2" onClick={() => this.acceptInvite(invite)}>Accept</button>
+          <button className="btn btn-danger col-2" onClick={() => this.rejectInvite(invite)}>Reject</button>
         </div>
       </li>
     )
@@ -16,7 +43,6 @@ class Invites extends Component{
   getSentInvite(invite){
     let userString = "Invite sent to: ";
     let users = invite.toUsers;
-    console.log(users);
     for( let idx in users ){
       userString += users[idx].username + ", ";
     }
@@ -24,7 +50,7 @@ class Invites extends Component{
       <li className="list-group-item">
         <div className="row">
           <div className="col-10">{userString.substr(0, userString.length-2)}.</div>
-          <button className="btn btn-danger float-right col-2">Cancel</button>
+          <button className="btn btn-danger float-right col-2" onClick={() => this.cancelInvite(invite)}>Cancel</button>
         </div>
       </li>
     )
@@ -53,9 +79,9 @@ class Invites extends Component{
           <div className="input-group-prepend">
             <span className="input-group-text">Create New Invite</span>
           </div>
-          <input type="text" id="username" className="form-control" placeholder="User Name" onChange={this.props.updateServer}/>
+          <input type="text" id="username" className="form-control" placeholder="User Name" onChange={this.handleChange}/>
           <div className="input-group-append">
-            <button className="btn btn-primary" type="button">Send</button>
+            <button className="btn btn-primary" type="button" onClick={this.sendInvite}>Send</button>
           </div>
         </div>
       </Panel>

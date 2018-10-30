@@ -38,7 +38,7 @@ class Game extends Component{
   }
   getBoard(){
     //TODO: Use API call to get actual contents of rows and pass them along
-    let fakeContents = [{piece:"1", isFlipped:true},{piece:"2",isFlipped:false},{},{},{},{},{},{}];
+    let fakeContents = [{piece:"S", isFlipped:true},{piece:"S",isFlipped:false},{},{},{},{},{},{}];
     return(
     <div>
       {this.getRow(0, fakeContents)}
