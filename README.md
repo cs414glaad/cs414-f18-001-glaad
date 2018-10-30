@@ -13,22 +13,28 @@
 ## Running
 
 ```
-$ gradle run
+$ ./gradlew run
 ```
 
 ## Building
 
 ```
-$ gradle build
+$ ./gradlew build
 ```
 
 ## Testing
 
+To test all packages, run the following:
 ```
-$ gradle test
+$ ./gradlew test
+```
+
+To test just server-side Java, run the following:
+```
+$ ./gradlew :server:test
 ```
 
 ## Built With
 
-* [Gradle](https://gradle.org/)
-* [JUnit 5](https://junit.org/junit5/)
+* [Gradle](https://gradle.org/) (or user the wrapper, recommended)
+* [Node Package Manager(npm)](https://www.npmjs.com/get-npm)
