@@ -31,7 +31,7 @@ class Login extends Component {
         </div>
         <div className="col-4">
           <div className="form-group">
-            <label htmlFor="email">User Name</label>
+            <label htmlFor="email">Email</label>
             <input type="email" id="email" className="form-control" placeholder="email@example.com" onChange={this.formUpdate}/>
           </div>
         </div>
@@ -46,7 +46,6 @@ class Login extends Component {
   }
 
   getButtons() {
-    console.log(this.props.user);
     return (
       <div className="row">
         <div className="col-4">
