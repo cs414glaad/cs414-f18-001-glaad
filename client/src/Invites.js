@@ -57,7 +57,7 @@ class Invites extends Component{
   }
   getInvites(invFunc){
     //TODO: Make an API call to get the current user's invites.
-    let invites = [{fromUser:"urMom",toUsers:[{username: "ripharambe"},{username: "xXxELITESNIPERxXx"}]},{fromUser:"banquiFreak123", toUsers:[{username: "noscope420xD"}]}];
+    let invites = [{fromUser:"urMom",toUsers:[{username: "ripharambe"},{username: "xXxELITESNIPERxXx"}]},{fromUser:"banqiFreak123", toUsers:[{username: "noscope420xD"}]}];
     let out = [];
     for( let idx in invites ){
       out.push(invFunc(invites[idx]));
