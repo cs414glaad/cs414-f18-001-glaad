@@ -60,9 +60,8 @@ public class Board {
   public void move(Cell fromCell, Cell toCell) throws InvalidMoveException {
     //checking if user is attempting to flip a piece
     if (fromCell == toCell) {
-      if (!fromCell.getPiece().isFlipped) {
+      if (!fromCell.getPiece().getIsFlipped()) {
         fromCell.getPiece().flipPiece();
-        return;
       }
       else {
         throw new InvalidMoveException("Invalid move. Select a different move");
@@ -74,13 +73,15 @@ public class Board {
         Piece fromPiece = fromCell.getPiece();
         toCell.setPiece(fromPiece);
         fromCell.setPiece(new NullPiece());
-      } else {
+      }
+      else {
         throw new InvalidMoveException("Invalid move. Select a different move");
       }
     }
   }
 
   public boolean anyPossibleMovesLeft(Turn turn) {
+
     return false;
   }
 
