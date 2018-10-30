@@ -14,15 +14,23 @@ class Cell extends Component{
     this.props.flip(this.props.x, this.props.y);
   }
   render() {
-    if(!this.props.isFlipped && this.props.piece)
+    //Type coercion - to prevent null pieces being displayed as unflipped pieces.
+    if(this.props.piece.isFlipped === false)
     {
       return (
         <button className="btn btn-secondary square" onClick={this.clickFlip}/>
       )
     }
-    else if(this.props.piece){
+    else if(this.props.piece.type){
+      let className = "btn square ";
+      if(this.props.piece.color === "RED"){
+        className += "btn-danger";
+      }
+      else{
+        className += "btn-dark"
+      }
       return (
-        <button className="btn btn-primary square" onClick={this.clickMove}><div className="square-content">{this.props.piece}</div></button>
+        <button className={className} onClick={this.clickMove}><div className="square-content">{this.props.piece.type}</div></button>
       )
     }
     else{
