@@ -15,7 +15,7 @@ public class UserService {
   }
 
   public User registerUser(String username, String email, String password) {
-    return null; // TODO
+    return new User(username, email, password); // TODO
   }
 
   public User unregisterUser(User user) {

@@ -81,7 +81,7 @@ public class ModelFacade {
    * @return
    */
   public boolean authenticate(String username, String password) {
-    return false; // TODO
+    return true; // TODO
   }
 
   public User getUserByEmail(String username) {

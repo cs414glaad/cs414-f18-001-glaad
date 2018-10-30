@@ -18,6 +18,9 @@ public class UserData extends DataType {
     for (int i = 0; i < invites.length; i++) {
       invites[i] = new InviteData(user.getInvites().get(i));
     }
-    games = (String[])(user.getGames().toArray());
+    games = new String[user.getGames().size()];
+    for (int i = 0; i < games.length; i++) {
+      games[i] = user.getGames().get(i);
+    }
   }
 }

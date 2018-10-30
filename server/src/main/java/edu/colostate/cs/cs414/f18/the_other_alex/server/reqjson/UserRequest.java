@@ -60,17 +60,17 @@ public class UserRequest extends RestRequest {
 
   private void validateInv() throws InvalidApiCallException {
     if (toUser == null) {
-      invalidCall("toUser required for 'inv' type");
+      throw new InvalidApiCallException("toUser required for 'inv' type");
     }
   }
 
   private void validateUser() throws InvalidApiCallException {
     if (username == null) {
-      invalidCall("username required for 'user' type");
+      throw new InvalidApiCallException("username required for 'user' type");
     } else if (email == null) {
-      invalidCall("email required for 'user' type");
+      throw new InvalidApiCallException("email required for 'user' type");
     } else if (password == null) {
-      invalidCall("password required for 'user' type");
+      throw new InvalidApiCallException("password required for 'user' type");
     }
   }
 

@@ -17,6 +17,10 @@ public class User {
     }
     setPassword(password);
     setEmail(email);
+    pendingInvites = new ArrayList<>();
+    pendingReceivedInvites = new ArrayList<>();
+    userHistory = new UserHistory();
+    games = new ArrayList<>();
   }
 
   /**
@@ -60,7 +64,7 @@ public class User {
   }
 
   private boolean isNonEmpty(String string) {
-    return !(password == null || password.length() == 0);
+    return !(string == null || string.length() == 0);
   }
 
   /**

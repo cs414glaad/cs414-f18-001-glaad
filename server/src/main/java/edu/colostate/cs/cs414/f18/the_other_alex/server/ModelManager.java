@@ -43,15 +43,6 @@ public class ModelManager {
   private String getUsername(Request request) {
     return request.session().attribute(SESSION_NAME);
   }
-  public boolean isLoggedIn(Request request, Response response) {
-    if (getUsername(request) == null) {
-      response.redirect("login.html");
-      return false;
-    } else {
-      // TODO: more auth
-      return true;
-    }
-  }
 
   private <T extends RestRequest> String handleRequest(Request request, Response response, Class<T> classOfT) {
     try {
@@ -88,9 +79,6 @@ public class ModelManager {
    * @return The HTTP body
    */
   public String root(Request request, Response response) {
-    if (!isLoggedIn(request, response)) {
-      return null;
-    }
     response.redirect("index.html");
     return null;
   }

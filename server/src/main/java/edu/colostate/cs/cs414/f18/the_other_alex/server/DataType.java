@@ -2,7 +2,7 @@ package edu.colostate.cs.cs414.f18.the_other_alex.server;
 
 import com.google.gson.Gson;
 
-public class DataType {
+public abstract class DataType {
   public String id;
 
   @Override
