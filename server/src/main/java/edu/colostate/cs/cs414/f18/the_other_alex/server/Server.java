@@ -36,6 +36,7 @@ public class Server {
     Spark.staticFileLocation(path); // ?
 
     get("/", modelManager::root);
+    get("/logout", modelManager::logout);
     post("/login", modelManager::login);
     post("/query", modelManager::query);
     post("/user", modelManager::user);
