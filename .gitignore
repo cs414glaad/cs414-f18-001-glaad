@@ -3,3 +3,4 @@ server/.gradle/
 .gradle/
 .idea/
 *.iml
+server/src/main/resources/public/
