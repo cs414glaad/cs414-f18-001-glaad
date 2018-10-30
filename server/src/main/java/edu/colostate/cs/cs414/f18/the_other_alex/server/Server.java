@@ -9,9 +9,25 @@ public class Server {
   private int port;
   private ModelManager modelManager;
 
+  private static void addShutdownHook(Server server) {
+    Runtime.getRuntime().addShutdownHook(new Thread()
+    {
+      @Override
+      public void run()
+      {
+        server.shutdown();
+      }
+    });
+  }
+
+  public void shutdown() {
+    modelManager.shutdown();
+  }
+
   public static void main(String[] args) {
     int port = 3001;
     Server server = new Server(port);
+    addShutdownHook(server);
     System.out.println("Server started on port: "+port);
   }
 

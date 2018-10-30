@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class RestCallTest {
+class RestRequestTest {
 
   Gson gson;
   JsonParser jsonParser;
@@ -126,7 +126,6 @@ class RestCallTest {
     String body = "{type: 'testType', gameId:'testGameId', fromCell: 'testFromCell', toCell: 'testToCell', username:'testUsername'}";
     GameRequest gameRequest = gson.fromJson(jsonParser.parse(body), GameRequest.class);
     assertEquals(gameRequest.type, "testType");
-    assertEquals(gameRequest.username, "testUsername");
     assertEquals(gameRequest.gameId, "testGameId");
     assertEquals(gameRequest.toCell, "testToCell");
     assertEquals(gameRequest.fromCell, "testFromCell");

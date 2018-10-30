@@ -7,7 +7,7 @@ import edu.colostate.cs.cs414.f18.the_other_alex.server.DataType;
 public class PieceData extends DataType {
   // row and column are stored in id
   public String color;
-  public boolean isFlipped;
+  public String pieceType; // "blank" or defined by Piece class
 
   public PieceData(Piece piece) {
     switch(piece.getColor()) {
@@ -18,7 +18,12 @@ public class PieceData extends DataType {
       case RED:
         color = "red";
     }
-    isFlipped = piece.getIsFlipped();
+    if (piece.getIsFlipped()) {
+      // values defined in Piece (e.g., NullPiece, Soldier, etc.)
+      pieceType = piece.getType();
+    } else {
+      pieceType = "Blank";
+    }
   }
 
   public PieceData(Cell cell) {

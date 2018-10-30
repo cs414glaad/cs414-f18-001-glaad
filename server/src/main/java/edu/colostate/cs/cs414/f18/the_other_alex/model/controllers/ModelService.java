@@ -4,6 +4,11 @@ public class ModelService {
   private UserService userService;
   private GameService gameService;
 
+  public ModelService() {
+    userService = new UserService();
+    gameService = new GameService();
+  }
+
   public UserService getUserService() {
     return userService;
   }

@@ -5,8 +5,8 @@ import edu.colostate.cs.cs414.f18.the_other_alex.model.*;
 public class ModelFacade {
   private ModelService modelService;
 
-  public ModelFacade(ModelService modelService) {
-    this.modelService = modelService;
+  public ModelFacade() {
+    this.modelService = new ModelService();
   }
 
   public UserHistory getUserHistory(String username) {
@@ -19,13 +19,8 @@ public class ModelFacade {
       return null; // TODO
   }
 
-  public boolean createUser(String username, String email, String password) {
-    try {
-      modelService.getUserService().registerUser(username, email, password);
-      return true;
-    } catch (Exception e) {
-      return false;
-    }
+  public User createUser(String username, String email, String password) {
+    return modelService.getUserService().registerUser(username, email, password);
   }
 
   public Game getGame(String gameId) {
@@ -79,7 +74,17 @@ public class ModelFacade {
     return pieceIds;
   }
 
-  public boolean authenticate(String user, String password) {
+  /**
+   * Returns false on failure. Returns false if either argument is null.
+   * @param username
+   * @param password
+   * @return
+   */
+  public boolean authenticate(String username, String password) {
     return false; // TODO
+  }
+
+  public User getUserByEmail(String username) {
+    return modelService.getUserService().getUserByEmail(username);
   }
 }
