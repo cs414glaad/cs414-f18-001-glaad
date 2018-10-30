@@ -7,7 +7,7 @@ class GameSelect extends Component{
       <li className="list-group-item">
         <div className="row">
           <div className="col-10">
-            {game.blackUser.username} vs {game.redUser.username}
+            <div className="badge badge-dark">{game.blackUser.username}</div> vs <div className="badge badge-danger">{game.redUser.username}</div>
           </div>
           <button className="btn btn-primary col-2" onClick={() => this.props.updateGame(game)}>Join</button>
         </div>
