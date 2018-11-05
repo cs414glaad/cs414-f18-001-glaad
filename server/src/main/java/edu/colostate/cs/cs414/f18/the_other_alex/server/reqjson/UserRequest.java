@@ -6,7 +6,6 @@ import edu.colostate.cs.cs414.f18.the_other_alex.model.controllers.ModelFacade;
 import edu.colostate.cs.cs414.f18.the_other_alex.server.RestRequest;
 import edu.colostate.cs.cs414.f18.the_other_alex.server.exceptions.FailedApiCallException;
 import edu.colostate.cs.cs414.f18.the_other_alex.server.exceptions.InvalidApiCallException;
-import edu.colostate.cs.cs414.f18.the_other_alex.server.resjson.InviteData;
 import edu.colostate.cs.cs414.f18.the_other_alex.server.resjson.InviteList;
 import edu.colostate.cs.cs414.f18.the_other_alex.server.resjson.UserList;
 import spark.Request;
@@ -33,13 +32,13 @@ public class UserRequest extends RestRequest {
   public String password;
   public String toUser; // username of new user
 
-  private String handleUserInv(Request request, Response response, String currentUser, ModelFacade modelFacade) {
-    Invite invite = modelFacade.createInvite(currentUser, toUser);
+  private String handleUserInv(Request request, Response response, String currentUser, ModelFacade modelFacade) throws FailedApiCallException {
+    Invite invite = modelFacade.sendInvite(currentUser, toUser, null);
     InviteList inviteList = new InviteList(invite);
     return inviteList.toString();
   }
 
-  private String handleUserUser(Request request, Response response, String currentUser, ModelFacade modelFacade) {
+  private String handleUserUser(Request request, Response response, String currentUser, ModelFacade modelFacade) throws FailedApiCallException {
     User user = modelFacade.createUser(
         username,
         email,
@@ -49,11 +48,11 @@ public class UserRequest extends RestRequest {
   }
 
   @Override
-  protected String handleRequest(Request request, Response response, String currentUser, ModelFacade modelFacade) {
+  protected String handleRequest(Request request, Response response, String currentUser, ModelFacade modelFacade) throws FailedApiCallException {
     switch(type) {
-      //case "reinv":
+      case "repl": // reply to invite
         // TODO
-      case "inv":
+      case "inv": // send
         return handleUserInv(request, response, currentUser, modelFacade);
       case "user":
         return handleUserUser(request, response, currentUser, modelFacade);
@@ -66,12 +65,12 @@ public class UserRequest extends RestRequest {
     super.validate();
     switch (type) {
       case "inv":
-        assertNotNull(toUser, "toUser");
+        assertNotNullOrEmpty(toUser, "toUser");
         break;
       case "user":
-        assertNotNull(username, "username");
-        assertNotNull(email, "email");
-        assertNotNull(password, "password");
+        assertNotNullOrEmpty(username, "username");
+        assertNotNullOrEmpty(email, "email");
+        assertNotNullOrEmpty(password, "password");
         break;
       default:
         throw new InvalidApiCallException("invalid type for user");

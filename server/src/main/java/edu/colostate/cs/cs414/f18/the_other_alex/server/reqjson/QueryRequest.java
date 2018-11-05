@@ -5,6 +5,7 @@ import edu.colostate.cs.cs414.f18.the_other_alex.model.Game;
 import edu.colostate.cs.cs414.f18.the_other_alex.model.GameRecord;
 import edu.colostate.cs.cs414.f18.the_other_alex.model.UserHistory;
 import edu.colostate.cs.cs414.f18.the_other_alex.model.controllers.ModelFacade;
+import edu.colostate.cs.cs414.f18.the_other_alex.model.exceptions.UserNotFoundException;
 import edu.colostate.cs.cs414.f18.the_other_alex.server.RestRequest;
 import edu.colostate.cs.cs414.f18.the_other_alex.server.exceptions.FailedApiCallException;
 import edu.colostate.cs.cs414.f18.the_other_alex.server.exceptions.InvalidApiCallException;
@@ -36,9 +37,13 @@ public class QueryRequest extends RestRequest {
    * Calls getUserHistory(String username) in UserHistory
    * @return returns a UserHistory data type
    */
-  private String handleHist(Request request, Response response, String currentUser, ModelFacade modelFacade) {
-    UserHistory userHistory = modelFacade.getUserHistory(username);
-    return null; // TODO
+  private String handleHist(Request request, Response response, String currentUser, ModelFacade modelFacade) throws FailedApiCallException {
+    try {
+      UserHistory userHistory = modelFacade.getUserHistory(username);
+    } catch (UserNotFoundException e) {
+      throw new FailedApiCallException(e.getMessage());
+    }
+    return null; // TODO: make user history list data object
   }
 
   /**
@@ -72,7 +77,7 @@ public class QueryRequest extends RestRequest {
 
   @Override
   protected String handleRequest(Request request, Response response, String currentUser, ModelFacade modelFacade)
-      throws InvalidApiCallException {
+      throws InvalidApiCallException, FailedApiCallException {
     switch (type) {
       case "hist":
         return handleHist(request, response, currentUser, modelFacade);

@@ -8,7 +8,11 @@ public class Invite {
   private User fromUser;
   private ArrayList<String> toUsers;
 
-  public Invite(User user, String inviteId) {
+  public Invite(User user) {
+    this(user, generateId());
+  }
+
+  private Invite(User user, String inviteId) {
     fromUser = user;
     this.inviteId = inviteId;
     toUsers = new ArrayList<String>();
@@ -26,11 +30,11 @@ public class Invite {
   }
 
   public boolean acceptInvite() {
-    return false;
+    return false; // TODO
   }
 
   public boolean rejectInvite() {
-    return false;
+    return false; // TODO
   }
 
   public User getFromUser() {
@@ -41,7 +45,7 @@ public class Invite {
     return toUsers;
   }
 
-  public String getId() {
+  public String getInviteId() {
     return inviteId;
   }
 

@@ -9,6 +9,7 @@ public class UserList extends RestCall {
   public ArrayList<UserData> users;
 
   public UserList() {
+    super();
     users = new ArrayList<>();
   }
 

@@ -52,6 +52,9 @@ public class ModelManager {
       return invalidApiCall(request, response, e.getMessage());
     } catch (FailedApiCallException e) {
       return failedApiCall(request, response, e.getMessage());
+    } catch (Exception e) {
+      e.printStackTrace();
+      return failedApiCall(request, response, e.getMessage());
     }
   }
 
@@ -88,22 +91,27 @@ public class ModelManager {
    * <p>
    * This route forwards to the following methods from the ModelFacade:
    * <p>
-   * - authenticate(String user, String password): boolean
+   * - authenticate(String username, String email, String password): boolean
    *
    * @param request  The HTTP request
    * @param response The HTTP response
    * @return The HTTP body
    */
   public String login(Request request, Response response) {
-    String email = request.queryParams("email");
-    String password = request.queryParams("password");
-    User user = modelFacade.getUserByEmail(email);
-    if (user == null) {
-      return failedApiCall(request, response, "user or password not found");
-    } else if (modelFacade.authenticate(user.getUsername(), password)) {
-      request.session().attribute(SESSION_NAME, user.getUsername());
-    } else {
-      return failedApiCall(request, response, "user or password not found");
+    try {
+      String username = request.queryParams("username");
+      String email = request.queryParams("email");
+      String password = request.queryParams("password");
+      User user = modelFacade.authenticate(username, email, password);
+      if (user == null) {
+        throw new FailedApiCallException("unable to log user in");
+      } else {
+        request.session().attribute(SESSION_NAME, user.getUsername());
+      }
+    } catch (FailedApiCallException e) {
+      return failedApiCall(request, response, e.getMessage());
+    } catch (InvalidApiCallException e) {
+      return invalidApiCall(request, response, e.getMessage());
     }
     response.redirect("/");
     return null;
@@ -171,6 +179,6 @@ public class ModelManager {
   }
 
   public void shutdown() {
-    // TODO: if needed
+    modelFacade.shutdown();
   }
 }

@@ -1,12 +1,12 @@
 package edu.colostate.cs.cs414.f18.the_other_alex.model;
 
-import edu.colostate.cs.cs414.f18.the_other_alex.model.controllers.GameObserver;
 import edu.colostate.cs.cs414.f18.the_other_alex.model.exceptions.InvalidMoveException;
 
 import java.util.Date;
+import java.util.Observable;
+import java.util.Observer;
 
-
-public class Game {
+public class Game extends Observable implements Observer {
   private User user1;
   private User user2;
   private User turn;
@@ -83,19 +83,12 @@ public class Game {
     return (turn == user);
   }
 
-  public void attach(GameObserver o) {
-
-  }
-
-  public void detach(GameObserver o) {
-
-  }
-
-  public void notifyObservers() {
-
-  }
-
   public GameRecord getGameRecord() {
     return gameRecord;
+  }
+
+  @Override
+  public void update(Observable o, Object arg) {
+
   }
 }

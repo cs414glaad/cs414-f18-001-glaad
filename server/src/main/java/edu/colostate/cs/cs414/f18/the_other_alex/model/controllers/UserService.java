@@ -2,20 +2,74 @@ package edu.colostate.cs.cs414.f18.the_other_alex.model.controllers;
 
 import edu.colostate.cs.cs414.f18.the_other_alex.model.Invite;
 import edu.colostate.cs.cs414.f18.the_other_alex.model.User;
+import edu.colostate.cs.cs414.f18.the_other_alex.model.exceptions.UserNotFoundException;
+import edu.colostate.cs.cs414.f18.the_other_alex.server.Database;
+import edu.colostate.cs.cs414.f18.the_other_alex.server.exceptions.FailedApiCallException;
+import edu.colostate.cs.cs414.f18.the_other_alex.server.exceptions.InvalidApiCallException;
 
-import java.util.UUID;
+import java.util.ArrayList;
+import java.util.Observable;
 
-public class UserService {
-  public User getUser(String username) {
-    return null;
+public class UserService extends Observable {
+  private Database database;
+  private ArrayList<User> cachedUsers;
+
+  public UserService(Database database) {
+    this.database = database;
+    cachedUsers = new ArrayList<>();
   }
 
-  public User getUserByEmail(String email) {
-    return null;
+  /**
+   * Throws exception for when user not found
+   *
+   * @param username
+   * @return
+   */
+  public User getUser(String username) throws UserNotFoundException {
+    for (User user : cachedUsers) {
+      if (user.getUsername().equals(username)) {
+        return user;
+      }
+    }
+    if (database != null) {
+      return database.getUser(username);
+    } else {
+      throw new UserNotFoundException();
+    }
   }
 
-  public User registerUser(String username, String email, String password) {
-    return new User(username, email, password); // TODO
+  /**
+   * Throws exception if user not found
+   *
+   * @param email
+   * @return
+   */
+  public User getUserByEmail(String email) throws UserNotFoundException {
+    for (User user : cachedUsers) {
+      if (user.getEmail().equals(email)) {
+        return user;
+      }
+    }
+    if (database != null) {
+      return database.getUserByEmail(email);
+    } else {
+      throw new UserNotFoundException();
+    }
+  }
+
+  public User registerUser(String username, String email, String password) throws FailedApiCallException {
+    try {
+      getUser(username); // throws exception
+      getUserByEmail(email);
+      throw new FailedApiCallException("user already exists");
+    } catch (UserNotFoundException e) {
+      // user doesn't exist
+    }
+    // Create user
+    User user = new User(username, email, password);
+    cachedUsers.add(user);
+    notifyObservers();
+    return user;
   }
 
   public User unregisterUser(User user) {
@@ -27,7 +81,10 @@ public class UserService {
   }
 
   private User loadUser(User user) {
-    return null; // TODO
+    if (cachedUsers.indexOf(user) == -1) {
+      cachedUsers.add(user);
+    }
+    return user;
   }
 
   private User saveUser(User user) {
@@ -35,16 +92,50 @@ public class UserService {
   }
 
   /**
-   * This will create an invite that hasn't already been created.
+   * This method will get the invite with the specified inviteId from the fromUser. If the fromUser doesn't have
+   * the invite, it will create it and assign the involved users.
    *
    * @param fromUser The user creating the invite
    * @param toUser The user receiving the invite
+   * @param inviteId The invite id to send, null if new invite
    * @return Returns the created invite
    */
-  private Invite createInvite(String fromUser, String toUser) {
-    String inviteId = UUID.randomUUID().toString();
-    Invite invite = getUser(fromUser).sendInvite(inviteId, toUser);
-    getUser(toUser).receiveInvite(invite);
+  public Invite sendInvite(String fromUser, String inviteId, String toUser) throws UserNotFoundException {
+    User fromUserObj = getUser(fromUser);
+    User toUserObj = getUser(toUser);
+    Invite invite = fromUserObj.getSendInvite(inviteId);
+    if (invite == null) {
+      invite = new Invite(fromUserObj);
+    }
+    fromUserObj.sendInvite(invite);
+    toUserObj.receiveInvite(invite);
+    notifyObservers();
     return invite;
+  }
+
+  public void shutdown() {
+    notifyObservers();
+  }
+
+  public User authenticate(String username, String email, String password) throws InvalidApiCallException, FailedApiCallException {
+    try {
+      User user;
+      if (username != null) {
+        user = getUser(username);
+      } else if (email != null) {
+        user = getUserByEmail(email);
+      } else {
+        // shouldn't happen
+        throw new InvalidApiCallException("username or email must be provided to authenticate");
+      }
+      if (!user.checkPassword(password)) {
+        throw new FailedApiCallException();
+      }
+      return user;
+    } catch (InvalidApiCallException e) {
+      throw e;
+    } catch (Exception e) {
+      throw new FailedApiCallException("credentials invalid");
+    }
   }
 }

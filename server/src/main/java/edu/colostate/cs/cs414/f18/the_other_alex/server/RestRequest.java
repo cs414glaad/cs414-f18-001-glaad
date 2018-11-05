@@ -3,7 +3,6 @@ package edu.colostate.cs.cs414.f18.the_other_alex.server;
 import edu.colostate.cs.cs414.f18.the_other_alex.model.controllers.ModelFacade;
 import edu.colostate.cs.cs414.f18.the_other_alex.server.exceptions.FailedApiCallException;
 import edu.colostate.cs.cs414.f18.the_other_alex.server.exceptions.InvalidApiCallException;
-import org.omg.CORBA.DynAnyPackage.Invalid;
 import spark.Request;
 import spark.Response;
 
@@ -17,11 +16,19 @@ import spark.Response;
  */
 public abstract class RestRequest extends RestCall {
 
-  protected void assertNotNull(Object object, String name) throws InvalidApiCallException {
-    if (object == null) {
+  protected void assertNotNull(Object obj, String name) throws InvalidApiCallException {
+    if (obj == null) {
       throw new InvalidApiCallException("'"+name+"' must be specified for '"+type+"'type");
     }
   }
+
+  protected void assertNotNullOrEmpty(String value, String name) throws InvalidApiCallException {
+    assertNotNull(value, name);
+    if (value.isEmpty()) {
+      throw new InvalidApiCallException("'"+name+"' must not be empty");
+    }
+  }
+
   /**
    * Once the request is validated, it can be handled. This method implements that handling.
    * @return Returns the response string
