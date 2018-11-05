@@ -110,11 +110,12 @@ public class Database {
             ClassNotFoundException {
         Class.forName(myDriver);
         Connection conn = DriverManager.getConnection(myUrl, username, password);
-        String serializeUser = "INSERT INTO UserTable(Email, UserObject) VALUES (?, ?);";
+        String serializeUser = "INSERT INTO UserTable(Email, Username, UserObject) VALUES (?, ?, );";
 
         PreparedStatement pstmt = conn.prepareStatement(serializeUser);
         pstmt.setString(1, user.getEmail());
-        pstmt.setObject(2, user);
+        pstmt.setString(2, user.getUsername());
+        pstmt.setObject(3, user);
         pstmt.executeUpdate();
         ResultSet rs = pstmt.getGeneratedKeys();
         int UserID = -1;
