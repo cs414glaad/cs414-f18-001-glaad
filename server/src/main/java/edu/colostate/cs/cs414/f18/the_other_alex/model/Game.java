@@ -4,9 +4,10 @@ import edu.colostate.cs.cs414.f18.the_other_alex.model.controllers.GameObserver;
 import edu.colostate.cs.cs414.f18.the_other_alex.model.exceptions.InvalidMoveException;
 
 import java.util.Date;
+import java.io.Serializable;
 
 
-public class Game {
+public class Game implements Serializable{
   private User user1;
   private User user2;
   private User turn;

@@ -1,8 +1,9 @@
 package edu.colostate.cs.cs414.f18.the_other_alex.model;
 
 import java.util.Date;
+import java.io.Serializable;
 
-public class GameRecord {
+public class GameRecord implements Serializable {
   private Date gameStartTime;
   private Date gameEndTime;
   private String winnerName;

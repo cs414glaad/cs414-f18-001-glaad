@@ -1,9 +1,10 @@
 package edu.colostate.cs.cs414.f18.the_other_alex.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.UUID;
 
-public class Invite {
+public class Invite implements Serializable{
   private String inviteId;
   private User fromUser;
   private ArrayList<String> toUsers;

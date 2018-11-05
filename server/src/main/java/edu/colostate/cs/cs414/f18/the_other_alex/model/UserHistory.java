@@ -1,6 +1,8 @@
 package edu.colostate.cs.cs414.f18.the_other_alex.model;
 
-public class UserHistory {
+import java.io.Serializable;
+
+public class UserHistory implements Serializable{
   private int wins;
   private int losses;
   private int draws;
