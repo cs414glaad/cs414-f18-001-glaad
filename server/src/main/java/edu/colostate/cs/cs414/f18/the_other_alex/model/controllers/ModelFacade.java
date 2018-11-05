@@ -1,6 +1,7 @@
 package edu.colostate.cs.cs414.f18.the_other_alex.model.controllers;
 
 import edu.colostate.cs.cs414.f18.the_other_alex.model.*;
+import edu.colostate.cs.cs414.f18.the_other_alex.server.exceptions.FailedApiCallException;
 
 public class ModelFacade {
   private ModelService modelService;
@@ -45,7 +46,7 @@ public class ModelFacade {
     return cells[getRow(id)][getCol(id)];
   }
 
-  public boolean makeMove(String gameId, String fromCellId, String toCellId, String username) {
+  public boolean makeMove(String gameId, String fromCellId, String toCellId, String username) throws FailedApiCallException {
     try {
       Game game = modelService.getGameService().getGame(gameId);
       Cell[][] cells = game.getBoard().getCells();
@@ -55,7 +56,7 @@ public class ModelFacade {
       game.makeMove(fromCell, toCell, user);
       return true;
     } catch (Exception e) {
-      return false; // TODO: fix this
+      throw new FailedApiCallException(e.getMessage());
     }
   }
 
@@ -63,15 +64,8 @@ public class ModelFacade {
    * @param gameId - the unique game Id
    * @return Returns a string of cell Ids
    */
-  public String[][] getBoard(String gameId) {
-    Cell[][] cells = modelService.getGameService().getGame(gameId).getBoard().getCells();
-    String[][] pieceIds = new String[cells.length][cells[0].length];
-    for (int row = 0; row < cells.length; row++) {
-      for (int col = 0; col < cells[row].length; col++) {
-        pieceIds[row][col] = cells[row][col].getPiece().getId();
-      }
-    }
-    return pieceIds;
+  public Board getBoard(String gameId) {
+    return modelService.getGameService().getGame(gameId).getBoard();
   }
 
   /**

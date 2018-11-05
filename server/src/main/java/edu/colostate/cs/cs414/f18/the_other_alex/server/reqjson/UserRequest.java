@@ -4,6 +4,7 @@ import edu.colostate.cs.cs414.f18.the_other_alex.model.Invite;
 import edu.colostate.cs.cs414.f18.the_other_alex.model.User;
 import edu.colostate.cs.cs414.f18.the_other_alex.model.controllers.ModelFacade;
 import edu.colostate.cs.cs414.f18.the_other_alex.server.RestRequest;
+import edu.colostate.cs.cs414.f18.the_other_alex.server.exceptions.FailedApiCallException;
 import edu.colostate.cs.cs414.f18.the_other_alex.server.exceptions.InvalidApiCallException;
 import edu.colostate.cs.cs414.f18.the_other_alex.server.resjson.InviteData;
 import edu.colostate.cs.cs414.f18.the_other_alex.server.resjson.InviteList;
@@ -50,6 +51,8 @@ public class UserRequest extends RestRequest {
   @Override
   protected String handleRequest(Request request, Response response, String currentUser, ModelFacade modelFacade) {
     switch(type) {
+      //case "reinv":
+        // TODO
       case "inv":
         return handleUserInv(request, response, currentUser, modelFacade);
       case "user":
@@ -58,33 +61,17 @@ public class UserRequest extends RestRequest {
     return null;
   }
 
-  private void validateInv() throws InvalidApiCallException {
-    if (toUser == null) {
-      throw new InvalidApiCallException("toUser required for 'inv' type");
-    }
-  }
-
-  private void validateUser() throws InvalidApiCallException {
-    if (username == null) {
-      throw new InvalidApiCallException("username required for 'user' type");
-    } else if (email == null) {
-      throw new InvalidApiCallException("email required for 'user' type");
-    } else if (password == null) {
-      throw new InvalidApiCallException("password required for 'user' type");
-    }
-  }
-
   @Override
-  public void validate() throws InvalidApiCallException {
-    if (type == null) {
-      throw new InvalidApiCallException("type for user not specified");
-    }
+  public void validate() throws InvalidApiCallException, FailedApiCallException {
+    super.validate();
     switch (type) {
       case "inv":
-        validateInv();
+        assertNotNull(toUser, "toUser");
         break;
       case "user":
-        validateUser();
+        assertNotNull(username, "username");
+        assertNotNull(email, "email");
+        assertNotNull(password, "password");
         break;
       default:
         throw new InvalidApiCallException("invalid type for user");
