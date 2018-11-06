@@ -22,53 +22,15 @@ public class Database {
     }
     // Or I could make it take a database connection, that would be more efficient probs. We'll see if it's an issue
 
-    public String getUserByEmail(String email) {
-// command line args contain username and password
-        // pom.xml
-        try { // connect to the database
-             Class.forName(myDriver);
-                       Connection conn = DriverManager.getConnection(myUrl, username, password);
-                // SSH TUNNEL WILL NEED TO BE CREATED IN JAVASCRIPT DURING WEBSITE
-            // START-UPs
-            // Maybe do this in constructor
-                        try { // create a statement
-                               Statement st = conn.createStatement();
-                               try { // submit a query
-                                      String query = "SELECT UserObject FROM UserTable WHERE Email = \"" + email + "\";";
-                                        ResultSet rs = st.executeQuery(query);
-
-                                     try {
-                                         return rs.getString(0);
-                                     } finally {
-                                         rs.close();
-                                     }
-                               } finally {
-                                   st.close();
-                               }
-                        } finally {
-                            conn.close();
-                        }
-        } catch (Exception e) { // catches all exceptions in the nested try's
-            System.err.printf("Exception: ");
-            if (e instanceof SQLException) {
-                System.err.println("SQLException caught, rethrowing");
-               // throw new SQLException(e);
-                System.exit(-1);
-            } else {
-                System.exit(-1);
-                //throw new ClassNotFoundException("ClassNotFoundException caught, rethrowing", e);
-            }
-        }
-        return null;
-    }
 
     public User findSerializedUserByEmail(String email) throws SQLException, IOException,
             ClassNotFoundException {
-        String deserializeUserSearchString = "SELECT UserObject FROM UserTable WHERE Email = \"" + email + "\";";
+        String deserializeUserSearchString = "SELECT UserObject FROM UserTable WHERE Email = ?;";
         Class.forName(myDriver);
         Connection conn = DriverManager.getConnection(myUrl, username, password);
-        Statement st = conn.createStatement();
-        ResultSet rs = st.executeQuery(deserializeUserSearchString);
+        PreparedStatement st = conn.prepareStatement(deserializeUserSearchString);
+        st.setString(1, email);
+        ResultSet rs = st.executeQuery();
         rs.next();
 
         byte[] buf = rs.getBytes(1);
@@ -86,11 +48,12 @@ public class Database {
 
     public User findSerializedUserByUserID(int UserID) throws SQLException, IOException,
             ClassNotFoundException {
-        String deserializeUserSearchString = "SELECT UserObject FROM UserTable WHERE UserID = \"" + UserID + "\";";
+        String deserializeUserSearchString = "SELECT UserObject FROM UserTable WHERE UserID = ?;";
         Class.forName(myDriver);
         Connection conn = DriverManager.getConnection(myUrl, username, password);
-        Statement st = conn.createStatement();
-        ResultSet rs = st.executeQuery(deserializeUserSearchString);
+        PreparedStatement st = conn.prepareStatement(deserializeUserSearchString);
+        st.setInt(1, UserID);
+        ResultSet rs = st.executeQuery();
         rs.next();
 
         byte[] buf = rs.getBytes(1);
@@ -110,7 +73,7 @@ public class Database {
             ClassNotFoundException {
         Class.forName(myDriver);
         Connection conn = DriverManager.getConnection(myUrl, username, password);
-        String serializeUser = "INSERT INTO UserTable(Email, Username, UserObject) VALUES (?, ?, );";
+        String serializeUser = "INSERT INTO UserTable(Email, Username, UserObject) VALUES (?, ?, ?);";
 
         PreparedStatement pstmt = conn.prepareStatement(serializeUser);
         pstmt.setString(1, user.getEmail());
@@ -131,11 +94,12 @@ public class Database {
 
     public Game findSerializedGameByID(int GameID) throws SQLException, IOException,
             ClassNotFoundException {
-        String deserializeGameSearchString = "SELECT GameObject FROM Game WHERE GameID = " + GameID + ";";
+        String deserializeGameSearchString = "SELECT GameObject FROM Game WHERE GameID = ?;";
         Class.forName(myDriver);
         Connection conn = DriverManager.getConnection(myUrl, username, password);
-        Statement st = conn.createStatement();
-        ResultSet rs = st.executeQuery(deserializeGameSearchString);
+        PreparedStatement ptstmt = conn.prepareStatement(deserializeGameSearchString);
+        ptstmt.setInt(1, GameID);
+        ResultSet rs = ptstmt.executeQuery();
         rs.next();
 
         byte[] buf = rs.getBytes(1);
@@ -143,7 +107,32 @@ public class Database {
         if (buf != null) {
             objectIn = new ObjectInputStream(new ByteArrayInputStream(buf));
         }
-        Game deSerializedObject = (Game) objectIn.readObject();
+        Game deserializedObject = (Game) objectIn.readObject();
+        rs.close();
+        ptstmt.close();
+        conn.close();
+
+        return deserializedObject;
+    }
+
+
+    //don't forget to change to PreparedStatements
+    public GameRecord findSerializedGameRecordByID(int GameRecordID) throws SQLException, IOException,
+            ClassNotFoundException {
+        String deserializeGameRecordSearchString = "SELECT GameRecordObject FROM GameRecord WHERE GameID = ?;";
+        Class.forName(myDriver);
+        Connection conn = DriverManager.getConnection(myUrl, username, password);
+        PreparedStatement st = conn.prepareStatement(deserializeGameRecordSearchString);
+        st.setInt(1, GameRecordID);
+        ResultSet rs = st.executeQuery();
+        rs.next();
+
+        byte[] buf = rs.getBytes(1);
+        ObjectInputStream objectIn = null;
+        if (buf != null) {
+            objectIn = new ObjectInputStream(new ByteArrayInputStream(buf));
+        }
+        GameRecord deSerializedObject = (GameRecord) objectIn.readObject();
         rs.close();
         st.close();
         conn.close();
@@ -151,24 +140,58 @@ public class Database {
         return deSerializedObject;
     }
 
-    public long addSerializedGame(Game game) throws SQLException, IOException,
+    public long addSerializedObject(Object o) throws ClassNotFoundException, IOException,
+            SQLException {
+        if (o instanceof User) {
+            return addSerializedUser((User) o);
+        }
+        else if (o instanceof UserHistory) {
+            return addObjectToTable("UserHistory", o);
+        }
+        else if (o instanceof Invite) {
+            return addObjectToTable("Invite", o);
+        }
+        else if (o instanceof GameRecord) {
+            return addObjectToTable("GameRecord", o);
+        }
+        else if (o instanceof Game) {
+            return addObjectToTable("Game", o);
+        }
+        else {
+            throw new ClassNotFoundException("This is not a known table instance. Did you mean to call addFriends?");
+        }
+    }
+
+    public long addObjectToTable(String tableName, Object o) throws SQLException, IOException,
             ClassNotFoundException {
         Class.forName(myDriver);
         Connection conn = DriverManager.getConnection(myUrl, username, password);
-        String serializeGame = "INSERT INTO Game(GameObject) VALUES (?);";
+        String serializeGameHistory = "INSERT INTO " + tableName + "(serializedObject) VALUES (?);";
 
-        PreparedStatement pstmt = conn.prepareStatement(serializeGame);
-        pstmt.setObject(1, game);
+        PreparedStatement pstmt = conn.prepareStatement(serializeGameHistory);
+        pstmt.setObject(1, o);
         pstmt.executeUpdate();
         ResultSet rs = pstmt.getGeneratedKeys();
-        int GameID = -1;
+        int serializedID = -1;
         if (rs.next()) {
-            GameID = rs.getInt(1);
+            serializedID = rs.getInt(1);
         }
         rs.close();
         pstmt.close();
         conn.close();
-        return GameID;
+        return serializedID;
+    }
+
+    public long addFriends(int UserIDOne, int UserIDTwo) throws SQLException, IOException,
+            ClassNotFoundException {
+    Class.forName(myDriver);
+    Connection conn = DriverManager.getConnection(myUrl, username, password);
+    String insertString = "INSERT INTO Friends(UserIDOne, UserIDTwo) VALUES(" + UserIDOne + ", " + UserIDTwo + ");" ;
+
+    Statement st = conn.createStatement();
+    ResultSet rs = st.executeQuery(insertString);
+
 
     }
+
 }

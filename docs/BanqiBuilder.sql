@@ -3,24 +3,18 @@
  CREATE TABLE UserHistory
  (
 	 UserHistoryID MEDIUMINT NOT NULL AUTO_INCREMENT,
-	 UserHistoryObject BLOB NOT NULL,
+	 SerializedObject BLOB NOT NULL,
 	 PRIMARY_KEY(UserHistoryID)
  );
  
- CREATE TABLE UserTable
- (
- 	UserID MEDIUMINT NOT NULL AUTO_INCREMENT,
-	Email VARCHAR(300) NOT NULL,
-	UserObject BLOB NOT NULL,
-	PRIMARY_KEY(UserID)
- );
+ 
  
  CREATE TABLE UserTable
  (
  	UserID MEDIUMINT NOT NULL AUTO_INCREMENT,
 	Email VARCHAR(300) NOT NULL,
 	Username VARCHAR(300) NOT NULL,
-	UserObject BLOB NOT NULL,
+	SerializedObject BLOB NOT NULL,
 	PRIMARY_KEY(UserID)
  );
  
@@ -28,24 +22,32 @@
  CREATE TABLE Invite
  (
 	 InviteID MEDIUMINT NOT NULL AUTO_INCREMENT,
-	 InviteObject BLOB NOT NULL,
+	 SerializedObject BLOB NOT NULL,
 	 PRIMARY_KEY(InviteID)
  )
  
  CREATE TABLE GameRecord
  (
  	 GameRecordID MEDIUMINT NOT NULL AUTO_INCREMENT,
-	 GameRecordObject BLOB NOT NULL,
+	 SerializedObject BLOB NOT NULL,
 	 PRIMARY_KEY(GameRecordID)
 	
  );
  
  CREATE TABLE Friend
  (
-	 UserIDOne INTEGER REFERENCES User(UserID),
-	 UserIDTwo INTEGER REFERENCES User(UserID),
+	 UserIDOne MEDIUMINT REFERENCES User(UserID),
+	 UserIDTwo MEDIUMINT REFERENCES User(UserID),
 	 PRIMARY KEY(UserIDOne, UserIDTwo)
  );
+ 
+ CREATE TABLE Game
+ (
+	 GameID MEDIUMINT NOT NULL AUTO_INCREMENT,
+	 SerializedObject BLOB NOT NULL,
+	 PRIMARY_KEY(GameID)
+ );
+ 
  /*CREATE TABLE Board
  (
      BoardID int IDENTITY(001,1) PRIMARY KEY

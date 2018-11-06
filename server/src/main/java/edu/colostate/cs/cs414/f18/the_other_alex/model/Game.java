@@ -16,7 +16,7 @@ public class Game implements Serializable{
   private PieceColor user1Color;
   private PieceColor user2Color;
   private Boolean firstMove;
-
+  private static final long serialVersionUID = 7526472295622776142L;
   //game record start time is set when Game instantiated. Player1 is first to move.
   public Game(User player1, User player2) {
     user1 = player1;

@@ -12,6 +12,9 @@ public class User implements Serializable{
   private UserHistory userHistory;
   private ArrayList<String> games;
 
+
+  private static final long serialVersionUID = 7526472295622776140L;
+
   public User(String username, String email, String password) {
     if (isValidUsername(username)) {
       this.username = username;

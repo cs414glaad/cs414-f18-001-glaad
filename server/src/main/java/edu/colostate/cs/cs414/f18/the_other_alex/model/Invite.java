@@ -9,6 +9,8 @@ public class Invite implements Serializable{
   private User fromUser;
   private ArrayList<String> toUsers;
 
+  private static final long serialVersionUID = 7526472295622776147L;
+
   public Invite(User user, String inviteId) {
     fromUser = user;
     this.inviteId = inviteId;
