@@ -50,7 +50,7 @@ public class QueryRequest extends RestRequest {
    * Calls getGame(String gameId) from Game
    * @return
    */
-  private String handleGame(Request request, Response response, String currentUser, ModelFacade modelFacade) {
+  private String handleGame(Request request, Response response, String currentUser, ModelFacade modelFacade) throws FailedApiCallException {
     Game game = modelFacade.getGame(gameId);
     GameList gameList = new GameList(game);
     return gameList.toString();
@@ -60,7 +60,7 @@ public class QueryRequest extends RestRequest {
    * Calls getGameRecord(String gameId) from GameRecord
    * @return
    */
-  private String handleRecord(Request request, Response response, String currentUser, ModelFacade modelFacade) {
+  private String handleRecord(Request request, Response response, String currentUser, ModelFacade modelFacade) throws FailedApiCallException {
     GameRecord gameRecord = modelFacade.getGameRecord(gameId);
     return null; // TODO
   }
@@ -69,7 +69,7 @@ public class QueryRequest extends RestRequest {
    * Calls getBoard(String gameId) from Game
    * @return
    */
-  private String handleBoard(Request request, Response response, String currentUser, ModelFacade modelFacade) {
+  private String handleBoard(Request request, Response response, String currentUser, ModelFacade modelFacade) throws FailedApiCallException {
     Board board = modelFacade.getBoard(gameId);
     BoardList boardList = new BoardList(board);
     return boardList.toString();

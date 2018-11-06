@@ -2,6 +2,7 @@ package edu.colostate.cs.cs414.f18.the_other_alex.model.controllers;
 
 import edu.colostate.cs.cs414.f18.the_other_alex.model.Invite;
 import edu.colostate.cs.cs414.f18.the_other_alex.model.User;
+import edu.colostate.cs.cs414.f18.the_other_alex.model.exceptions.InvalidInputException;
 import edu.colostate.cs.cs414.f18.the_other_alex.model.exceptions.UserNotFoundException;
 import edu.colostate.cs.cs414.f18.the_other_alex.server.Database;
 import edu.colostate.cs.cs414.f18.the_other_alex.server.exceptions.FailedApiCallException;
@@ -57,7 +58,7 @@ public class UserService extends Observable {
     }
   }
 
-  public User registerUser(String username, String email, String password) throws FailedApiCallException {
+  public User registerUser(String username, String email, String password) throws FailedApiCallException, InvalidInputException {
     try {
       getUser(username); // throws exception
       getUserByEmail(email);
@@ -76,7 +77,7 @@ public class UserService extends Observable {
     return null; // TODO
   }
 
-  public User searchUser(String query) {
+  public User[] searchUser(String query, int limit) {
     return null; // TODO
   }
 
@@ -100,7 +101,7 @@ public class UserService extends Observable {
    * @param inviteId The invite id to send, null if new invite
    * @return Returns the created invite
    */
-  public Invite sendInvite(String fromUser, String inviteId, String toUser) throws UserNotFoundException {
+  public synchronized Invite sendInvite(String fromUser, String inviteId, String toUser) throws UserNotFoundException {
     User fromUserObj = getUser(fromUser);
     User toUserObj = getUser(toUser);
     Invite invite = fromUserObj.getSendInvite(inviteId);
@@ -136,6 +137,17 @@ public class UserService extends Observable {
       throw e;
     } catch (Exception e) {
       throw new FailedApiCallException("credentials invalid");
+    }
+  }
+
+  public void acceptInvite(String currentUser, String inviteId) throws FailedApiCallException {
+    try {
+      Invite invite = getUser(currentUser).getReceivedInvite(inviteId);
+      if (!invite.acceptInvite(currentUser)) {
+        throw new FailedApiCallException("unable to accept invitation");
+      }
+    } catch (UserNotFoundException e) {
+      throw new FailedApiCallException(e.getMessage());
     }
   }
 }

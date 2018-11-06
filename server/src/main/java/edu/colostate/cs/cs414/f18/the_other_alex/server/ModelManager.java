@@ -6,6 +6,7 @@ import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
 import edu.colostate.cs.cs414.f18.the_other_alex.model.User;
 import edu.colostate.cs.cs414.f18.the_other_alex.model.controllers.ModelFacade;
+import edu.colostate.cs.cs414.f18.the_other_alex.model.exceptions.InvalidInputException;
 import edu.colostate.cs.cs414.f18.the_other_alex.server.exceptions.FailedApiCallException;
 import edu.colostate.cs.cs414.f18.the_other_alex.server.exceptions.InvalidApiCallException;
 import edu.colostate.cs.cs414.f18.the_other_alex.server.reqjson.GameRequest;
@@ -30,13 +31,13 @@ public class ModelManager {
 
   private String failedApiCall(Request request, Response response, String msg) {
     response.status(HttpStatus.FORBIDDEN_403);
-    ResponseData responseData = new ResponseData("failure", msg);
+    ResponseData responseData = new ResponseData(ResponseData.FAILURE, msg);
     return responseData.toString();
   }
 
   private String invalidApiCall(Request request, Response response, String msg) {
     response.status(HttpStatus.BAD_REQUEST_400); // is this right?
-    ResponseData responseData = new ResponseData("invalid", msg);
+    ResponseData responseData = new ResponseData(ResponseData.INVALID, msg);
     return responseData.toString();
   }
 

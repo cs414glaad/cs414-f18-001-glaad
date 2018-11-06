@@ -1,10 +1,12 @@
 package edu.colostate.cs.cs414.f18.the_other_alex.server;
 
+import edu.colostate.cs.cs414.f18.the_other_alex.model.Game;
 import edu.colostate.cs.cs414.f18.the_other_alex.model.User;
 import edu.colostate.cs.cs414.f18.the_other_alex.model.controllers.GameService;
 import edu.colostate.cs.cs414.f18.the_other_alex.model.controllers.ModelService;
 import edu.colostate.cs.cs414.f18.the_other_alex.model.controllers.UserService;
 import edu.colostate.cs.cs414.f18.the_other_alex.model.exceptions.UserNotFoundException;
+import edu.colostate.cs.cs414.f18.the_other_alex.model.exceptions.GameNotFoundException;
 
 import java.util.Observable;
 import java.util.Observer;
@@ -47,5 +49,14 @@ public class Database implements Observer {
 
   private void updateFromUserService(UserService userService) {
     // TODO
+  }
+
+  /**
+   * Throws GameNotFoundException when game can't be found. Otherwise, returns the game. Should never return null.
+   * @param gameId
+   * @return
+   */
+  public Game getGame(String gameId) throws GameNotFoundException {
+    throw new GameNotFoundException();
   }
 }

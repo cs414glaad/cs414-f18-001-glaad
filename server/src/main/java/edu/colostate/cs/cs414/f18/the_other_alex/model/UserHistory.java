@@ -1,7 +1,7 @@
 package edu.colostate.cs.cs414.f18.the_other_alex.model;
 
 public class UserHistory {
-  private int wins;
+  private int wins; // note: these default to zero as they should
   private int losses;
   private int draws;
   private int totalGamesPlayed;

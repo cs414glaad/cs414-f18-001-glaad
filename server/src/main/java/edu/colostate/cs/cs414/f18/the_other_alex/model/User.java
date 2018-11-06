@@ -1,6 +1,10 @@
 package edu.colostate.cs.cs414.f18.the_other_alex.model;
 
+import edu.colostate.cs.cs414.f18.the_other_alex.model.exceptions.InvalidInputException;
+
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -8,21 +12,28 @@ public class User extends Observable implements Observer {
   private String username;
   private String email;
   private String password;
+
   private ArrayList<Invite> pendingInvites;
   private ArrayList<Invite> pendingReceivedInvites;
   private UserHistory userHistory;
   private ArrayList<String> games;
 
-  public User(String username, String email, String password) {
-    if (isValidUsername(username)) {
-      this.username = username;
-    }
+  public User(String username, String email, String password) throws InvalidInputException {
+    setUsername(username);
     setPassword(password);
     setEmail(email);
     pendingInvites = new ArrayList<>();
     pendingReceivedInvites = new ArrayList<>();
     userHistory = new UserHistory();
     games = new ArrayList<>();
+  }
+
+  private void setUsername(String username) throws InvalidInputException {
+    if (isValidUsername(username)) {
+      this.username = username;
+    } else {
+      throw new InvalidInputException("invalid username");
+    }
   }
 
   /**
@@ -61,7 +72,6 @@ public class User extends Observable implements Observer {
    * @return True if username is valid
    */
   private boolean isValidUsername(String username) {
-    // TODO: check for username already exists
     return isNonEmpty(username);
   }
 
@@ -70,19 +80,22 @@ public class User extends Observable implements Observer {
   }
 
   private boolean isValidEmail(String email) {
-    // TODO: check for email already exists
     return isNonEmpty(email);
   }
 
-  public void setPassword(String newPassword) {
+  public void setPassword(String newPassword) throws InvalidInputException {
     if (isValidPassword(newPassword)) {
       password = newPassword;
+    } else {
+      throw new InvalidInputException("invalid password");
     }
   }
 
-  public void setEmail(String newEmail) {
+  public void setEmail(String newEmail) throws InvalidInputException {
     if (isValidEmail(newEmail)) {
       email = newEmail;
+    } else {
+      throw new InvalidInputException("invalid email");
     }
   }
 
@@ -98,10 +111,6 @@ public class User extends Observable implements Observer {
     return email;
   }
 
-  public ArrayList<Invite> getInvites() {
-    return pendingInvites;
-  }
-
   public ArrayList<String> getGames() {
     return games;
   }
@@ -113,5 +122,26 @@ public class User extends Observable implements Observer {
   @Override
   public void update(Observable o, Object arg) {
 
+  }
+
+  private Invite searchInvites(ArrayList<Invite> inviteList, String inviteId) {
+    for (Invite invite : inviteList) {
+      if (invite.getInviteId().equals(inviteId)) {
+        return invite;
+      }
+    }
+    return null;
+  }
+
+  public Invite getReceivedInvite(String inviteId) {
+    return searchInvites(pendingReceivedInvites, inviteId);
+  }
+
+  public Invite getPendingInvite(String inviteId) {
+    return searchInvites(pendingInvites, inviteId);
+  }
+
+  public ArrayList<Invite> getPendingInvites() {
+    return pendingInvites;
   }
 }

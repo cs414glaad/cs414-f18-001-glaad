@@ -1,9 +1,7 @@
 package edu.colostate.cs.cs414.f18.the_other_alex.model.controllers;
 
-import edu.colostate.cs.cs414.f18.the_other_alex.model.Cell;
-import edu.colostate.cs.cs414.f18.the_other_alex.model.Game;
-import edu.colostate.cs.cs414.f18.the_other_alex.model.GameOutcome;
-import edu.colostate.cs.cs414.f18.the_other_alex.model.User;
+import edu.colostate.cs.cs414.f18.the_other_alex.model.*;
+import edu.colostate.cs.cs414.f18.the_other_alex.model.exceptions.GameNotFoundException;
 import edu.colostate.cs.cs414.f18.the_other_alex.server.Database;
 import edu.colostate.cs.cs414.f18.the_other_alex.server.exceptions.FailedApiCallException;
 
@@ -26,15 +24,25 @@ public class GameService extends Observable {
    * @param p2 the second player
    * @return Returns the created game
    */
-  public Game createGame(User p1, User p2) {
-    return null;
+  public Game createGame(User p1, User p2, String id) {
+    Game game = new Game(p1, p2, id);
+    cachedGames.add(game);
+    return game;
   }
 
   public GameOutcome getGameOutcome(String gameID) {
     return null;
   }
 
-  public Game getGame(String gameId) {
+  public Game getGame(String gameId) throws GameNotFoundException {
+    for (Game game : cachedGames) {
+      if (game.getGameId().equals(gameId)) {
+        return game;
+      }
+    }
+    if (database != null) {
+      database.getGame(gameId);
+    }
     return null;
   }
 
@@ -72,7 +80,6 @@ public class GameService extends Observable {
       throw new FailedApiCallException(e.getMessage());
     }
   }
-
 
   public void shutdown() {
     notifyObservers();
