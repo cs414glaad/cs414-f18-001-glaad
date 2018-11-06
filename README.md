@@ -36,5 +36,5 @@ $ ./gradlew :server:test
 
 ## Built With
 
-* [Gradle](https://gradle.org/) (or user the wrapper, recommended)
-* [Node Package Manager(npm)](https://www.npmjs.com/get-npm)
+* [OpenJDK 1.8.0 v 181](https://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html)
+* [Gradle](https://gradle.org/) (wrapper for this included, no need to install).

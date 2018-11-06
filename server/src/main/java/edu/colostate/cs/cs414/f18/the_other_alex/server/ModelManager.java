@@ -146,6 +146,7 @@ public class ModelManager {
    * @return The HTTP body
    */
   public String query(Request request, Response response) {
+    response.type("application/json");
     return handleRequest(request, response, QueryRequest.class);
   }
   /**
@@ -161,6 +162,7 @@ public class ModelManager {
    * @return The HTTP body
    */
   public String user(Request request, Response response) {
+    response.type("application/json");
     return handleRequest(request, response, UserRequest.class);
   }
 
@@ -176,6 +178,7 @@ public class ModelManager {
    * @return The HTTP body
    */
   public String game(Request request, Response response) {
+    response.type("application/json");
     return handleRequest(request, response, GameRequest.class);
   }
 
