@@ -1,5 +1,6 @@
 package edu.colostate.cs.cs414.f18.the_other_alex.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.UUID;

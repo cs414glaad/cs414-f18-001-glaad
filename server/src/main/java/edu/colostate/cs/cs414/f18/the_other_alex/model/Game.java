@@ -5,8 +5,9 @@ import edu.colostate.cs.cs414.f18.the_other_alex.model.exceptions.InvalidMoveExc
 import java.util.Date;
 import java.util.Observable;
 import java.util.Observer;
+import java.io.Serializable;
 
-public class Game extends Observable implements Observer {
+public class Game extends Observable implements Observer, Serializable {
   private String gameId;
   private User user1;
   private User user2;
@@ -16,6 +17,7 @@ public class Game extends Observable implements Observer {
   private PieceColor user1Color;
   private PieceColor user2Color;
   private Boolean firstMove;
+  private static final long serialVersionUID = 7526472295622776142L;
   private GameState gameState;
 
   //game record start time is set when Game instantiated. Player1 is first to move.

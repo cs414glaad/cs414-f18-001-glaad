@@ -1,14 +1,13 @@
 package edu.colostate.cs.cs414.f18.the_other_alex.model;
 
+import java.io.Serializable;
 import edu.colostate.cs.cs414.f18.the_other_alex.model.exceptions.InvalidInputException;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
-public class User extends Observable implements Observer {
+public class User extends Observable implements Observer, Serializable {
   private String username;
   private String email;
   private String password;
@@ -17,6 +16,8 @@ public class User extends Observable implements Observer {
   private ArrayList<Invite> pendingReceivedInvites;
   private UserHistory userHistory;
   private ArrayList<String> games;
+
+  private static final long serialVersionUID = 7526472295622776140L;
 
   public User(String username, String email, String password) throws InvalidInputException {
     setUsername(username);
