@@ -7,7 +7,10 @@ class TestBoard {
 
     @Test
     void move() {
+    }
 
+    @Test
+    void anyPossibleMovesLeft () {
     }
 
 }
