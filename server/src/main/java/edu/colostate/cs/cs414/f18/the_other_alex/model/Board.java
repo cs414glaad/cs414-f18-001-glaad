@@ -95,7 +95,7 @@ public class Board {
         if (p.getColor() == opponentColor) {
           for (int k = 0; k < NUM_ROWS; k++) {
             for (int l = 0; l < NUM_COLS; l++) {
-              if (p.isMoveValid(cells[k][l], cells[i][k], cells)) {
+              if (p.isMoveValid(cells[k][l], cells[i][j], cells)) {
                 return true;
               }
             }
