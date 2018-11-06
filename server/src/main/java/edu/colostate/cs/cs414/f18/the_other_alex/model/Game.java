@@ -1,12 +1,13 @@
 package edu.colostate.cs.cs414.f18.the_other_alex.model;
 
-import edu.colostate.cs.cs414.f18.the_other_alex.model.controllers.GameObserver;
 import edu.colostate.cs.cs414.f18.the_other_alex.model.exceptions.InvalidMoveException;
 
 import java.util.Date;
+import java.util.Observable;
+import java.util.Observer;
 
-
-public class Game {
+public class Game extends Observable implements Observer {
+  private String gameId;
   private User user1;
   private User user2;
   private User turn;
@@ -17,7 +18,8 @@ public class Game {
   private Boolean firstMove;
 
   //game record start time is set when Game instantiated. Player1 is first to move.
-  public Game(User player1, User player2) {
+  public Game(User player1, User player2, String id) {
+    gameId = id;
     user1 = player1;
     user2 = player2;
     board = new Board();
@@ -83,19 +85,16 @@ public class Game {
     return (turn == user);
   }
 
-  public void attach(GameObserver o) {
-
-  }
-
-  public void detach(GameObserver o) {
-
-  }
-
-  public void notifyObservers() {
-
-  }
-
   public GameRecord getGameRecord() {
     return gameRecord;
+  }
+
+  @Override
+  public void update(Observable o, Object arg) {
+
+  }
+
+  public String getGameId() {
+    return gameId;
   }
 }
