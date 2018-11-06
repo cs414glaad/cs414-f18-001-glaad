@@ -140,7 +140,14 @@ public class UserService extends Observable {
     }
   }
 
-  public void acceptInvite(String currentUser, String inviteId) throws FailedApiCallException {
+  /**
+   * Returns
+   * @param currentUser
+   * @param inviteId
+   * @return returns gameId (which is really just inviteId)
+   * @throws FailedApiCallException
+   */
+  public String acceptInvite(String currentUser, String inviteId) throws FailedApiCallException {
     try {
       Invite invite = getUser(currentUser).getReceivedInvite(inviteId);
       if (!invite.acceptInvite(currentUser)) {
@@ -149,5 +156,6 @@ public class UserService extends Observable {
     } catch (UserNotFoundException e) {
       throw new FailedApiCallException(e.getMessage());
     }
+    return inviteId;
   }
 }

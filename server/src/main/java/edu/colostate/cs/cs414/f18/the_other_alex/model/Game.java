@@ -16,6 +16,7 @@ public class Game extends Observable implements Observer {
   private PieceColor user1Color;
   private PieceColor user2Color;
   private Boolean firstMove;
+  private GameState gameState;
 
   //game record start time is set when Game instantiated. Player1 is first to move.
   public Game(User player1, User player2, String id) {
@@ -28,6 +29,7 @@ public class Game extends Observable implements Observer {
     user2Color = PieceColor.NONE;
     turn = user1;
     firstMove = true;
+    gameState = GameState.IN_PROGRESS;
   }
 
   public void gameOver() {
@@ -96,5 +98,21 @@ public class Game extends Observable implements Observer {
 
   public String getGameId() {
     return gameId;
+  }
+
+  public PieceColor getUser1Color() {
+    return user1Color;
+  }
+
+  public PieceColor getUser2Color() {
+    return user2Color;
+  }
+
+  public User getTurn() {
+    return turn;
+  }
+
+  public GameState getGameState() {
+    return gameState;
   }
 }
