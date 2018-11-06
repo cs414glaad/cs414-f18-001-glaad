@@ -7,8 +7,6 @@ import edu.colostate.cs.cs414.f18.the_other_alex.model.exceptions.UserNotFoundEx
 import edu.colostate.cs.cs414.f18.the_other_alex.server.exceptions.FailedApiCallException;
 import edu.colostate.cs.cs414.f18.the_other_alex.server.exceptions.InvalidApiCallException;
 
-import java.util.ArrayList;
-
 public class ModelFacade {
   private ModelService modelService;
 
@@ -30,8 +28,8 @@ public class ModelFacade {
     }
   }
 
-  public void acceptInvite(String currentUser, String inviteId) throws FailedApiCallException {
-    modelService.getUserService().acceptInvite(currentUser, inviteId);
+  public String acceptInvite(String currentUser, String inviteId) throws FailedApiCallException {
+    return modelService.getUserService().acceptInvite(currentUser, inviteId);
   }
 
   public User createUser(String username, String email, String password) throws FailedApiCallException, InvalidInputException {
@@ -76,5 +74,9 @@ public class ModelFacade {
     } catch (UserNotFoundException e) {
       throw new FailedApiCallException(e.getMessage());
     }
+  }
+
+  public Invite sendInvite(String user1, String user2) throws FailedApiCallException {
+    return sendInvite(user1, user2, null);
   }
 }
