@@ -18,6 +18,8 @@ public class Game extends Observable implements Observer, Serializable {
   private PieceColor user2Color;
   private Boolean firstMove;
   private static final long serialVersionUID = 7526472295622776142L;
+  private GameState gameState;
+
   //game record start time is set when Game instantiated. Player1 is first to move.
   public Game(User player1, User player2, String id) {
     gameId = id;
@@ -29,6 +31,7 @@ public class Game extends Observable implements Observer, Serializable {
     user2Color = PieceColor.NONE;
     turn = user1;
     firstMove = true;
+    gameState = GameState.IN_PROGRESS;
   }
 
   public void gameOver() {
@@ -70,20 +73,43 @@ public class Game extends Observable implements Observer, Serializable {
       endTurn();
       return GameState.IN_PROGRESS;
     }
-//subsequent moves
-    board.move(fromCell, toCell);
-    if(board.isGameOver()) {
-      gameOver();
-      return GameState.OVER;
+//subsequent moves.
+    if(fromCell.getPiece().getColor() == getUserColor(user)) { //make sure piece is right color
+      board.move(fromCell, toCell);
+      if (board.isGameOver(getOpponentColor(user))) {
+        gameOver();
+        return GameState.OVER;
+      }
+      else {
+        endTurn();
+        return GameState.IN_PROGRESS;
+      }
     }
     else {
-      endTurn();
-      return GameState.IN_PROGRESS;
+      throw new InvalidMoveException("Invalid move: Select a piece of your own color");
     }
   }
 
   public boolean isUsersTurn(User user) {
     return (turn == user);
+  }
+
+  public PieceColor getUserColor(User user) {
+    if(user == user1) {
+      return user1Color;
+    }
+    else {
+      return user2Color;
+    }
+  }
+
+  public PieceColor getOpponentColor(User user) {
+    if(user == user1) {
+      return user2Color;
+    }
+    else {
+      return user1Color;
+    }
   }
 
   public GameRecord getGameRecord() {
@@ -97,5 +123,21 @@ public class Game extends Observable implements Observer, Serializable {
 
   public String getGameId() {
     return gameId;
+  }
+
+  public PieceColor getUser1Color() {
+    return user1Color;
+  }
+
+  public PieceColor getUser2Color() {
+    return user2Color;
+  }
+
+  public User getTurn() {
+    return turn;
+  }
+
+  public GameState getGameState() {
+    return gameState;
   }
 }
