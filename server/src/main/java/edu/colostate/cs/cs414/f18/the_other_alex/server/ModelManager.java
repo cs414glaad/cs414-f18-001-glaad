@@ -6,6 +6,7 @@ import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
 import edu.colostate.cs.cs414.f18.the_other_alex.model.User;
 import edu.colostate.cs.cs414.f18.the_other_alex.model.controllers.ModelFacade;
+import edu.colostate.cs.cs414.f18.the_other_alex.model.exceptions.InvalidInputException;
 import edu.colostate.cs.cs414.f18.the_other_alex.server.exceptions.FailedApiCallException;
 import edu.colostate.cs.cs414.f18.the_other_alex.server.exceptions.InvalidApiCallException;
 import edu.colostate.cs.cs414.f18.the_other_alex.server.reqjson.GameRequest;
@@ -30,13 +31,13 @@ public class ModelManager {
 
   private String failedApiCall(Request request, Response response, String msg) {
     response.status(HttpStatus.FORBIDDEN_403);
-    ResponseData responseData = new ResponseData("failure", msg);
+    ResponseData responseData = new ResponseData(ResponseData.FAILURE, msg);
     return responseData.toString();
   }
 
   private String invalidApiCall(Request request, Response response, String msg) {
     response.status(HttpStatus.BAD_REQUEST_400); // is this right?
-    ResponseData responseData = new ResponseData("invalid", msg);
+    ResponseData responseData = new ResponseData(ResponseData.INVALID, msg);
     return responseData.toString();
   }
 
@@ -51,6 +52,9 @@ public class ModelManager {
     } catch (InvalidApiCallException e) {
       return invalidApiCall(request, response, e.getMessage());
     } catch (FailedApiCallException e) {
+      return failedApiCall(request, response, e.getMessage());
+    } catch (Exception e) {
+      e.printStackTrace();
       return failedApiCall(request, response, e.getMessage());
     }
   }
@@ -88,22 +92,27 @@ public class ModelManager {
    * <p>
    * This route forwards to the following methods from the ModelFacade:
    * <p>
-   * - authenticate(String user, String password): boolean
+   * - authenticate(String username, String email, String password): boolean
    *
    * @param request  The HTTP request
    * @param response The HTTP response
    * @return The HTTP body
    */
   public String login(Request request, Response response) {
-    String email = request.queryParams("email");
-    String password = request.queryParams("password");
-    User user = modelFacade.getUserByEmail(email);
-    if (user == null) {
-      return failedApiCall(request, response, "user or password not found");
-    } else if (modelFacade.authenticate(user.getUsername(), password)) {
-      request.session().attribute(SESSION_NAME, user.getUsername());
-    } else {
-      return failedApiCall(request, response, "user or password not found");
+    try {
+      String username = request.queryParams("username");
+      String email = request.queryParams("email");
+      String password = request.queryParams("password");
+      User user = modelFacade.authenticate(username, email, password);
+      if (user == null) {
+        throw new FailedApiCallException("unable to log user in");
+      } else {
+        request.session().attribute(SESSION_NAME, user.getUsername());
+      }
+    } catch (FailedApiCallException e) {
+      return failedApiCall(request, response, e.getMessage());
+    } catch (InvalidApiCallException e) {
+      return invalidApiCall(request, response, e.getMessage());
     }
     response.redirect("/");
     return null;
@@ -171,6 +180,6 @@ public class ModelManager {
   }
 
   public void shutdown() {
-    // TODO: if needed
+    modelFacade.shutdown();
   }
 }

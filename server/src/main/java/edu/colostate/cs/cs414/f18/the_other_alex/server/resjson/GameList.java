@@ -7,6 +7,7 @@ import java.util.ArrayList;
 
 public class GameList extends RestCall {
   public GameList() {
+    super();
     games = new ArrayList<>();
   }
 
