@@ -14,8 +14,8 @@ public class Database {
     String myDriver;
 
     public Database() {
-    username = "ashellum";
-    password = "830284211";
+        username = "ashellum";
+        password = "830284211";
         String myDriver = "com.mysql.jdbc.Driver"; // add dependencies in
         //String myUrl = "jdbc:mysql://faure.cs.colostate.edu/cs314";
         String myUrl = "jdbc:mysql://faure.cs.colostate.edu/theotheralex";
@@ -46,6 +46,7 @@ public class Database {
         return deSerializedObject;
     }
 
+    //ADD USERNAME SEARCH
     public User findSerializedUserByUserID(int UserID) throws SQLException, IOException,
             ClassNotFoundException {
         String deserializeUserSearchString = "SELECT UserObject FROM UserTable WHERE UserID = ?;";
@@ -69,7 +70,7 @@ public class Database {
         return deSerializedObject;
     }
 
-    public long addSerializedUser(User user) throws SQLException, IOException,
+    private long addSerializedUser(User user) throws SQLException, IOException,
             ClassNotFoundException {
         Class.forName(myDriver);
         Connection conn = DriverManager.getConnection(myUrl, username, password);
@@ -117,7 +118,7 @@ public class Database {
 
 
     //don't forget to change to PreparedStatements
-    public GameRecord findSerializedGameRecordByID(int GameRecordID) throws SQLException, IOException,
+    /*public GameRecord findSerializedGameRecordByID(int GameRecordID) throws SQLException, IOException,
             ClassNotFoundException {
         String deserializeGameRecordSearchString = "SELECT GameRecordObject FROM GameRecord WHERE GameID = ?;";
         Class.forName(myDriver);
@@ -138,14 +139,14 @@ public class Database {
         conn.close();
 
         return deSerializedObject;
-    }
+    }*/
 
     public long addSerializedObject(Object o) throws ClassNotFoundException, IOException,
             SQLException {
         if (o instanceof User) {
             return addSerializedUser((User) o);
         }
-        else if (o instanceof UserHistory) {
+       /* else if (o instanceof UserHistory) {
             return addObjectToTable("UserHistory", o);
         }
         else if (o instanceof Invite) {
@@ -153,16 +154,16 @@ public class Database {
         }
         else if (o instanceof GameRecord) {
             return addObjectToTable("GameRecord", o);
-        }
+        }*/
         else if (o instanceof Game) {
-            return addObjectToTable("Game", o);
+            return addGameObjectToTable((Game) o);
         }
         else {
             throw new ClassNotFoundException("This is not a known table instance. Did you mean to call addFriends?");
         }
     }
 
-    public long addObjectToTable(String tableName, Object o) throws SQLException, IOException,
+    /*private long addObjectToTable(String tableName, Object o) throws SQLException, IOException,
             ClassNotFoundException {
         Class.forName(myDriver);
         Connection conn = DriverManager.getConnection(myUrl, username, password);
@@ -180,8 +181,28 @@ public class Database {
         pstmt.close();
         conn.close();
         return serializedID;
-    }
+    }*/
+    private long addGameObjectToTable(Game g) throws SQLException, IOException,
+            ClassNotFoundException {
+        Class.forName(myDriver);
+        Connection conn = DriverManager.getConnection(myUrl, username, password);
+        String serializeGameHistory = "INSERT INTO Game(GameID, serializedObject) VALUES (?, ?);";
 
+        PreparedStatement pstmt = conn.prepareStatement(serializeGameHistory);
+        pstmt.setInt(1, g.getGameId().hashCode());
+        pstmt.setObject(2, g);
+        pstmt.executeUpdate();
+        ResultSet rs = pstmt.getGeneratedKeys();
+        int serializedID = -1;
+        if (rs.next()) {
+            serializedID = rs.getInt(1);
+        }
+        rs.close();
+        pstmt.close();
+        conn.close();
+        return serializedID;
+    }
+    /*
     public long addFriends(int UserIDOne, int UserIDTwo) throws SQLException, IOException,
             ClassNotFoundException {
     Class.forName(myDriver);
@@ -192,6 +213,6 @@ public class Database {
     ResultSet rs = st.executeQuery(insertString);
 
 
-    }
+    }*/
 
 }

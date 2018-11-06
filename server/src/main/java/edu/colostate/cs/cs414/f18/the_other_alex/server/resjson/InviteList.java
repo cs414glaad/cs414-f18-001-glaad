@@ -7,6 +7,7 @@ import java.util.ArrayList;
 
 public class InviteList extends RestCall {
   public InviteList() {
+    super();
     invites = new ArrayList<>();
   }
 

@@ -7,6 +7,7 @@ import java.util.ArrayList;
 
 public class BoardList extends RestCall {
   public BoardList() {
+    super();
     boards = new ArrayList<>();
   }
 
