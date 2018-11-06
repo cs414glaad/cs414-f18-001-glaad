@@ -4,6 +4,7 @@ import edu.colostate.cs.cs414.f18.the_other_alex.model.controllers.ModelFacade;
 import edu.colostate.cs.cs414.f18.the_other_alex.server.RestRequest;
 import edu.colostate.cs.cs414.f18.the_other_alex.server.exceptions.FailedApiCallException;
 import edu.colostate.cs.cs414.f18.the_other_alex.server.exceptions.InvalidApiCallException;
+import edu.colostate.cs.cs414.f18.the_other_alex.server.resjson.ResponseData;
 import spark.Request;
 import spark.Response;
 
@@ -28,12 +29,19 @@ public class GameRequest extends RestRequest {
   public String toCell;
 
   @Override
-  protected String handleRequest(Request request, Response response, String currentUser, ModelFacade modelFacade) {
-    return null;
+  protected String handleRequest(Request request, Response response, String currentUser, ModelFacade modelFacade) throws InvalidApiCallException, FailedApiCallException {
+    switch (type) {
+      case "move":
+        modelFacade.makeMove(gameId, fromCell, toCell, currentUser);
+        ResponseData responseData = new ResponseData("success", "move was successful");
+        return responseData.toString();
+      default:
+        throw new InvalidApiCallException("invalid type for 'game' call");
+    }
   }
 
   @Override
   protected void validate() throws InvalidApiCallException, FailedApiCallException {
-
+    super.validate();
   }
 }

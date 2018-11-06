@@ -9,6 +9,9 @@ public class InviteData extends DataType {
 
   public InviteData(Invite invite) {
     fromUser = invite.getFromUser().getUsername();
-    toUser = (String[])(invite.getToUsers().toArray());
+    toUser = new String[invite.getToUsers().size()];
+    for (int i = 0 ;i < toUser.length; i++) {
+      toUser[i] = invite.getToUsers().get(i);
+    }
   }
 }

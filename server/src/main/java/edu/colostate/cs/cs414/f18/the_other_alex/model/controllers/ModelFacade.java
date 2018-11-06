@@ -1,6 +1,11 @@
 package edu.colostate.cs.cs414.f18.the_other_alex.model.controllers;
 
 import edu.colostate.cs.cs414.f18.the_other_alex.model.*;
+import edu.colostate.cs.cs414.f18.the_other_alex.model.exceptions.GameNotFoundException;
+import edu.colostate.cs.cs414.f18.the_other_alex.model.exceptions.InvalidInputException;
+import edu.colostate.cs.cs414.f18.the_other_alex.model.exceptions.UserNotFoundException;
+import edu.colostate.cs.cs414.f18.the_other_alex.server.exceptions.FailedApiCallException;
+import edu.colostate.cs.cs414.f18.the_other_alex.server.exceptions.InvalidApiCallException;
 
 public class ModelFacade {
   private ModelService modelService;
@@ -9,82 +14,69 @@ public class ModelFacade {
     this.modelService = new ModelService();
   }
 
-  public UserHistory getUserHistory(String username) {
-    UserService userService = this.modelService.getUserService();
-    User user = userService.getUser(username);
-    return user.getUserHistory();
+  public UserHistory getUserHistory(String username) throws UserNotFoundException {
+    return modelService.getUserService().getUser(username).getUserHistory();
   }
 
-  public Invite createInvite(String fromUser, String toUser) {
-      return null; // TODO
+  public Invite sendInvite(String fromUser, String toUser, String inviteId) throws FailedApiCallException {
+    try {
+      Invite invite = modelService.getUserService().sendInvite(fromUser, inviteId, toUser);
+      invite.addObserver(modelService);
+      return invite;
+    } catch (UserNotFoundException e) {
+      throw new FailedApiCallException(e.getMessage());
+    }
   }
 
-  public User createUser(String username, String email, String password) {
+  public String acceptInvite(String currentUser, String inviteId) throws FailedApiCallException {
+    return modelService.getUserService().acceptInvite(currentUser, inviteId);
+  }
+
+  public User createUser(String username, String email, String password) throws FailedApiCallException, InvalidInputException {
     return modelService.getUserService().registerUser(username, email, password);
   }
 
-  public Game getGame(String gameId) {
-    return modelService.getGameService().getGame(gameId);
-  }
-
-  public GameRecord getGameRecord(String gameId) {
-    return modelService.getGameService().getGame(gameId).getGameRecord();
-  }
-
-  private int getRow(String id) {
-    String[] parts = id.split(" ");
-    return Integer.parseInt(parts[0]);
-  }
-
-  private int getCol(String id) {
-    String[] parts = id.split(" ");
-    return Integer.parseInt(parts[1]);
-  }
-
-  private Cell getCellFromId(Cell[][] cells, String id) {
-    return cells[getRow(id)][getCol(id)];
-  }
-
-  public boolean makeMove(String gameId, String fromCellId, String toCellId, String username) {
+  public Game getGame(String gameId) throws FailedApiCallException {
     try {
-      Game game = modelService.getGameService().getGame(gameId);
-      Cell[][] cells = game.getBoard().getCells();
-      User user = modelService.getUserService().getUser(username);
-      Cell fromCell = getCellFromId(cells, fromCellId);
-      Cell toCell = getCellFromId(cells, toCellId);
-      game.makeMove(fromCell, toCell, user);
-      return true;
-    } catch (Exception e) {
-      return false; // TODO: fix this
+      return modelService.getGameService().getGame(gameId);
+    } catch (GameNotFoundException e) {
+      throw new FailedApiCallException(e.getMessage());
     }
   }
 
-  /**
-   * @param gameId - the unique game Id
-   * @return Returns a string of cell Ids
-   */
-  public String[][] getBoard(String gameId) {
-    Cell[][] cells = modelService.getGameService().getGame(gameId).getBoard().getCells();
-    String[][] pieceIds = new String[cells.length][cells[0].length];
-    for (int row = 0; row < cells.length; row++) {
-      for (int col = 0; col < cells[row].length; col++) {
-        pieceIds[row][col] = cells[row][col].getPiece().getId();
-      }
+  public GameRecord getGameRecord(String gameId) throws FailedApiCallException {
+    try {
+      return modelService.getGameService().getGame(gameId).getGameRecord();
+    } catch (GameNotFoundException e) {
+      throw new FailedApiCallException(e.getMessage());
     }
-    return pieceIds;
   }
 
-  /**
-   * Returns false on failure. Returns false if either argument is null.
-   * @param username
-   * @param password
-   * @return
-   */
-  public boolean authenticate(String username, String password) {
-    return false; // TODO
+  public Board getBoard(String gameId) throws FailedApiCallException {
+    try {
+      return modelService.getGameService().getGame(gameId).getBoard();
+    } catch (GameNotFoundException e) {
+      throw new FailedApiCallException(e.getMessage());
+    }
   }
 
-  public User getUserByEmail(String username) {
-    return modelService.getUserService().getUserByEmail(username);
+  public User authenticate(String username, String email, String password) throws FailedApiCallException, InvalidApiCallException {
+    return modelService.getUserService().authenticate(username, email, password);
+  }
+
+  public void shutdown() {
+    modelService.shutdown();
+  }
+
+  public void makeMove(String gameId, String fromCell, String toCell, String currentUser) throws FailedApiCallException {
+    try {
+      modelService.getGameService().makeMove(gameId, fromCell, toCell, modelService.getUserService().getUser(currentUser));
+    } catch (UserNotFoundException e) {
+      throw new FailedApiCallException(e.getMessage());
+    }
+  }
+
+  public Invite sendInvite(String user1, String user2) throws FailedApiCallException {
+    return sendInvite(user1, user2, null);
   }
 }

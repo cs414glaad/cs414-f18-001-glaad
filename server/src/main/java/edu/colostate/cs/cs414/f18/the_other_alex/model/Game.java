@@ -1,12 +1,13 @@
 package edu.colostate.cs.cs414.f18.the_other_alex.model;
 
-import edu.colostate.cs.cs414.f18.the_other_alex.model.controllers.GameObserver;
 import edu.colostate.cs.cs414.f18.the_other_alex.model.exceptions.InvalidMoveException;
 
 import java.util.Date;
+import java.util.Observable;
+import java.util.Observer;
 
-
-public class Game {
+public class Game extends Observable implements Observer {
+  private String gameId;
   private User user1;
   private User user2;
   private User turn;
@@ -15,9 +16,11 @@ public class Game {
   private PieceColor user1Color;
   private PieceColor user2Color;
   private Boolean firstMove;
+  private GameState gameState;
 
   //game record start time is set when Game instantiated. Player1 is first to move.
-  public Game(User player1, User player2) {
+  public Game(User player1, User player2, String id) {
+    gameId = id;
     user1 = player1;
     user2 = player2;
     board = new Board();
@@ -26,6 +29,7 @@ public class Game {
     user2Color = PieceColor.NONE;
     turn = user1;
     firstMove = true;
+    gameState = GameState.IN_PROGRESS;
   }
 
   public void gameOver() {
@@ -106,20 +110,32 @@ public class Game {
     }
   }
 
-
-  public void attach(GameObserver o) {
-
-  }
-
-  public void detach(GameObserver o) {
-
-  }
-
-  public void notifyObservers() {
-
-  }
-
   public GameRecord getGameRecord() {
     return gameRecord;
+  }
+
+  @Override
+  public void update(Observable o, Object arg) {
+
+  }
+
+  public String getGameId() {
+    return gameId;
+  }
+
+  public PieceColor getUser1Color() {
+    return user1Color;
+  }
+
+  public PieceColor getUser2Color() {
+    return user2Color;
+  }
+
+  public User getTurn() {
+    return turn;
+  }
+
+  public GameState getGameState() {
+    return gameState;
   }
 }

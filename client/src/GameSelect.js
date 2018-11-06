@@ -16,7 +16,7 @@ class GameSelect extends Component{
   }
   getGames(){
     //TODO: Make an API call to get the current user's invites.
-    let games = [{blackUser: {username: "1337h4x0r"}, redUser: {username: "banqiFreak123"}}, {blackUser: {username: "urMom"}, redUser: {username: "1337h4x0r"}}];
+    let games = [{blackUser: {username: "1337h4x0r"}, redUser: {username: "banqiFreak123"}}, {blackUser: {username: "aboiuc234"}, redUser: {username: "1337h4x0r"}}];
     let out = [];
     for( let idx in games ){
       out.push(this.getGame(games[idx]));

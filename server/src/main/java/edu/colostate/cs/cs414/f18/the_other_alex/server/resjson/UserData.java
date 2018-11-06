@@ -14,10 +14,13 @@ public class UserData extends DataType {
     username = user.getUsername();
     email = user.getEmail();
     userHistory = new UserHistoryData(user.getUserHistory());
-    invites = new InviteData[user.getInvites().size()];
+    invites = new InviteData[user.getPendingInvites().size()];
     for (int i = 0; i < invites.length; i++) {
-      invites[i] = new InviteData(user.getInvites().get(i));
+      invites[i] = new InviteData(user.getPendingInvites().get(i));
     }
-    games = (String[])(user.getGames().toArray());
+    games = new String[user.getGames().size()];
+    for (int i = 0; i < games.length; i++) {
+      games[i] = user.getGames().get(i);
+    }
   }
 }

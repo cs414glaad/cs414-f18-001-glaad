@@ -1,19 +1,33 @@
 package edu.colostate.cs.cs414.f18.the_other_alex.server;
 
-import com.google.gson.Gson;
 import edu.colostate.cs.cs414.f18.the_other_alex.model.controllers.ModelFacade;
+import edu.colostate.cs.cs414.f18.the_other_alex.model.exceptions.InvalidInputException;
 import edu.colostate.cs.cs414.f18.the_other_alex.server.exceptions.FailedApiCallException;
 import edu.colostate.cs.cs414.f18.the_other_alex.server.exceptions.InvalidApiCallException;
 import spark.Request;
 import spark.Response;
 
+/**
+ * If more request types are needed, here is how to add them.
+ *
+ * 1. Identify if they fit as part of GameRequest, QueryRequest or UserRequest. You shouldn't need to create a new
+ * request type object.
+ * 2. Add validator to validate in order to accept the request.
+ * 3. Add handler to switch statement in handleRequest.
+ */
 public abstract class RestRequest extends RestCall {
-  protected void invalidCall(String msg) throws InvalidApiCallException {
-    throw new InvalidApiCallException(msg);
+
+  protected void assertNotNull(Object obj, String name) throws InvalidApiCallException {
+    if (obj == null) {
+      throw new InvalidApiCallException("'"+name+"' must be specified for '"+type+"'type");
+    }
   }
 
-  protected void failedCall(String msg) throws FailedApiCallException {
-    throw new FailedApiCallException(msg);
+  protected void assertNotNullOrEmpty(String value, String name) throws InvalidApiCallException {
+    assertNotNull(value, name);
+    if (value.isEmpty()) {
+      throw new InvalidApiCallException("'"+name+"' must not be empty");
+    }
   }
 
   /**
@@ -24,7 +38,7 @@ public abstract class RestRequest extends RestCall {
       Request request,
       Response response,
       String currentUser,
-      ModelFacade modelFacade);
+      ModelFacade modelFacade) throws InvalidApiCallException, FailedApiCallException;
 
   /**
    * Will validate the provided rest call. If the call is invalid, throws InvalidApiCallException.
@@ -33,11 +47,9 @@ public abstract class RestRequest extends RestCall {
    * @throws InvalidApiCallException If request is invalid.
    * @throws FailedApiCallException If request fails to complete (e.g User couldn't be created)
    */
-  protected abstract void validate() throws InvalidApiCallException, FailedApiCallException;
-
-  @Override
-  public String toString() {
-    Gson gson = new Gson();
-    return gson.toJson(this);
+  protected void validate() throws InvalidApiCallException, FailedApiCallException {
+    if (type == null) {
+      throw new InvalidApiCallException("type must be defined");
+    }
   }
 }
