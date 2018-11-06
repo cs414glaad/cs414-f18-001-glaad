@@ -67,21 +67,45 @@ public class Game {
       endTurn();
       return GameState.IN_PROGRESS;
     }
-//subsequent moves
-    board.move(fromCell, toCell);
-    if(board.isGameOver()) {
-      gameOver();
-      return GameState.OVER;
+//subsequent moves.
+    if(fromCell.getPiece().getColor() == getUserColor(user)) { //make sure piece is right color
+      board.move(fromCell, toCell);
+      if (board.isGameOver(getOpponentColor(user))) {
+        gameOver();
+        return GameState.OVER;
+      }
+      else {
+        endTurn();
+        return GameState.IN_PROGRESS;
+      }
     }
     else {
-      endTurn();
-      return GameState.IN_PROGRESS;
+      throw new InvalidMoveException("Invalid move: Select a piece of your own color");
     }
   }
 
   public boolean isUsersTurn(User user) {
     return (turn == user);
   }
+
+  public PieceColor getUserColor(User user) {
+    if(user == user1) {
+      return user1Color;
+    }
+    else {
+      return user2Color;
+    }
+  }
+
+  public PieceColor getOpponentColor(User user) {
+    if(user == user1) {
+      return user2Color;
+    }
+    else {
+      return user1Color;
+    }
+  }
+
 
   public void attach(GameObserver o) {
 

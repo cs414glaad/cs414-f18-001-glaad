@@ -10,9 +10,13 @@ import java.util.Random;
 public class Board {
   private Cell[][] cells;
   private List<Piece> pieces;
+  public static final int NUM_ROWS = 4;
+  public static final int NUM_COLS = 8;
+
+
 
   public Board() {
-    cells = new Cell[4][8];
+    cells = new Cell[NUM_ROWS][NUM_COLS];
     pieces = new ArrayList<Piece>();
     loadPieces();
     loadCells();
@@ -26,8 +30,8 @@ public class Board {
   //randomizes placement of pieces onto 4x8 cells array
   private void loadCells() {
     Random randomGenerator = new Random();
-    for (int i = 0; i < 4; i++) {
-      for (int j = 0; j < 8; j++) {
+    for (int i = 0; i < NUM_ROWS; i++) {
+      for (int j = 0; j < NUM_COLS; j++) {
         int randomIndex = randomGenerator.nextInt(pieces.size());
         Piece piece = pieces.remove(randomIndex);
         cells[i][j] = new Cell(i, j, piece);
@@ -80,13 +84,31 @@ public class Board {
     }
   }
 
-  public boolean anyPossibleMovesLeft(Turn turn) {
+  //Checks if player has a move to make before giving them a turn. Otherwise game over.
+  public boolean anyPossibleMovesLeft(PieceColor opponentColor) {
+    for (int i = 0; i < NUM_ROWS; i++) {
+      for (int j = 0; j < NUM_COLS; j++) {
+        Piece p = cells[i][j].getPiece();
+        if (!p.getIsFlipped()) { //unflipped piece means move available
+          return true;
+        }
+        if (p.getColor() == opponentColor) {
+          for (int k = 0; k < NUM_ROWS; k++) {
+            for (int l = 0; l < NUM_COLS; l++) {
+              if (p.isMoveValid(cells[k][l], cells[i][k], cells)) {
+                return true;
+              }
+            }
+          }
+        }
+      }
+      }
+      return false;
+    }
 
-    return false;
-  }
-
-  public boolean isGameOver() {
-    return false;
+//remove?
+  public boolean isGameOver(PieceColor opponentColor) {
+    return(!anyPossibleMovesLeft(opponentColor));
   }
 }
 
