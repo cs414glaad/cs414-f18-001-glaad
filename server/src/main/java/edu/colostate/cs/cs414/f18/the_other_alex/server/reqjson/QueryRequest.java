@@ -11,16 +11,30 @@ import edu.colostate.cs.cs414.f18.the_other_alex.server.exceptions.FailedApiCall
 import edu.colostate.cs.cs414.f18.the_other_alex.server.exceptions.InvalidApiCallException;
 import edu.colostate.cs.cs414.f18.the_other_alex.server.resjson.BoardList;
 import edu.colostate.cs.cs414.f18.the_other_alex.server.resjson.GameList;
+import edu.colostate.cs.cs414.f18.the_other_alex.server.resjson.GameRecordList;
+import edu.colostate.cs.cs414.f18.the_other_alex.server.resjson.UserHistoryList;
 import spark.Request;
 import spark.Response;
 
 /**
  * Available game types are:
  *
- * - 'hist': requires username
- * - 'game': requires gameId
- * - 'record': requires gameId
- * - 'board': requires gameId
+ * - 'hist':
+ *     requires username
+ *     gets user history
+ *     returns UserHistoryList
+ * - 'game':
+ *     requires gameId
+ *     gets a game by id
+ *     returns GameList
+ * - 'record':
+ *     requires gameId
+ *     gets a game record by id
+ *     returns GameRecordList
+ * - 'board':
+ *     requires gameId
+ *     gets board by id
+ *     returns GameBoardList
  *
  * Json format:
  * {
@@ -35,15 +49,15 @@ public class QueryRequest extends RestRequest {
 
   /**
    * Calls getUserHistory(String username) in UserHistory
-   * @return returns a UserHistory data type
+   * @return a UserHistory data type
    */
   private String handleHist(Request request, Response response, String currentUser, ModelFacade modelFacade) throws FailedApiCallException {
     try {
       UserHistory userHistory = modelFacade.getUserHistory(username);
+      return (new UserHistoryList(userHistory)).toString();
     } catch (UserNotFoundException e) {
       throw new FailedApiCallException(e.getMessage());
     }
-    return null; // TODO: make user history list data object
   }
 
   /**
@@ -62,7 +76,8 @@ public class QueryRequest extends RestRequest {
    */
   private String handleRecord(Request request, Response response, String currentUser, ModelFacade modelFacade) throws FailedApiCallException {
     GameRecord gameRecord = modelFacade.getGameRecord(gameId);
-    return null; // TODO
+    GameRecordList gameRecordList = new GameRecordList(gameRecord);
+    return gameRecordList.toString();
   }
 
   /**

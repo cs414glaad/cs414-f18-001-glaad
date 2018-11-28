@@ -6,7 +6,6 @@ import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
 import edu.colostate.cs.cs414.f18.the_other_alex.model.User;
 import edu.colostate.cs.cs414.f18.the_other_alex.model.controllers.ModelFacade;
-import edu.colostate.cs.cs414.f18.the_other_alex.model.exceptions.InvalidInputException;
 import edu.colostate.cs.cs414.f18.the_other_alex.server.exceptions.FailedApiCallException;
 import edu.colostate.cs.cs414.f18.the_other_alex.server.exceptions.InvalidApiCallException;
 import edu.colostate.cs.cs414.f18.the_other_alex.server.reqjson.GameRequest;

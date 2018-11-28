@@ -74,14 +74,16 @@ public class UserService extends Observable {
   }
 
   public User unregisterUser(User user) {
-    return null; // TODO
+    return null; // TODO remove user from users and database
   }
 
   public User[] searchUser(String query, int limit) {
-    return null; // TODO
+    // TODO incorporate limit and return multiple users
+    return new User[]{database.searchUser(query)};
   }
 
   private User loadUser(User user) {
+    // TODO load user from database
     if (cachedUsers.indexOf(user) == -1) {
       cachedUsers.add(user);
     }
@@ -89,7 +91,7 @@ public class UserService extends Observable {
   }
 
   private User saveUser(User user) {
-    return null; // TODO
+    return null; // TODO save user to database
   }
 
   /**
@@ -152,6 +154,18 @@ public class UserService extends Observable {
       Invite invite = getUser(currentUser).getReceivedInvite(inviteId);
       if (!invite.acceptInvite(currentUser)) {
         throw new FailedApiCallException("unable to accept invitation");
+      }
+    } catch (UserNotFoundException e) {
+      throw new FailedApiCallException(e.getMessage());
+    }
+    return inviteId;
+  }
+
+  public String rejectInvite(String currentUser, String inviteId) throws FailedApiCallException {
+    try {
+      Invite invite = getUser(currentUser).getReceivedInvite(inviteId);
+      if (!invite.rejectInvite(currentUser, this)) {
+        throw new FailedApiCallException("unable to reject invitation");
       }
     } catch (UserNotFoundException e) {
       throw new FailedApiCallException(e.getMessage());

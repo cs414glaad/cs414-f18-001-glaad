@@ -1,5 +1,8 @@
 package edu.colostate.cs.cs414.f18.the_other_alex.model;
 
+import edu.colostate.cs.cs414.f18.the_other_alex.model.controllers.UserService;
+import edu.colostate.cs.cs414.f18.the_other_alex.model.exceptions.UserNotFoundException;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Observable;
@@ -29,8 +32,8 @@ public class Invite extends Observable {
     return false;
   }
 
-  public void findPlayers(String username) {
-
+  public User[] findPlayers(String username, UserService userService) {
+    return userService.searchUser(username, 5);
   }
 
   /**
@@ -48,11 +51,17 @@ public class Invite extends Observable {
     }
   }
 
-  public synchronized void rejectInvite(String username) {
+  public synchronized boolean rejectInvite(String username, UserService userService) {
     int i = toUsers.indexOf(username);
     if (i != -1) {
       toUsers.remove(username);
+      try {
+        userService.getUser(username).rejectInvite(this);
+      } catch (UserNotFoundException e) {
+        // can happen when the user unregisters. we didn't need them anyway..
+      }
     }
+    return i != -1;
   }
 
   public User getFromUser() {

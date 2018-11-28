@@ -2,6 +2,7 @@ package edu.colostate.cs.cs414.f18.the_other_alex.model;
 
 import java.io.Serializable;
 import edu.colostate.cs.cs414.f18.the_other_alex.model.exceptions.InvalidInputException;
+import edu.colostate.cs.cs414.f18.the_other_alex.model.exceptions.InvalidMoveException;
 
 import java.util.ArrayList;
 import java.util.Observable;
@@ -48,6 +49,10 @@ public class User extends Observable implements Observer, Serializable {
 
   public void sendInvite(Invite invite) {
     pendingInvites.add(invite);
+  }
+
+  public void rejectInvite(Invite invite) {
+    pendingReceivedInvites.remove(invite);
   }
 
   public Invite getSendInvite(String inviteId) {

@@ -13,7 +13,10 @@ import spark.Response;
  *
  * Available types are:
  *
- * - 'move': requires gameId, fromCell, toCell
+ * - 'move':
+ *     requires gameId, fromCell, toCell
+ *     makes a move
+ *     returns ResponseData
  *
  * Json format:
  * {
@@ -22,6 +25,8 @@ import spark.Response;
  *   fromCell: {cellId},
  *   toCell: {cellId},
  * }
+ * cell id's are specified in GameService makeMove method: "row col" where row
+ * and col are the row and column of piece's position
  */
 public class GameRequest extends RestRequest {
   public String gameId;

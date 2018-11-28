@@ -9,6 +9,7 @@ import java.util.Observable;
 import java.util.Observer;
 
 public class ModelService implements Observer {
+  // TODO: make this a singleton
   private UserService userService;
   private GameService gameService;
   private Database database;
@@ -41,7 +42,7 @@ public class ModelService implements Observer {
       User toUser = userService.getUser(invite.getToUser());
       gameService.createGame(invite.getFromUser(), toUser, invite.getInviteId());
     } catch (UserNotFoundException e) {
-      invite.rejectInvite(invite.getToUser());
+      invite.rejectInvite(invite.getToUser(), userService);
       invite.clearAcceptance();
       return;
     }
