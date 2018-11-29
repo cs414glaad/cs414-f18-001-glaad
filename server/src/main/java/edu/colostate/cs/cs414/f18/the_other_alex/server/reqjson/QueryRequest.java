@@ -1,24 +1,23 @@
 package edu.colostate.cs.cs414.f18.the_other_alex.server.reqjson;
 
-import edu.colostate.cs.cs414.f18.the_other_alex.model.Board;
-import edu.colostate.cs.cs414.f18.the_other_alex.model.Game;
-import edu.colostate.cs.cs414.f18.the_other_alex.model.GameRecord;
-import edu.colostate.cs.cs414.f18.the_other_alex.model.UserHistory;
+import edu.colostate.cs.cs414.f18.the_other_alex.model.*;
 import edu.colostate.cs.cs414.f18.the_other_alex.model.controllers.ModelFacade;
+import edu.colostate.cs.cs414.f18.the_other_alex.model.exceptions.GameNotFoundException;
 import edu.colostate.cs.cs414.f18.the_other_alex.model.exceptions.UserNotFoundException;
 import edu.colostate.cs.cs414.f18.the_other_alex.server.RestRequest;
 import edu.colostate.cs.cs414.f18.the_other_alex.server.exceptions.FailedApiCallException;
 import edu.colostate.cs.cs414.f18.the_other_alex.server.exceptions.InvalidApiCallException;
-import edu.colostate.cs.cs414.f18.the_other_alex.server.resjson.BoardList;
-import edu.colostate.cs.cs414.f18.the_other_alex.server.resjson.GameList;
-import edu.colostate.cs.cs414.f18.the_other_alex.server.resjson.GameRecordList;
-import edu.colostate.cs.cs414.f18.the_other_alex.server.resjson.UserHistoryList;
+import edu.colostate.cs.cs414.f18.the_other_alex.server.resjson.*;
 import spark.Request;
 import spark.Response;
 
 /**
  * Available game types are:
  *
+ * - 'user':
+ *     requires username
+ *     get user
+ *     returns UserList
  * - 'hist':
  *     requires username
  *     gets user history
@@ -51,6 +50,20 @@ public class QueryRequest extends RestRequest {
    * Calls getUserHistory(String username) in UserHistory
    * @return a UserHistory data type
    */
+  private String handleUser(Request request, Response response, String currentUser, ModelFacade modelFacade) throws FailedApiCallException {
+    try {
+      User user = modelFacade.getUser(username);
+      UserList userList = new UserList(user);
+      return userList.toString();
+    } catch (UserNotFoundException e) {
+      throw new FailedApiCallException(e.getMessage());
+    }
+  }
+
+  /**
+   * Calls getUserHistory(String username) in UserHistory
+   * @return a UserHistory data type
+   */
   private String handleHist(Request request, Response response, String currentUser, ModelFacade modelFacade) throws FailedApiCallException {
     try {
       UserHistory userHistory = modelFacade.getUserHistory(username);
@@ -65,9 +78,13 @@ public class QueryRequest extends RestRequest {
    * @return
    */
   private String handleGame(Request request, Response response, String currentUser, ModelFacade modelFacade) throws FailedApiCallException {
-    Game game = modelFacade.getGame(gameId);
-    GameList gameList = new GameList(game);
-    return gameList.toString();
+    try {
+      Game game = modelFacade.getGame(gameId);
+      GameList gameList = new GameList(game);
+      return gameList.toString();
+    } catch (GameNotFoundException e) {
+      throw new FailedApiCallException(e.getMessage());
+    }
   }
 
   /**
@@ -94,6 +111,8 @@ public class QueryRequest extends RestRequest {
   protected String handleRequest(Request request, Response response, String currentUser, ModelFacade modelFacade)
       throws InvalidApiCallException, FailedApiCallException {
     switch (type) {
+      case "user":
+        return handleUser(request, response, currentUser, modelFacade);
       case "hist":
         return handleHist(request, response, currentUser, modelFacade);
       case "game":
@@ -108,10 +127,12 @@ public class QueryRequest extends RestRequest {
   }
 
   @Override
-  protected void validate() throws InvalidApiCallException, FailedApiCallException {
-    super.validate();
+  protected void validate(String currentUser) throws InvalidApiCallException, FailedApiCallException {
+    super.validate(currentUser);
+    requireLoggedIn(currentUser);
     switch (type) {
       case "hist":
+      case "user":
         assertNotNull(username, "username");
         break;
       case "game":

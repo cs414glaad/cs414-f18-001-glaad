@@ -82,6 +82,7 @@ public class GameService extends Observable {
   }
 
   public void shutdown() {
+    setChanged();
     notifyObservers();
   }
 }

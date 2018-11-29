@@ -1,10 +1,12 @@
 package edu.colostate.cs.cs414.f18.the_other_alex.model;
 
+import edu.colostate.cs.cs414.f18.the_other_alex.model.controllers.ModelService;
 import edu.colostate.cs.cs414.f18.the_other_alex.model.controllers.UserService;
 import edu.colostate.cs.cs414.f18.the_other_alex.model.exceptions.UserNotFoundException;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.Observable;
 import java.util.UUID;
 
@@ -25,7 +27,7 @@ public class Invite extends Observable {
     toUser = null;
   }
 
-  public boolean send(String username) {
+  public synchronized boolean send(String username) {
     if (!toUsers.contains(username)) {
       return toUsers.add(username);
     }
@@ -41,9 +43,20 @@ public class Invite extends Observable {
    * @param username username of the user accepting
    * @return
    */
-  public synchronized boolean acceptInvite(String username) {
+  public synchronized boolean acceptInvite(String username, UserService userService) throws UserNotFoundException {
     if(toUser == null && toUsers.contains(username)) {
       toUser = username;
+      ArrayList<String> toRemove = new ArrayList<>();
+      for (String user : toUsers) {
+        if (user != toUser) {
+          toRemove.add(user);
+        }
+      }
+      for (String user : toRemove) {
+        rejectInvite(user, userService);
+      }
+      remove(userService);
+      setChanged();
       notifyObservers();
       return true;
     } else {
@@ -86,5 +99,31 @@ public class Invite extends Observable {
 
   public void clearAcceptance() {
     toUsers = null;
+  }
+
+  private void remove(UserService userService) {
+    fromUser.removeInviteFromPendingInvites(this);
+    try {
+      userService.getUser(toUser).removeInviteFromPendingReceivedInvites(this);
+    } catch (UserNotFoundException e) {
+      // do nothing
+    }
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    Invite invite = (Invite) o;
+    return Objects.equals(inviteId, invite.inviteId);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(inviteId);
   }
 }

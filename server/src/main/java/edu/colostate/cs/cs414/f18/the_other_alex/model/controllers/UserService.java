@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Observable;
 
 public class UserService extends Observable {
+  // TODO: set changed followed by notify for any changes (save to database)
   private Database database;
   private ArrayList<User> cachedUsers;
 
@@ -53,15 +54,19 @@ public class UserService extends Observable {
     }
     if (database != null) {
       return database.getUserByEmail(email);
-    } else {
-      throw new UserNotFoundException();
     }
+    throw new UserNotFoundException();
   }
 
   public User registerUser(String username, String email, String password) throws FailedApiCallException, InvalidInputException {
     try {
       getUser(username); // throws exception
-      getUserByEmail(email);
+      throw new FailedApiCallException("user already exists");
+    } catch (UserNotFoundException e) {
+      // user doesn't exist
+    }
+    try {
+      getUserByEmail(email); // throws exception
       throw new FailedApiCallException("user already exists");
     } catch (UserNotFoundException e) {
       // user doesn't exist
@@ -69,6 +74,7 @@ public class UserService extends Observable {
     // Create user
     User user = new User(username, email, password);
     cachedUsers.add(user);
+    setChanged();
     notifyObservers();
     return user;
   }
@@ -112,11 +118,13 @@ public class UserService extends Observable {
     }
     fromUserObj.sendInvite(invite);
     toUserObj.receiveInvite(invite);
+    setChanged();
     notifyObservers();
     return invite;
   }
 
   public void shutdown() {
+    setChanged();
     notifyObservers();
   }
 
@@ -152,7 +160,7 @@ public class UserService extends Observable {
   public String acceptInvite(String currentUser, String inviteId) throws FailedApiCallException {
     try {
       Invite invite = getUser(currentUser).getReceivedInvite(inviteId);
-      if (!invite.acceptInvite(currentUser)) {
+      if (!invite.acceptInvite(currentUser, this)) {
         throw new FailedApiCallException("unable to accept invitation");
       }
     } catch (UserNotFoundException e) {

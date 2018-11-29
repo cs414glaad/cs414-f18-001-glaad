@@ -63,7 +63,7 @@ public class UserRequest extends RestRequest {
   }
 
   private String handleUserInv(Request request, Response response, String currentUser, ModelFacade modelFacade) throws FailedApiCallException {
-    Invite invite = modelFacade.sendInvite(currentUser, toUser, null);
+    Invite invite = modelFacade.sendInvite(currentUser, toUser, inviteId);
     InviteList inviteList = new InviteList(invite);
     return inviteList.toString();
   }
@@ -97,15 +97,17 @@ public class UserRequest extends RestRequest {
   }
 
   @Override
-  public void validate() throws InvalidApiCallException, FailedApiCallException {
-    super.validate();
+  public void validate(String currentUser) throws InvalidApiCallException, FailedApiCallException {
+    super.validate(currentUser);
     switch (type) {
       case "replno": // reject invite
       case "repl": // accept invite
         assertNotNull(inviteId, "inviteId");
+        requireLoggedIn(currentUser);
         break;
       case "inv": // create invite
         assertNotNullOrEmpty(toUser, "toUser");
+        requireLoggedIn(currentUser);
         break;
       case "user": // create user
         assertNotNullOrEmpty(username, "username");

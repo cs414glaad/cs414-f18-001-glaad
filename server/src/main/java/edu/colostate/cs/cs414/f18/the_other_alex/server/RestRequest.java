@@ -18,7 +18,7 @@ public abstract class RestRequest extends RestCall {
 
   protected void assertNotNull(Object obj, String name) throws InvalidApiCallException {
     if (obj == null) {
-      throw new InvalidApiCallException("'"+name+"' must be specified for '"+type+"'type");
+      throw new InvalidApiCallException("'"+name+"' must be specified for '"+type+"' type");
     }
   }
 
@@ -26,6 +26,12 @@ public abstract class RestRequest extends RestCall {
     assertNotNull(value, name);
     if (value.isEmpty()) {
       throw new InvalidApiCallException("'"+name+"' must not be empty");
+    }
+  }
+
+  protected void requireLoggedIn(String username) throws InvalidApiCallException {
+    if (username == null) {
+      throw new InvalidApiCallException("user must be logged in");
     }
   }
 
@@ -46,7 +52,7 @@ public abstract class RestRequest extends RestCall {
    * @throws InvalidApiCallException If request is invalid.
    * @throws FailedApiCallException If request fails to complete (e.g User couldn't be created)
    */
-  protected void validate() throws InvalidApiCallException, FailedApiCallException {
+  protected void validate(String currentUser) throws InvalidApiCallException, FailedApiCallException {
     if (type == null) {
       throw new InvalidApiCallException("type must be defined");
     }

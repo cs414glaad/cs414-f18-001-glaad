@@ -46,7 +46,17 @@ public class GameRequest extends RestRequest {
   }
 
   @Override
-  protected void validate() throws InvalidApiCallException, FailedApiCallException {
-    super.validate();
+  protected void validate(String currentUser) throws InvalidApiCallException, FailedApiCallException {
+    super.validate(currentUser);
+    requireLoggedIn(currentUser);
+    switch (type) {
+      case "move":
+        assertNotNull(gameId, "gameId");
+        assertNotNull(toCell, "toCell");
+        assertNotNull(fromCell, "fromCell");
+        break;
+      default:
+        throw new InvalidApiCallException("invalid type for game");
+    }
   }
 }
