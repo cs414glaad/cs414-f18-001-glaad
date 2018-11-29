@@ -25,7 +25,7 @@ import spark.Response;
  *     accepts invite
  *     returns ResponseData
  * - 'inv':
- *     requires toUser
+ *     requires toUser, optional: inviteId
  *     sends invite to toUser
  *     returns InviteList
  * - 'user':
