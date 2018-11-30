@@ -30,6 +30,7 @@ public class GameData extends DataType {
   }
 
   public GameData(Game game) {
+    id = game.getGameId();
     user1Color = colorToString(game.getUser1Color());
     user2Color = colorToString(game.getUser2Color());
     turn = game.getTurn().getUsername();

@@ -6,7 +6,6 @@ import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
 import edu.colostate.cs.cs414.f18.the_other_alex.model.User;
 import edu.colostate.cs.cs414.f18.the_other_alex.model.controllers.ModelFacade;
-import edu.colostate.cs.cs414.f18.the_other_alex.model.exceptions.InvalidInputException;
 import edu.colostate.cs.cs414.f18.the_other_alex.server.exceptions.FailedApiCallException;
 import edu.colostate.cs.cs414.f18.the_other_alex.server.exceptions.InvalidApiCallException;
 import edu.colostate.cs.cs414.f18.the_other_alex.server.reqjson.GameRequest;
@@ -48,7 +47,12 @@ public class ModelManager {
   private <T extends RestRequest> String handleRequest(Request request, Response response, Class<T> classOfT) {
     try {
       T t = validateRequest(request, classOfT);
-      return t.handleRequest(request, response, getUsername(request), modelFacade);
+      String username = getUsername(request);
+      if (username == null) {
+        username = "user not logged in";
+      }
+      System.out.printf("user sent request: %s%n", username);
+      return t.handleRequest(request, response, username, modelFacade);
     } catch (InvalidApiCallException e) {
       return invalidApiCall(request, response, e.getMessage());
     } catch (FailedApiCallException e) {
@@ -67,7 +71,7 @@ public class ModelManager {
       if (t == null) {
         throw new InvalidApiCallException("must send request for api call");
       }
-      t.validate();
+      t.validate(getUsername(request));
       return t;
     } catch (JsonSyntaxException e) {
       throw new InvalidApiCallException(e.getMessage());
@@ -108,6 +112,7 @@ public class ModelManager {
         throw new FailedApiCallException("unable to log user in");
       } else {
         request.session().attribute(SESSION_NAME, user.getUsername());
+        System.out.printf("user logged in: %s%n", request.session().attribute(SESSION_NAME).toString());
       }
     } catch (FailedApiCallException e) {
       return failedApiCall(request, response, e.getMessage());
@@ -126,6 +131,8 @@ public class ModelManager {
    * @return The HTTP body
    */
   public String logout(Request request, Response response) {
+    String username = request.session().attribute(SESSION_NAME);
+    System.out.printf("user logged out: %s%n", username);
     request.session().removeAttribute(SESSION_NAME);
     response.redirect("/");
     return null;

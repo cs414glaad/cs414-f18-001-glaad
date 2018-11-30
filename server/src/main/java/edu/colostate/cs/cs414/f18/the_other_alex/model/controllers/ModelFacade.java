@@ -11,7 +11,11 @@ public class ModelFacade {
   private ModelService modelService;
 
   public ModelFacade() {
-    this.modelService = new ModelService();
+    modelService = new ModelService();
+  }
+
+  public ModelFacade(boolean useDatabase) {
+    this.modelService = new ModelService(useDatabase);
   }
 
   public UserHistory getUserHistory(String username) throws UserNotFoundException {
@@ -32,16 +36,24 @@ public class ModelFacade {
     return modelService.getUserService().acceptInvite(currentUser, inviteId);
   }
 
+  public String rejectInvite(String currentUser, String inviteId) throws FailedApiCallException {
+    return modelService.getUserService().rejectInvite(currentUser, inviteId);
+  }
+
   public User createUser(String username, String email, String password) throws FailedApiCallException, InvalidInputException {
     return modelService.getUserService().registerUser(username, email, password);
   }
 
-  public Game getGame(String gameId) throws FailedApiCallException {
-    try {
-      return modelService.getGameService().getGame(gameId);
-    } catch (GameNotFoundException e) {
-      throw new FailedApiCallException(e.getMessage());
-    }
+  public User getUser(String username) throws UserNotFoundException {
+    return modelService.getUserService().getUser(username);
+  }
+
+  public User getUserByEmail(String email) throws UserNotFoundException {
+    return modelService.getUserService().getUserByEmail(email);
+  }
+
+  public Game getGame(String gameId) throws GameNotFoundException {
+    return modelService.getGameService().getGame(gameId);
   }
 
   public GameRecord getGameRecord(String gameId) throws FailedApiCallException {

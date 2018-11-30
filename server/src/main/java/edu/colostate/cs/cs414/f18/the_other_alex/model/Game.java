@@ -32,6 +32,9 @@ public class Game extends Observable implements Observer, Serializable {
     turn = user1;
     firstMove = true;
     gameState = GameState.IN_PROGRESS;
+
+    user1.addGame(id);
+    user2.addGame(id);
   }
 
   public void gameOver() {

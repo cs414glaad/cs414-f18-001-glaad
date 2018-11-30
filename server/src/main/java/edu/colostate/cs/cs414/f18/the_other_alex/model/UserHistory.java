@@ -7,6 +7,7 @@ public class UserHistory {
   private int losses;
   private int draws;
   private int totalGamesPlayed;
+
   public int getWins() {
     return wins;
   }

@@ -5,8 +5,8 @@ import edu.colostate.cs.cs414.f18.the_other_alex.model.User;
 import edu.colostate.cs.cs414.f18.the_other_alex.model.controllers.GameService;
 import edu.colostate.cs.cs414.f18.the_other_alex.model.controllers.ModelService;
 import edu.colostate.cs.cs414.f18.the_other_alex.model.controllers.UserService;
-import edu.colostate.cs.cs414.f18.the_other_alex.model.exceptions.UserNotFoundException;
 import edu.colostate.cs.cs414.f18.the_other_alex.model.exceptions.GameNotFoundException;
+import edu.colostate.cs.cs414.f18.the_other_alex.model.exceptions.UserNotFoundException;
 
 import java.util.Observable;
 import java.util.Observer;

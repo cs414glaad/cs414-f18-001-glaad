@@ -42,12 +42,20 @@ public class User extends Observable implements Observer, Serializable {
    * @param invite
    */
   public void receiveInvite(Invite invite) {
-    pendingReceivedInvites.add(invite);
-    invite.getToUsers().add(username);
+    if (!pendingReceivedInvites.contains(invite)) {
+      pendingReceivedInvites.add(invite);
+      invite.getToUsers().add(username);
+    }
   }
 
   public void sendInvite(Invite invite) {
-    pendingInvites.add(invite);
+    if (!pendingInvites.contains(invite)) {
+      pendingInvites.add(invite);
+    }
+  }
+
+  public void rejectInvite(Invite invite) {
+    pendingReceivedInvites.remove(invite);
   }
 
   public Invite getSendInvite(String inviteId) {
@@ -125,13 +133,21 @@ public class User extends Observable implements Observer, Serializable {
 
   }
 
-  private Invite searchInvites(ArrayList<Invite> inviteList, String inviteId) {
+  private synchronized Invite searchInvites(ArrayList<Invite> inviteList, String inviteId) {
     for (Invite invite : inviteList) {
       if (invite.getInviteId().equals(inviteId)) {
         return invite;
       }
     }
     return null;
+  }
+
+  public ArrayList<Invite> getPendingReceivedInvites() {
+    return pendingReceivedInvites;
+  }
+
+  public ArrayList<Invite> getPendingInvites() {
+    return pendingInvites;
   }
 
   public Invite getReceivedInvite(String inviteId) {
@@ -142,7 +158,33 @@ public class User extends Observable implements Observer, Serializable {
     return searchInvites(pendingInvites, inviteId);
   }
 
-  public ArrayList<Invite> getPendingInvites() {
-    return pendingInvites;
+  public void removeInviteFromPendingReceivedInvites(String inviteId) {
+    Invite invite = getReceivedInvite(inviteId);
+    removeInviteFromPendingReceivedInvites(invite);
+  }
+
+  public synchronized void removeInviteFromPendingReceivedInvites(Invite invite) {
+    pendingReceivedInvites.remove(invite);
+  }
+
+  public void removeInviteFromPendingInvites(String inviteId) {
+    Invite invite = getPendingInvite(inviteId);
+    removeInviteFromPendingInvites(invite);
+  }
+
+  public synchronized void removeInviteFromPendingInvites(Invite invite) {
+    pendingInvites.remove(invite);
+  }
+
+  public void addGame(String id) {
+    games.add(id);
+  }
+
+  public void removeGame(String id) {
+    games.remove(id);
+  }
+
+  public void removeGame(Game game) {
+    removeGame(game.getGameId());
   }
 }
