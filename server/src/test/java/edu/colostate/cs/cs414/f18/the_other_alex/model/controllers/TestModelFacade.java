@@ -122,6 +122,13 @@ class TestModelFacade {
   }
 
   @Test
+  void failedCreateUser() throws InvalidInputException{
+    assertThrows(InvalidInputException.class, ()->{
+      modelFacade.createUser("joe","jabroni mail","123123");
+    });
+  }
+
+  @Test
   void getUserByEmail() throws UserNotFoundException {
     assertEquals(user1, modelFacade.getUserByEmail("user1@email.com"));
     assertThrows(UserNotFoundException.class, () -> modelFacade.getUserByEmail("bad email"));
