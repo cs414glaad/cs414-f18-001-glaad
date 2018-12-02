@@ -37,7 +37,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"type\":\"user\",\n  \"username\":\"user1\",\n  \"email\":\"def not a email 3lol\",\n  \"password\":\"passwd\"\n}"
+					"raw": "{\n  \"type\":\"user\",\n  \"username\":\"user1\",\n  \"email\":\"defisanemail1@lol.com\",\n  \"password\":\"passwd\"\n}"
 				},
 				"url": {
 					"raw": "localhost:3001/user",
@@ -77,7 +77,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"type\":\"user\",\n  \"username\":\"user2\",\n  \"email\":\"def not a email 2\",\n  \"password\":\"passwd\"\n}"
+					"raw": "{\n  \"type\":\"user\",\n  \"username\":\"user2\",\n  \"email\":\"defisanemail2@lol.com\",\n  \"password\":\"passwd\"\n}"
 				},
 				"url": {
 					"raw": "localhost:3001/user",
@@ -117,7 +117,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"type\":\"user\",\n  \"username\":\"user3\",\n  \"email\":\"def not a email 3\",\n  \"password\":\"passwd\"\n}"
+					"raw": "{\n  \"type\":\"user\",\n  \"username\":\"user3\",\n  \"email\":\"defisanemail1@lol.com\",\n  \"password\":\"passwd\"\n}"
 				},
 				"url": {
 					"raw": "localhost:3001/user",

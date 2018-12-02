@@ -57,7 +57,9 @@ public class UserService extends Observable {
     }
     throw new UserNotFoundException();
   }
-
+  /**
+    This method creates and cashes a user if that user has valid credentials and doesn't already exist
+   */
   public User registerUser(String username, String email, String password) throws FailedApiCallException, InvalidInputException {
     try {
       getUser(username); // throws exception
@@ -71,7 +73,12 @@ public class UserService extends Observable {
     } catch (UserNotFoundException e) {
       // user doesn't exist
     }
-    // Create user
+      //validate email
+      if(!isValidEmailAddress(email)) {
+        throw new InvalidInputException("invalid email");
+      }
+
+    // Create user if user doesn't already exist under the given username/email and if email is valid
     User user = new User(username, email, password);
     cachedUsers.add(user);
     setChanged();
@@ -149,6 +156,17 @@ public class UserService extends Observable {
       throw new FailedApiCallException("credentials invalid");
     }
   }
+  /**
+   * Checks if email passed in by user is of the correct form
+   * @param email
+   * returns true if email is valid
+   */
+    public boolean isValidEmailAddress(String email){
+      String ePattern = "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$";
+      java.util.regex.Pattern p = java.util.regex.Pattern.compile(ePattern);
+      java.util.regex.Matcher m = p.matcher(email);
+      return m.matches();
+    }
 
   /**
    * Returns
