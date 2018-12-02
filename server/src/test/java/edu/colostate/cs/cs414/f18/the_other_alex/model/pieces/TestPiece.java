@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
 
-public class testPiece {
+public class TestPiece {
 	private  Soldier testSoldier;
 	@Test
 	public void testCanSoldierCaptureGeneral(){

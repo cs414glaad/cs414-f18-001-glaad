@@ -3,8 +3,6 @@ package edu.colostate.cs.cs414.f18.the_other_alex.model;
 import java.sql.*;
 import java.io.ObjectInputStream;
 import java.io.ByteArrayInputStream;
-import java.util.ArrayList;
-import java.util.ArrayList;
 import java.io.IOException;
 
 public class Database {
@@ -26,7 +24,7 @@ public class Database {
     public User findSerializedUserByEmail(String email) throws SQLException, IOException,
             ClassNotFoundException, IllegalAccessException, InstantiationException {
         String deserializeUserSearchString = "SELECT UserObject FROM UserTable WHERE Email = ?;";
-        Class.forName(myDriver).newInstance();
+//        Class.forName(myDriver).newInstance();
         Connection conn = DriverManager.getConnection(myUrl, username, password);
         PreparedStatement st = conn.prepareStatement(deserializeUserSearchString);
         st.setString(1, email);
@@ -50,7 +48,7 @@ public class Database {
     public User findSerializedUserByUsername(String username) throws SQLException, IOException,
             ClassNotFoundException , IllegalAccessException, InstantiationException{
         String deserializeUserSearchString = "SELECT UserObject FROM UserTable WHERE Username = ?;";
-        Class.forName(myDriver).newInstance();
+//        Class.forName(myDriver).newInstance();
         Connection conn = DriverManager.getConnection(myUrl, this.username, password);
         PreparedStatement st = conn.prepareStatement(deserializeUserSearchString);
         st.setString(1, username);
@@ -74,7 +72,7 @@ public class Database {
     public User findSerializedUserByUserID(int UserID) throws SQLException, IOException,
             ClassNotFoundException , IllegalAccessException, InstantiationException{
         String deserializeUserSearchString = "SELECT UserObject FROM UserTable WHERE UserID = ?;";
-        Class.forName(myDriver).newInstance();
+//        Class.forName(myDriver).newInstance();
         Connection conn = DriverManager.getConnection(myUrl, username, password);
         PreparedStatement st = conn.prepareStatement(deserializeUserSearchString);
         st.setInt(1, UserID);
@@ -96,7 +94,7 @@ public class Database {
 
     private long addSerializedUser(User user) throws SQLException, IOException,
             ClassNotFoundException, IllegalAccessException, InstantiationException {
-        Class.forName(myDriver).newInstance();
+//        Class.forName(myDriver).newInstance();
         Connection conn = DriverManager.getConnection(myUrl, username, password);
         String serializeUser = "INSERT INTO UserTable(Email, Username, UserObject) VALUES (?, ?, ?);";
 
@@ -120,7 +118,7 @@ public class Database {
     public Game findSerializedGameByID(int GameID) throws SQLException, IOException,
             ClassNotFoundException , IllegalAccessException, InstantiationException{
         String deserializeGameSearchString = "SELECT GameObject FROM Game WHERE GameID = ?;";
-        Class.forName(myDriver).newInstance();
+//        Class.forName(myDriver).newInstance();
         Connection conn = DriverManager.getConnection(myUrl, username, password);
         PreparedStatement ptstmt = conn.prepareStatement(deserializeGameSearchString);
         ptstmt.setInt(1, GameID);
@@ -155,7 +153,7 @@ public class Database {
 
     private long addGameObjectToTable(Game g) throws SQLException, IOException,
             ClassNotFoundException, IllegalAccessException, InstantiationException {
-        Class.forName(myDriver).newInstance();
+//        Class.forName(myDriver).newInstance();
         Connection conn = DriverManager.getConnection(myUrl, username, password);
         String serializeGameHistory = "INSERT INTO Game(GameID, serializedObject) VALUES (?, ?);";
 
@@ -178,7 +176,7 @@ public class Database {
     public void deleteUserEntryUsingID(int userID) throws SQLException, IOException,
             ClassNotFoundException, IllegalAccessException, InstantiationException{
 
-        Class.forName(myDriver).newInstance();
+//        Class.forName(myDriver).newInstance();
         Connection conn = DriverManager.getConnection(myUrl, username, password);
         String userDeletionString = "DELETE FROM UserTable WHERE UserID = ?;";
 
@@ -193,7 +191,7 @@ public class Database {
     public void deleteGameEntryUsingID(int gameID) throws SQLException, IOException,
             ClassNotFoundException, IllegalAccessException, InstantiationException {
 
-        Class.forName(myDriver).newInstance();
+//        Class.forName(myDriver).newInstance();
         Connection conn = DriverManager.getConnection(myUrl, username, password);
         String gameDeletionString = "DELETE FROM Game WHERE GameID = ?;";
 
