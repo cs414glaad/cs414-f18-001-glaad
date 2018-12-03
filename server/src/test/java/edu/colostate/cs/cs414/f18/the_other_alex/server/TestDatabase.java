@@ -6,6 +6,8 @@ import edu.colostate.cs.cs414.f18.the_other_alex.model.User;
 import edu.colostate.cs.cs414.f18.the_other_alex.model.exceptions.InvalidInputException;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import java.io.IOException;
+import java.sql.SQLException;
 
 public class TestDatabase {
 
@@ -15,30 +17,28 @@ public class TestDatabase {
     private Database database = new Database();
 
     @Test
-    public void testAddingGame() {
+    public void testAddingGame() throws InvalidInputException, ClassNotFoundException, SQLException,
+            InstantiationException, IllegalAccessException, IOException{
+        long u1ID = -1;
+        long u2ID = -1;
+        Game g = null;
         try {
             testUser1 = new User("User1", "user1@gmail.com", "passw0rd");
             testUser2 = new User("User1", "user2@gmail.com", "pooprat");
             testGame = new Game(testUser1, testUser2, "1");
-            long u1ID = database.addSerializedObject(testUser1);
+            u1ID = database.addSerializedObject(testUser1);
             System.out.println("User one inserted");
-            long u2ID = database.addSerializedObject(testUser2);
+            u2ID = database.addSerializedObject(testUser2);
             System.out.println("User two inserted");
             database.addSerializedObject(testGame);
             System.out.println("Game inserted");
-            Game g = database.findSerializedGameByID(1);
+            g = database.findSerializedGameByID(testGame.getGameId().hashCode());
             assertEquals(g.getGameId(), "1");
-            database.deleteGameEntryUsingID(1);
-            database.deleteUserEntryUsingID((int)u1ID);
-            database.deleteUserEntryUsingID((int)u2ID);
         }
-        catch(InvalidInputException e) {
-            System.exit(-1);
-        }
-        catch(Exception e){
-            System.out.println(e.getMessage());
-            System.out.println("Error from Database");
-            System.exit(-1);
+        finally {
+            database.deleteGameEntryUsingID(g.getGameId().hashCode());
+            database.deleteUserEntryUsingID((int) u1ID);
+            database.deleteUserEntryUsingID((int) u2ID);
         }
     }
 

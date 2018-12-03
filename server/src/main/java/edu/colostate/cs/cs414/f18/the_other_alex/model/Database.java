@@ -14,16 +14,15 @@ public class Database {
     public Database() {
         username = "ashellum";
         password = "830284211";
-        myDriver = "com.mysql.jdbc.Driver"; // add dependencies in
         //String myUrl = "jdbc:mysql://faure.cs.colostate.edu/cs314";
-        myUrl = "jdbc:mysql://faure.cs.colostate.edu/theotheralex";
+        myUrl = "jdbc:mysql://129.82.45.59:3306/theotheralex";
     }
     // Or I could make it take a database connection, that would be more efficient probs. We'll see if it's an issue
 
     // condense all of this find user shit into one method instead of copying code like a fool
     public User findSerializedUserByEmail(String email) throws SQLException, IOException,
             ClassNotFoundException, IllegalAccessException, InstantiationException {
-        String deserializeUserSearchString = "SELECT UserObject FROM UserTable WHERE Email = ?;";
+        String deserializeUserSearchString = "SELECT SerializedObject FROM UserTable WHERE Email = ?;";
 //        Class.forName(myDriver).newInstance();
         Connection conn = DriverManager.getConnection(myUrl, username, password);
         PreparedStatement st = conn.prepareStatement(deserializeUserSearchString);
@@ -47,7 +46,7 @@ public class Database {
 
     public User findSerializedUserByUsername(String username) throws SQLException, IOException,
             ClassNotFoundException , IllegalAccessException, InstantiationException{
-        String deserializeUserSearchString = "SELECT UserObject FROM UserTable WHERE Username = ?;";
+        String deserializeUserSearchString = "SELECT SerializedObject FROM UserTable WHERE Username = ?;";
 //        Class.forName(myDriver).newInstance();
         Connection conn = DriverManager.getConnection(myUrl, this.username, password);
         PreparedStatement st = conn.prepareStatement(deserializeUserSearchString);
@@ -71,7 +70,7 @@ public class Database {
     //ADD USERNAME SEARCH
     public User findSerializedUserByUserID(int UserID) throws SQLException, IOException,
             ClassNotFoundException , IllegalAccessException, InstantiationException{
-        String deserializeUserSearchString = "SELECT UserObject FROM UserTable WHERE UserID = ?;";
+        String deserializeUserSearchString = "SELECT SerializedObject FROM UserTable WHERE UserID = ?;";
 //        Class.forName(myDriver).newInstance();
         Connection conn = DriverManager.getConnection(myUrl, username, password);
         PreparedStatement st = conn.prepareStatement(deserializeUserSearchString);
@@ -96,9 +95,9 @@ public class Database {
             ClassNotFoundException, IllegalAccessException, InstantiationException {
 //        Class.forName(myDriver).newInstance();
         Connection conn = DriverManager.getConnection(myUrl, username, password);
-        String serializeUser = "INSERT INTO UserTable(Email, Username, UserObject) VALUES (?, ?, ?);";
+        String serializeUser = "INSERT INTO UserTable(Email, Username, SerializedObject) VALUES (?, ?, ?);";
 
-        PreparedStatement pstmt = conn.prepareStatement(serializeUser);
+        PreparedStatement pstmt = conn.prepareStatement(serializeUser, Statement.RETURN_GENERATED_KEYS);
         pstmt.setString(1, user.getEmail());
         pstmt.setString(2, user.getUsername());
         pstmt.setObject(3, user);
@@ -117,7 +116,7 @@ public class Database {
 
     public Game findSerializedGameByID(int GameID) throws SQLException, IOException,
             ClassNotFoundException , IllegalAccessException, InstantiationException{
-        String deserializeGameSearchString = "SELECT GameObject FROM Game WHERE GameID = ?;";
+        String deserializeGameSearchString = "SELECT SerializedObject FROM Game WHERE GameID = ?;";
 //        Class.forName(myDriver).newInstance();
         Connection conn = DriverManager.getConnection(myUrl, username, password);
         PreparedStatement ptstmt = conn.prepareStatement(deserializeGameSearchString);
@@ -155,9 +154,9 @@ public class Database {
             ClassNotFoundException, IllegalAccessException, InstantiationException {
 //        Class.forName(myDriver).newInstance();
         Connection conn = DriverManager.getConnection(myUrl, username, password);
-        String serializeGameHistory = "INSERT INTO Game(GameID, serializedObject) VALUES (?, ?);";
+        String serializeGameHistory = "INSERT INTO Game(GameID, SerializedObject) VALUES (?, ?);";
 
-        PreparedStatement pstmt = conn.prepareStatement(serializeGameHistory);
+        PreparedStatement pstmt = conn.prepareStatement(serializeGameHistory, Statement.RETURN_GENERATED_KEYS);
         pstmt.setInt(1, g.getGameId().hashCode());
         pstmt.setObject(2, g);
         pstmt.executeUpdate();

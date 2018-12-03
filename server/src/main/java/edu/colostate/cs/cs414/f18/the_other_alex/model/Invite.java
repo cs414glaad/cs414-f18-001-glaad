@@ -1,15 +1,19 @@
 package edu.colostate.cs.cs414.f18.the_other_alex.model;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.UUID;
 
-public class Invite extends Observable {
+public class Invite extends Observable implements Serializable {
   private String inviteId;
   private User fromUser;
   private ArrayList<String> toUsers;
   private String toUser;
+  private static final long serialVersionUID = 8L;
 
   public Invite(User user) {
     this(user, generateId());
@@ -20,6 +24,16 @@ public class Invite extends Observable {
     this.inviteId = inviteId;
     toUsers = new ArrayList<>();
     toUser = null;
+  }
+
+  private void writeObject(ObjectOutputStream oos)
+          throws IOException {
+    oos.defaultWriteObject();
+  }
+
+  private void readObject(ObjectInputStream ois)
+          throws ClassNotFoundException, IOException {
+    ois.defaultReadObject();
   }
 
   public boolean send(String username) {

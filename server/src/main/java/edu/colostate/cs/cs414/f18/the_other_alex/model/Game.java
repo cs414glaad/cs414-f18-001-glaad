@@ -2,6 +2,9 @@ package edu.colostate.cs.cs414.f18.the_other_alex.model;
 
 import edu.colostate.cs.cs414.f18.the_other_alex.model.exceptions.InvalidMoveException;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.Date;
 import java.util.Observable;
 import java.util.Observer;
@@ -17,7 +20,7 @@ public class Game extends Observable implements Observer, Serializable {
   private PieceColor user1Color;
   private PieceColor user2Color;
   private Boolean firstMove;
-  private static final long serialVersionUID = 7526472295622776142L;
+  private static final long serialVersionUID = 7L;
   private GameState gameState;
 
   //game record start time is set when Game instantiated. Player1 is first to move.
@@ -32,6 +35,16 @@ public class Game extends Observable implements Observer, Serializable {
     turn = user1;
     firstMove = true;
     gameState = GameState.IN_PROGRESS;
+  }
+
+  private void writeObject(ObjectOutputStream oos)
+          throws IOException {
+    oos.defaultWriteObject();
+  }
+
+  private void readObject(ObjectInputStream ois)
+          throws ClassNotFoundException, IOException {
+    ois.defaultReadObject();
   }
 
   public void gameOver() {

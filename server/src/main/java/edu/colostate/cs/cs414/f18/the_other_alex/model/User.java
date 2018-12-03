@@ -1,5 +1,8 @@
 package edu.colostate.cs.cs414.f18.the_other_alex.model;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import edu.colostate.cs.cs414.f18.the_other_alex.model.exceptions.InvalidInputException;
 
@@ -27,6 +30,16 @@ public class User extends Observable implements Observer, Serializable {
     pendingReceivedInvites = new ArrayList<>();
     userHistory = new UserHistory();
     games = new ArrayList<>();
+  }
+
+  private void writeObject(ObjectOutputStream oos)
+          throws IOException {
+    oos.defaultWriteObject();
+  }
+
+  private void readObject(ObjectInputStream ois)
+          throws ClassNotFoundException, IOException {
+    ois.defaultReadObject();
   }
 
   private void setUsername(String username) throws InvalidInputException {

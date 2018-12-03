@@ -4,11 +4,15 @@ import edu.colostate.cs.cs414.f18.the_other_alex.model.Cell;
 import edu.colostate.cs.cs414.f18.the_other_alex.model.NullPiece;
 import edu.colostate.cs.cs414.f18.the_other_alex.model.PieceColor;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public abstract class Piece {
+public abstract class Piece implements Serializable {
 	protected static final String GENERAL = "General";
 	protected static final String ADVISOR = "Advisor";
 	protected static final String ELEPHANT = "Elephant";
@@ -18,6 +22,7 @@ public abstract class Piece {
 	protected static final String SOLDIER = "Soldier";
 	// may be used to help with movement, might decide it's a bad idea
 	protected static final String NULL = "Null piece";
+	private static final long serialVersionUID = 4L;
 
 	protected static final List<String> generalCanCapture = Arrays.asList(
 			GENERAL, ADVISOR, ELEPHANT, CHARIOT, HORSE, CANNON, SOLDIER, NULL);
@@ -39,6 +44,17 @@ public abstract class Piece {
 	protected String type;
 	protected PieceColor color;
 	private String id;
+
+
+	private void writeObject(ObjectOutputStream oos)
+			throws IOException {
+		oos.defaultWriteObject();
+	}
+
+	private void readObject(ObjectInputStream ois)
+			throws ClassNotFoundException, IOException {
+		ois.defaultReadObject();
+	}
 
 	public Piece(PieceColor color){
 		isFlipped = false;
