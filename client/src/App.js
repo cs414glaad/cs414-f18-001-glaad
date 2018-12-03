@@ -25,10 +25,10 @@ class App extends Component {
   render() {
     return (
       <div className="container-fluid">
-        <Login user={this.state.user} updateUser={this.updateUser}/>
-        <Invites user={this.state.user}/>
-        <GameSelect user={this.state.user} updateGame={this.updateGame}/>
-        <Game user={this.state.user} game={this.state.game}/>
+        <Login user={this.state.user} updateUser={this.updateUser} server={this.state.server}/>
+        <Invites user={this.state.user} server={this.state.server}/>
+        <GameSelect user={this.state.user} updateGame={this.updateGame} server={this.state.server}/>
+        <Game user={this.state.user} game={this.state.game} server={this.state.server}/>
         <Debug updateServer={this.updateServer}/>
       </div>
     );
