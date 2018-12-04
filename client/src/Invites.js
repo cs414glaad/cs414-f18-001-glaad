@@ -23,10 +23,10 @@ class Invites extends Component{
         })
             .then(function (response) {
                 alert(response.data.status)
-            })
+            }.bind(this))
             .catch(function (error) {
                 alert(error.response.data.msg)
-            });
+            }.bind(this));
     }
   }
   acceptInvite(invite){
@@ -76,10 +76,10 @@ class Invites extends Component{
               .then(function (response) {
                   this.state.username = response.data.msg;
                   console.log(response.data.msg)
-              })
+              }.bind(this))
               .catch(function (error) {
                   alert(error.response.data.msg)
-              });
+              }.bind(this));
 
           //getting list of sent invites from username
           if(this.state.username) {
@@ -90,10 +90,10 @@ class Invites extends Component{
                   .then(function (response) {
                       this.state.userObj = JSON.parse(response.data.msg);
                       console.log(this.state.userObj)
-                  })
+                  }.bind(this))
                   .catch(function (error) {
                       alert(error.response.data.msg)
-                  });
+                  }.bind(this));
           }
           /*
           let invites = [{fromUser:"aboiuc234",toUsers:[{username: "ripharambe"},{username: "xXxELITESNIPERxXx"}]},{fromUser:"banqiFreak123", toUsers:[{username: "noscope419xD"}]}];
