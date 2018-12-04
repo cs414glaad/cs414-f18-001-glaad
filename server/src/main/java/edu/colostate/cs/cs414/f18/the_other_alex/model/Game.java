@@ -63,33 +63,37 @@ public class Game extends Observable implements Observer, Serializable {
   }
 
   public GameState makeMove(Cell fromCell, Cell toCell, User user) throws InvalidMoveException {
+    if(turn.equals(user)) {
 //check for firstMove. If true, set userColors according to flipped piece color. (assumes user1 plays first)
-    if (firstMove) {
-      board.move(fromCell, toCell);
-      user1Color = fromCell.getPiece().getColor();
-      if (user1Color == PieceColor.BLACK) {
-        user2Color = PieceColor.RED;
-      } else {
-        user2Color = PieceColor.BLACK;
-      }
-      firstMove = false;
-      endTurn();
-      return GameState.IN_PROGRESS;
-    }
-//subsequent moves.
-    if(fromCell.getPiece().getColor() == getUserColor(user)) { //make sure piece is right color
-      board.move(fromCell, toCell);
-      if (board.isGameOver(getOpponentColor(user))) {
-        gameOver();
-        return GameState.OVER;
-      }
-      else {
+      if (firstMove) {
+        board.move(fromCell, toCell);
+        user1Color = fromCell.getPiece().getColor();
+        if (user1Color == PieceColor.BLACK) {
+          user2Color = PieceColor.RED;
+        } else {
+          user2Color = PieceColor.BLACK;
+        }
+        firstMove = false;
         endTurn();
         return GameState.IN_PROGRESS;
       }
+//subsequent moves.
+      if (fromCell.getPiece().getColor() == getUserColor(user)) { //make sure piece is right color
+        board.move(fromCell, toCell);
+        turn = user2;
+        if (board.isGameOver(getOpponentColor(user))) {
+          gameOver();
+          return GameState.OVER;
+        } else {
+          endTurn();
+          return GameState.IN_PROGRESS;
+        }
+      } else {
+        throw new InvalidMoveException("Invalid move: Select a piece of your own color");
+      }
     }
-    else {
-      throw new InvalidMoveException("Invalid move: Select a piece of your own color");
+    else{
+      throw new InvalidMoveException("It is not your turn to move");
     }
   }
 
@@ -123,7 +127,6 @@ public class Game extends Observable implements Observer, Serializable {
   public void update(Observable o, Object arg) {
 
   }
-
   public String getGameId() {
     return gameId;
   }
