@@ -2,7 +2,7 @@ package edu.colostate.cs.cs414.f18.the_other_alex.model.controllers;
 
 import edu.colostate.cs.cs414.f18.the_other_alex.model.*;
 import edu.colostate.cs.cs414.f18.the_other_alex.model.exceptions.GameNotFoundException;
-import edu.colostate.cs.cs414.f18.the_other_alex.server.Database;
+import edu.colostate.cs.cs414.f18.the_other_alex.model.Database;
 import edu.colostate.cs.cs414.f18.the_other_alex.server.exceptions.FailedApiCallException;
 
 import java.util.ArrayList;
@@ -41,7 +41,11 @@ public class GameService extends Observable {
       }
     }
     if (database != null) {
-      database.getGame(gameId);
+      try {
+        database.getGame(gameId.hashCode());
+      } catch(Exception e) {
+        throw new GameNotFoundException();
+      }
     }
     return null;
   }

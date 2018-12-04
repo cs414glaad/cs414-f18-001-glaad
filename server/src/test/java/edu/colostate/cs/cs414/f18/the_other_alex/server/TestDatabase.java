@@ -11,37 +11,87 @@ import java.sql.SQLException;
 
 public class TestDatabase {
 
-    private Game testGame;
-    private User testUser1;
-    private User testUser2;
     private Database database = new Database();
 
     @Test
-    public void testAddingGame() throws InvalidInputException, ClassNotFoundException, SQLException,
+    public void testAddingAndFindingGame() throws InvalidInputException, ClassNotFoundException, SQLException,
             InstantiationException, IllegalAccessException, IOException{
         long u1ID = -1;
         long u2ID = -1;
         Game g = null;
         try {
-            testUser1 = new User("User1", "user1@gmail.com", "passw0rd");
-            testUser2 = new User("User1", "user2@gmail.com", "pooprat");
-            testGame = new Game(testUser1, testUser2, "1");
+            User testUser1 = new User("User1", "user1@gmail.com", "passw0rd");
+            User testUser2 = new User("User1", "user2@gmail.com",
+                    "TheArtistFormallyKnownAsPooprat");
+            Game testGame = new Game(testUser1, testUser2, "1");
+
             u1ID = database.addSerializedObject(testUser1);
-            System.out.println("User one inserted");
             u2ID = database.addSerializedObject(testUser2);
-            System.out.println("User two inserted");
             database.addSerializedObject(testGame);
-            System.out.println("Game inserted");
-            g = database.findSerializedGameByID(testGame.getGameId().hashCode());
-            assertEquals(g.getGameId(), "1");
+
+            g = database.getGame(testGame.getGameId().hashCode());
+            assertEquals("1", g.getGameId());
         }
         finally {
-            database.deleteGameEntryUsingID(g.getGameId().hashCode());
             database.deleteUserEntryUsingID((int) u1ID);
             database.deleteUserEntryUsingID((int) u2ID);
+            database.deleteGameEntryUsingID(g.getGameId().hashCode());
+        }
+    }
+
+    @Test
+    public void testAddingAndFindingUserByEmail() throws InvalidInputException, ClassNotFoundException, SQLException,
+            InstantiationException, IllegalAccessException, IOException {
+        long uID = -1;
+        User u = null;
+        try {
+            User testUser = new User("User1", "user1@gmail.com", "passw0rd");
+
+            uID = database.addSerializedObject(testUser);
+
+            u = database.getUserByEmail("user1@gmail.com");
+
+            assertEquals("User1", u.getUsername());
+        } finally {
+            database.deleteUserEntryUsingID((int) uID);
+        }
+    }
+
+    @Test
+    public void testAddingAndFindingUserByUsername() throws InvalidInputException, ClassNotFoundException, SQLException,
+            InstantiationException, IllegalAccessException, IOException {
+        long uID = -1;
+        User u = null;
+        try {
+            User testUser = new User("User1", "user1@gmail.com", "passw0rd");
+
+            uID = database.addSerializedObject(testUser);
+
+            u = database.getUser("User1");
+
+            assertEquals("user1@gmail.com", u.getEmail());
+        } finally {
+            database.deleteUserEntryUsingID((int) uID);
         }
     }
 
 
+    @Test
+    public void testAddingAndFindingUserByUserID() throws InvalidInputException, ClassNotFoundException, SQLException,
+            InstantiationException, IllegalAccessException, IOException {
+        int uID = -1;
+        User u = null;
+        try {
+            User testUser = new User("User1", "user1@gmail.com", "passw0rd");
+
+            uID = database.addSerializedObject(testUser);
+
+            u = database.findSerializedUserByUserID(uID);
+
+            assertEquals("User1", u.getUsername());
+        } finally {
+            database.deleteUserEntryUsingID((int) uID);
+        }
+    }
 
 }

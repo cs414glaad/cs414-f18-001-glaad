@@ -10,6 +10,9 @@ public class Database {
     String password;
     String myUrl;
     String myDriver;
+    Connection conn;
+    PreparedStatement st;
+    ResultSet rs;
 
     public Database() {
         username = "ashellum";
@@ -20,124 +23,173 @@ public class Database {
     // Or I could make it take a database connection, that would be more efficient probs. We'll see if it's an issue
 
     // condense all of this find user shit into one method instead of copying code like a fool
-    public User findSerializedUserByEmail(String email) throws SQLException, IOException,
+    public User getUserByEmail(String email) throws SQLException, IOException,
             ClassNotFoundException, IllegalAccessException, InstantiationException {
-        String deserializeUserSearchString = "SELECT SerializedObject FROM UserTable WHERE Email = ?;";
+        try {
+            String deserializeUserSearchString = "SELECT SerializedObject FROM UserTable WHERE Email = ?;";
 //        Class.forName(myDriver).newInstance();
-        Connection conn = DriverManager.getConnection(myUrl, username, password);
-        PreparedStatement st = conn.prepareStatement(deserializeUserSearchString);
-        st.setString(1, email);
-        ResultSet rs = st.executeQuery();
-        rs.next();
+            conn = DriverManager.getConnection(myUrl, username, password);
+            st = conn.prepareStatement(deserializeUserSearchString);
+            st.setString(1, email);
+            rs = st.executeQuery();
+            rs.next();
 
-        byte[] buf = rs.getBytes(1);
-        ObjectInputStream objectIn = null;
-        if (buf != null) {
-            objectIn = new ObjectInputStream(new ByteArrayInputStream(buf));
+            byte[] buf = rs.getBytes(1);
+            ObjectInputStream objectIn = null;
+            if (buf != null) {
+                objectIn = new ObjectInputStream(new ByteArrayInputStream(buf));
+            }
+            User deSerializedObject = (User) objectIn.readObject();
+
+            return deSerializedObject;
         }
-        User deSerializedObject = (User) objectIn.readObject();
-        rs.close();
-        st.close();
-        conn.close();
-
-        return deSerializedObject;
+        finally {
+            if (rs != null && rs.isClosed() == false) {
+                rs.close();
+            }
+            if (st != null && st.isClosed() == false) {
+                st.close();
+            }
+            if (conn != null && conn.isClosed() == false) {
+                conn.close();
+            }
+        }
     }
 
 
-    public User findSerializedUserByUsername(String username) throws SQLException, IOException,
+    public User getUser(String username) throws SQLException, IOException,
             ClassNotFoundException , IllegalAccessException, InstantiationException{
-        String deserializeUserSearchString = "SELECT SerializedObject FROM UserTable WHERE Username = ?;";
+        try {
+            String deserializeUserSearchString = "SELECT SerializedObject FROM UserTable WHERE Username = ?;";
 //        Class.forName(myDriver).newInstance();
-        Connection conn = DriverManager.getConnection(myUrl, this.username, password);
-        PreparedStatement st = conn.prepareStatement(deserializeUserSearchString);
-        st.setString(1, username);
-        ResultSet rs = st.executeQuery();
-        rs.next();
+            conn = DriverManager.getConnection(myUrl, this.username, password);
+            st = conn.prepareStatement(deserializeUserSearchString);
+            st.setString(1, username);
+            rs = st.executeQuery();
+            rs.next();
 
-        byte[] buf = rs.getBytes(1);
-        ObjectInputStream objectIn = null;
-        if (buf != null) {
-            objectIn = new ObjectInputStream(new ByteArrayInputStream(buf));
+            byte[] buf = rs.getBytes(1);
+            ObjectInputStream objectIn = null;
+            if (buf != null) {
+                objectIn = new ObjectInputStream(new ByteArrayInputStream(buf));
+            }
+            User deSerializedObject = (User) objectIn.readObject();
+
+            return deSerializedObject;
         }
-        User deSerializedObject = (User) objectIn.readObject();
-        rs.close();
-        st.close();
-        conn.close();
-
-        return deSerializedObject;
+        finally {
+            if (rs != null && rs.isClosed() == false) {
+                rs.close();
+            }
+            if (st != null && st.isClosed() == false) {
+                st.close();
+            }
+            if (conn != null && conn.isClosed() == false) {
+                conn.close();
+            }
+        }
     }
 
-    //ADD USERNAME SEARCH
     public User findSerializedUserByUserID(int UserID) throws SQLException, IOException,
             ClassNotFoundException , IllegalAccessException, InstantiationException{
-        String deserializeUserSearchString = "SELECT SerializedObject FROM UserTable WHERE UserID = ?;";
+        try {
+            String deserializeUserSearchString = "SELECT SerializedObject FROM UserTable WHERE UserID = ?;";
 //        Class.forName(myDriver).newInstance();
-        Connection conn = DriverManager.getConnection(myUrl, username, password);
-        PreparedStatement st = conn.prepareStatement(deserializeUserSearchString);
-        st.setInt(1, UserID);
-        ResultSet rs = st.executeQuery();
-        rs.next();
+            conn = DriverManager.getConnection(myUrl, username, password);
+            st = conn.prepareStatement(deserializeUserSearchString);
+            st.setInt(1, UserID);
+            rs = st.executeQuery();
+            rs.next();
 
-        byte[] buf = rs.getBytes(1);
-        ObjectInputStream objectIn = null;
-        if (buf != null) {
-            objectIn = new ObjectInputStream(new ByteArrayInputStream(buf));
+            byte[] buf = rs.getBytes(1);
+            ObjectInputStream objectIn = null;
+            if (buf != null) {
+                objectIn = new ObjectInputStream(new ByteArrayInputStream(buf));
+            }
+            User deSerializedObject = (User) objectIn.readObject();
+
+            return deSerializedObject;
         }
-        User deSerializedObject = (User) objectIn.readObject();
-        rs.close();
-        st.close();
-        conn.close();
-
-        return deSerializedObject;
+        finally {
+            if (rs != null && rs.isClosed() == false) {
+                rs.close();
+            }
+            if (st != null && st.isClosed() == false) {
+                st.close();
+            }
+            if (conn != null && conn.isClosed() == false) {
+                conn.close();
+            }
+        }
     }
 
-    private long addSerializedUser(User user) throws SQLException, IOException,
+    private int addSerializedUser(User user) throws SQLException, IOException,
             ClassNotFoundException, IllegalAccessException, InstantiationException {
 //        Class.forName(myDriver).newInstance();
-        Connection conn = DriverManager.getConnection(myUrl, username, password);
-        String serializeUser = "INSERT INTO UserTable(Email, Username, SerializedObject) VALUES (?, ?, ?);";
+        try {
+            conn = DriverManager.getConnection(myUrl, username, password);
+            String serializeUser = "INSERT INTO UserTable(Email, Username, SerializedObject) VALUES (?, ?, ?);";
 
-        PreparedStatement pstmt = conn.prepareStatement(serializeUser, Statement.RETURN_GENERATED_KEYS);
-        pstmt.setString(1, user.getEmail());
-        pstmt.setString(2, user.getUsername());
-        pstmt.setObject(3, user);
-        pstmt.executeUpdate();
-        ResultSet rs = pstmt.getGeneratedKeys();
-        int UserID = -1;
-        if (rs.next()) {
-            UserID = rs.getInt(1);
+            st = conn.prepareStatement(serializeUser, Statement.RETURN_GENERATED_KEYS);
+            st.setString(1, user.getEmail());
+            st.setString(2, user.getUsername());
+            st.setObject(3, user);
+            st.executeUpdate();
+            rs = st.getGeneratedKeys();
+            int UserID = -1;
+            if (rs.next()) {
+                UserID = rs.getInt(1);
+            }
+            return UserID;
         }
-        rs.close();
-        pstmt.close();
-        conn.close();
-        return UserID;
+        finally {
+            if (rs != null && rs.isClosed() == false) {
+                rs.close();
+            }
+            if (st != null && st.isClosed() == false) {
+                st.close();
+            }
+            if (conn != null && conn.isClosed() == false) {
+                conn.close();
+            }
+        }
 
     }
 
-    public Game findSerializedGameByID(int GameID) throws SQLException, IOException,
+    public Game getGame(int GameID) throws SQLException, IOException,
             ClassNotFoundException , IllegalAccessException, InstantiationException{
         String deserializeGameSearchString = "SELECT SerializedObject FROM Game WHERE GameID = ?;";
 //        Class.forName(myDriver).newInstance();
-        Connection conn = DriverManager.getConnection(myUrl, username, password);
-        PreparedStatement ptstmt = conn.prepareStatement(deserializeGameSearchString);
-        ptstmt.setInt(1, GameID);
-        ResultSet rs = ptstmt.executeQuery();
-        rs.next();
+        try {
+            conn = DriverManager.getConnection(myUrl, username, password);
+            st = conn.prepareStatement(deserializeGameSearchString);
+            st.setInt(1, GameID);
+            rs = st.executeQuery();
+            rs.next();
 
-        byte[] buf = rs.getBytes(1);
-        ObjectInputStream objectIn = null;
-        if (buf != null) {
-            objectIn = new ObjectInputStream(new ByteArrayInputStream(buf));
+            byte[] buf = rs.getBytes(1);
+            ObjectInputStream objectIn = null;
+            if (buf != null) {
+                objectIn = new ObjectInputStream(new ByteArrayInputStream(buf));
+            }
+            Game deserializedObject = (Game) objectIn.readObject();
+
+            return deserializedObject;
         }
-        Game deserializedObject = (Game) objectIn.readObject();
-        rs.close();
-        ptstmt.close();
-        conn.close();
-
-        return deserializedObject;
+        finally {
+            if (rs != null && rs.isClosed() == false) {
+                rs.close();
+            }
+            if (st != null && st.isClosed() == false) {
+                st.close();
+            }
+            if (conn != null && conn.isClosed() == false) {
+                conn.close();
+            }
+        }
     }
 
-    public long addSerializedObject(Object o) throws ClassNotFoundException, IOException,
+    public int addSerializedObject(Object o) throws ClassNotFoundException, IOException,
             SQLException, IllegalAccessException, InstantiationException {
         if (o instanceof User) {
             return addSerializedUser((User) o);
@@ -150,25 +202,35 @@ public class Database {
         }
     }
 
-    private long addGameObjectToTable(Game g) throws SQLException, IOException,
+    private int addGameObjectToTable(Game g) throws SQLException, IOException,
             ClassNotFoundException, IllegalAccessException, InstantiationException {
 //        Class.forName(myDriver).newInstance();
-        Connection conn = DriverManager.getConnection(myUrl, username, password);
-        String serializeGameHistory = "INSERT INTO Game(GameID, SerializedObject) VALUES (?, ?);";
+        try {
+            conn = DriverManager.getConnection(myUrl, username, password);
+            String serializeGameHistory = "INSERT INTO Game(GameID, SerializedObject) VALUES (?, ?);";
 
-        PreparedStatement pstmt = conn.prepareStatement(serializeGameHistory, Statement.RETURN_GENERATED_KEYS);
-        pstmt.setInt(1, g.getGameId().hashCode());
-        pstmt.setObject(2, g);
-        pstmt.executeUpdate();
-        ResultSet rs = pstmt.getGeneratedKeys();
-        int serializedID = -1;
-        if (rs.next()) {
-            serializedID = rs.getInt(1);
+            st = conn.prepareStatement(serializeGameHistory, Statement.RETURN_GENERATED_KEYS);
+            st.setInt(1, g.getGameId().hashCode());
+            st.setObject(2, g);
+            st.executeUpdate();
+            rs = st.getGeneratedKeys();
+            int serializedID = -1;
+            if (rs.next()) {
+                serializedID = rs.getInt(1);
+            }
+            return serializedID;
         }
-        rs.close();
-        pstmt.close();
-        conn.close();
-        return serializedID;
+        finally {
+            if (rs != null && rs.isClosed() == false) {
+                rs.close();
+            }
+            if (st != null && st.isClosed() == false) {
+                st.close();
+            }
+            if (conn != null && conn.isClosed() == false) {
+                conn.close();
+            }
+        }
     }
 
     //FOR TESTING PURPOSES ONLY
@@ -176,14 +238,25 @@ public class Database {
             ClassNotFoundException, IllegalAccessException, InstantiationException{
 
 //        Class.forName(myDriver).newInstance();
-        Connection conn = DriverManager.getConnection(myUrl, username, password);
-        String userDeletionString = "DELETE FROM UserTable WHERE UserID = ?;";
+        try {
+            conn = DriverManager.getConnection(myUrl, username, password);
+            String userDeletionString = "DELETE FROM UserTable WHERE UserID = ?;";
 
-        PreparedStatement pstmt = conn.prepareStatement(userDeletionString);
-        pstmt.setInt(1, userID);
-        pstmt.executeUpdate();
-        pstmt.close();
-        conn.close();
+            st = conn.prepareStatement(userDeletionString);
+            st.setInt(1, userID);
+            st.executeUpdate();
+        }
+        finally {
+            if (rs != null && rs.isClosed() == false) {
+                rs.close();
+            }
+            if (st != null && st.isClosed() == false) {
+                st.close();
+            }
+            if (conn != null && conn.isClosed() == false) {
+                conn.close();
+            }
+        }
     }
 
     //FOR TESTING PURPOSES ONLY
@@ -191,13 +264,24 @@ public class Database {
             ClassNotFoundException, IllegalAccessException, InstantiationException {
 
 //        Class.forName(myDriver).newInstance();
-        Connection conn = DriverManager.getConnection(myUrl, username, password);
-        String gameDeletionString = "DELETE FROM Game WHERE GameID = ?;";
+        try {
+            conn = DriverManager.getConnection(myUrl, username, password);
+            String gameDeletionString = "DELETE FROM Game WHERE GameID = ?;";
 
-        PreparedStatement pstmt = conn.prepareStatement(gameDeletionString);
-        pstmt.setInt(1, gameID);
-        pstmt.executeUpdate();
-        pstmt.close();
-        conn.close();
+            st = conn.prepareStatement(gameDeletionString);
+            st.setInt(1, gameID);
+            st.executeUpdate();
+        }
+        finally {
+            if (rs != null && rs.isClosed() == false) {
+                rs.close();
+            }
+            if (st != null && st.isClosed() == false ) {
+                st.close();
+            }
+            if (conn != null && conn.isClosed() == false) {
+                conn.close();
+            }
+        }
     }
 }

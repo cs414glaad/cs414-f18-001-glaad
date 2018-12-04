@@ -3,7 +3,7 @@ package edu.colostate.cs.cs414.f18.the_other_alex.model.controllers;
 import edu.colostate.cs.cs414.f18.the_other_alex.model.Invite;
 import edu.colostate.cs.cs414.f18.the_other_alex.model.User;
 import edu.colostate.cs.cs414.f18.the_other_alex.model.exceptions.UserNotFoundException;
-import edu.colostate.cs.cs414.f18.the_other_alex.server.Database;
+import edu.colostate.cs.cs414.f18.the_other_alex.model.Database;
 
 import java.util.Observable;
 import java.util.Observer;
@@ -14,7 +14,7 @@ public class ModelService implements Observer {
   private Database database;
 
   public ModelService() {
-    database = null; //new Database(this);
+    database = null;
     userService = new UserService(database);
     gameService = new GameService(database);
   }

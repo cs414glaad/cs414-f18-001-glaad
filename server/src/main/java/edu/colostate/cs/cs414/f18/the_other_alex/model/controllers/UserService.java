@@ -4,7 +4,7 @@ import edu.colostate.cs.cs414.f18.the_other_alex.model.Invite;
 import edu.colostate.cs.cs414.f18.the_other_alex.model.User;
 import edu.colostate.cs.cs414.f18.the_other_alex.model.exceptions.InvalidInputException;
 import edu.colostate.cs.cs414.f18.the_other_alex.model.exceptions.UserNotFoundException;
-import edu.colostate.cs.cs414.f18.the_other_alex.server.Database;
+import edu.colostate.cs.cs414.f18.the_other_alex.model.Database;
 import edu.colostate.cs.cs414.f18.the_other_alex.server.exceptions.FailedApiCallException;
 import edu.colostate.cs.cs414.f18.the_other_alex.server.exceptions.InvalidApiCallException;
 
@@ -33,7 +33,11 @@ public class UserService extends Observable {
       }
     }
     if (database != null) {
-      return database.getUser(username);
+      try {
+        return database.getUser(username);
+      } catch (Exception e) {
+        throw new UserNotFoundException();
+      }
     } else {
       throw new UserNotFoundException();
     }
@@ -52,7 +56,11 @@ public class UserService extends Observable {
       }
     }
     if (database != null) {
-      return database.getUserByEmail(email);
+      try {
+        return database.getUserByEmail(email);
+      } catch (Exception e) {
+        throw new UserNotFoundException();
+      }
     } else {
       throw new UserNotFoundException();
     }
