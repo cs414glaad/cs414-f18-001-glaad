@@ -143,4 +143,12 @@ public class Game extends Observable implements Observer, Serializable {
   public GameState getGameState() {
     return gameState;
   }
+
+  public User getUser1() {
+    return user1;
+  }
+
+  public User getUser2() {
+    return user2;
+  }
 }
