@@ -14,6 +14,10 @@ import spark.Response;
 /**
  * Available game types are:
  *
+ * - 'whoami':
+ *     requires -
+ *     get logged in user
+ *     returns ResponseData
  * - 'user':
  *     requires username
  *     get user
@@ -45,6 +49,19 @@ import spark.Response;
 public class QueryRequest extends RestRequest {
   public String username;
   public String gameId;
+
+  /**
+   * Calls getUserHistory(String username) in UserHistory
+   * @return a UserHistory data type
+   */
+  private String handleWhoami(Request request, Response response, String currentUser, ModelFacade modelFacade) throws FailedApiCallException {
+    System.out.println(currentUser);
+    if (currentUser == null) {
+      currentUser = "";
+    }
+    ResponseData responseData = new ResponseData(ResponseData.SUCCESS, currentUser);
+    return responseData.toString();
+  }
 
   /**
    * Calls getUserHistory(String username) in UserHistory
@@ -111,6 +128,8 @@ public class QueryRequest extends RestRequest {
   protected String handleRequest(Request request, Response response, String currentUser, ModelFacade modelFacade)
       throws InvalidApiCallException, FailedApiCallException {
     switch (type) {
+      case "whoami":
+        return handleWhoami(request, response, currentUser, modelFacade);
       case "user":
         return handleUser(request, response, currentUser, modelFacade);
       case "hist":
@@ -129,15 +148,18 @@ public class QueryRequest extends RestRequest {
   @Override
   protected void validate(String currentUser) throws InvalidApiCallException, FailedApiCallException {
     super.validate(currentUser);
-    requireLoggedIn(currentUser);
     switch (type) {
+      case "whoami":
+        break;
       case "hist":
       case "user":
+        requireLoggedIn(currentUser);
         assertNotNull(username, "username");
         break;
       case "game":
       case "record":
       case "board":
+        requireLoggedIn(currentUser);
         assertNotNull(gameId, "gameId");
         break;
       default:
