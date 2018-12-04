@@ -25,7 +25,7 @@ class Login extends Component {
         this.props.updateUser({name: this.state.username});
       })
       .catch(function (error) {
-        alert(error.response.data.message)
+        alert(error.response.data.msg)
       });
   }
   logOut(){
@@ -40,7 +40,7 @@ class Login extends Component {
       email: this.state.email
     })
       .catch(function (error) {
-        alert(error.response.data.message)
+        alert(error.response.data.msg)
       });
   }
   getForms() {

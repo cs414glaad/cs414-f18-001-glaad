@@ -8,7 +8,7 @@ import Debug from './Debug.js'
 class App extends Component {
   constructor(props){
     super(props);
-    this.state = {server: "http://localhost:3001", user: null, game: null};
+    this.state = {server: "http://" + window.location.hostname + ":" + window.location.port, user: null, game: null};
     this.updateServer = this.updateServer.bind(this);
     this.updateUser = this.updateUser.bind(this);
     this.updateGame = this.updateGame.bind(this);
