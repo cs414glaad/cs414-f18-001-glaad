@@ -6,6 +6,7 @@ import qs from 'qs';
 class Login extends Component {
   constructor(props){
     super(props);
+    this.props = props;
     this.state = {username:null, email:null, password:null};
     this.formUpdate = this.formUpdate.bind(this);
     this.logIn = this.logIn.bind(this);
@@ -16,17 +17,20 @@ class Login extends Component {
     this.setState({[event.target.id]: event.target.value});
   }
   logIn(){
+    let resp = function(response) {
+      this.props.updateUser({name: this.state.username});
+    };
+    let err = function(error) {
+      alert(error);
+      //alert(error.response.data.msg)
+    };
+    resp = resp.bind(this);
+    err = err.bind(this);
     axios.post(this.props.server + '/login', qs.stringify({
       username: this.state.username,
       password: this.state.password,
       email: this.state.email
-    }))
-      .then(function (response) {
-        this.props.updateUser({name: this.state.username});
-      })
-      .catch(function (error) {
-        alert(error.response.data.msg)
-      });
+    })).then(resp).catch(err);
   }
   logOut(){
     axios.get(this.props.server + '/logout');
