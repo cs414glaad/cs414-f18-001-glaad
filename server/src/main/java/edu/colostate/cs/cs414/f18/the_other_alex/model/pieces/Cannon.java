@@ -36,7 +36,6 @@ public class Cannon extends Piece {
 
 
 	private boolean decideBetweenMoveOrCapture(Cell toCell, Cell fromCell, Cell[][] cells){
-		System.out.println("entering decideBetweenMoveOrCapture"); //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!testing
 		//if we are a cannon and were trying to capture a piece, call the method that checks cannon can capture
 		if(!(toCell.getPiece().type.equals("Null piece"))) {
 			return isValidCapture(fromCell, toCell, cells);
@@ -48,14 +47,12 @@ public class Cannon extends Piece {
 
 
 	private boolean isValidCapture(Cell fromCell, Cell toCell, Cell[][] cells) {
-		System.out.println("entering isValidCapture"); //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!testing
 			return evaluateCorrectnessOfMove(fromCell, toCell, cells);
 
 	}
 
 	private boolean evaluateCorrectnessOfMove(Cell fromCell, Cell toCell,
 			Cell[][] cells) {
-		System.out.println("entering evaluateCorrectnessOfMOve"); //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!testing
 		int toCol = toCell.getCoordinate().getCol();
 		int toRow = toCell.getCoordinate().getRow();
 		int fromCol = fromCell.getCoordinate().getCol();
@@ -70,7 +67,6 @@ public class Cannon extends Piece {
 
 	private boolean checkForPiecesBetween(Cell toCell, Cell[][] cells, int toCol,
 			int toRow, int fromCol, int fromRow) {
-		System.out.println("entering checkForPieceBetween"); //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!testing
 		int lowIndex = -1;
 		int highIndex = -1;
 		if (toCol != fromCol) {
@@ -105,7 +101,6 @@ public class Cannon extends Piece {
 
 	private boolean pieceBetweenOnXAxis(int lowIndex, int highIndex, int row,
 			Cell[][] cells) {
-		System.out.println("pieceBetweenOnXaxis"); //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!testing
 		boolean pieceBetween = false;
 		for (int i = lowIndex + 1; i < highIndex; ++i) {
 			// technically, x is y and y is x
@@ -123,7 +118,6 @@ public class Cannon extends Piece {
 
 	private boolean pieceBetweenOnYAxis(int lowIndex, int highIndex, int col,
 			Cell[][] cells) {
-		System.out.println("pieceBetweenOnYaxis"); //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!testing
 
 		boolean pieceBetween = false;
 		for (int i = lowIndex + 1; i < highIndex; ++i) {
