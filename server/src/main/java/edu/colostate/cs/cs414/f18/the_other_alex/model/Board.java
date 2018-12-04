@@ -68,11 +68,11 @@ public class Board {
         fromCell.getPiece().flipPiece();
       }
       else {
-        throw new InvalidMoveException("Invalid move. Select a different move");
+        throw new InvalidMoveException("Invalid move. Piece cannot be be flipped. Select a different move");
       }
     }
     else {
-      boolean moveValid = fromCell.getPiece().isMoveValid(fromCell, toCell, cells);
+      boolean moveValid = fromCell.getPiece().isMoveValid(toCell, fromCell, cells);
       if (moveValid) {
         Piece fromPiece = fromCell.getPiece();
         toCell.setPiece(fromPiece);

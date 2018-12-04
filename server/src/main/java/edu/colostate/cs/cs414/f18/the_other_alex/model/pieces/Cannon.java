@@ -26,15 +26,11 @@ public class Cannon extends Piece {
 			return false;
 		}
 
-		if ((toCell.getPiece() instanceof NullPiece)
-				|| toCell.getPiece().getIsFlipped() == true
-				&& toCell.getPiece().getIsFlipped() == true) {
-
+		if(toCell.getPiece() instanceof NullPiece || toCell.getPiece().getIsFlipped() == true) {
 			return decideBetweenMoveOrCapture(toCell, fromCell, cells);
-
-		} else {
+		}
+		else {
 			return false;
-
 		}
 	}
 
@@ -51,7 +47,6 @@ public class Cannon extends Piece {
 
 
 	private boolean isValidCapture(Cell fromCell, Cell toCell, Cell[][] cells) {
-
 			return evaluateCorrectnessOfMove(fromCell, toCell, cells);
 
 	}
@@ -123,6 +118,7 @@ public class Cannon extends Piece {
 
 	private boolean pieceBetweenOnYAxis(int lowIndex, int highIndex, int col,
 			Cell[][] cells) {
+
 		boolean pieceBetween = false;
 		for (int i = lowIndex + 1; i < highIndex; ++i) {
 			if ((cells[i][col].getPiece() instanceof NullPiece) == false) {
