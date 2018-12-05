@@ -33,13 +33,7 @@ class GameSelect extends Component{
       let game = response.data.games[0];
       let procGame = GameSelect.procGame(game);
       this.addGame(procGame);
-    }.bind(this)).catch(function(error) {
-      if (error.response === undefined) {
-        alert(error);
-      } else {
-        alert(error.response.data.msg);
-      }
-    }.bind(this));
+    }.bind(this)).catch(this.props.error);
   }
 
   loadUserData(user) {
@@ -55,9 +49,7 @@ class GameSelect extends Component{
       for (let idx in gameIds) {
         this.loadGame(gameIds[idx]);
       }
-    }.bind(this)).catch(function (error) {
-      alert(error.response.data.msg);
-    }.bind(this));
+    }.bind(this)).catch(this.props.error);
   }
 
   static procGame(game) {

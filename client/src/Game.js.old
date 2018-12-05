@@ -36,10 +36,12 @@ class Game extends Component{
   updateDimensions() {
     this.setState({ width: window.innerWidth });
   }
+
   componentDidMount() {
     this.updateDimensions();
     window.addEventListener("resize", this.updateDimensions.bind(this));
   }
+
   componentWillUnmount() {
     window.removeEventListener("resize", this.updateDimensions.bind(this));
   }
@@ -54,89 +56,79 @@ class Game extends Component{
     }
   }
 
-  getRowVert(y, board){
-    let out = [];
-    for( let i = 0; i < 4; i++ ){
-      out.push(<div className="col-3 col-md-2"><Cell piece={board[3-i][y]} id={board[3-i][y].id} move={this.move}/></div>)
-    }
-    return <div className="row"><div className="d-none d-md-block col-md-2"/>{out}<div className="d-none d-md-block col-md-2"/></div>;
-  }
-
-  getRowHoriz(y, row){
-    let out = [];
-    for( let i = 0; i < 8; i++ ){
-      out.push(<div className="col-1"><Cell piece={row[i]} id={row[i].id} move={this.move}/></div>)
-    }
-    return <div className="row"><div className="col-2"/> {out} <div className="col-2"/></div>;
-  }
-
-  getBoardVert(board){
-    return(
-      <div>
-        {this.getRowVert(0, board)}
-        <br/>
-        {this.getRowVert(1, board)}
-        <br/>
-        {this.getRowVert(2, board)}
-        <br/>
-        {this.getRowVert(3, board)}
-        <br/>
-        {this.getRowVert(4, board)}
-        <br/>
-        {this.getRowVert(5, board)}
-        <br/>
-        {this.getRowVert(6, board)}
-        <br/>
-        {this.getRowVert(7, board)}
-      </div>
-    )
-  }
-
   getBoardHoriz(board){
-    return(
-    <div>
-      {this.getRowHoriz(0, board[0])}
-      <br/>
-      {this.getRowHoriz(1, board[1])}
-      <br/>
-      {this.getRowHoriz(2, board[2])}
-      <br/>
-      {this.getRowHoriz(3, board[3])}
-    </div>
-    )
-  }
-
-  getBoard(){
-    if(this.state.width > 1000) {
-      return this.getBoardHoriz(this.state.board);
-    } else {
-      return this.getBoardVert(this.state.board);
-    }
-  }
-
-  renderGame() {
     return (
       <div>
-        <div>
-          game state
-        </div>
-        <div>
-          {this.getBoard()}
-        </div>
+      {this.getRows(board, "col-2", "col-1")}
       </div>
-    )
+    );
+  }
+
+  getBoardVert(board) {
+    console.log('rendering verticle');
+    //board = JSON.parse(JSON.stringify(board));
+    let rows = [1, 2, 3, 4, 5, 6, 7, 8].map(() => [{}, {}, {}, {}]);
+    for (let row = 0; row < 4; row++)  {
+      for (let col = 0; col < 8; col++) {
+        let newRow = col;
+        let newCol = 3 - row;
+        rows[newRow][newCol] = board[row][col]; // Transpose flip about x-axis
+      }
+    }
+
+    return (
+      <div>
+        {this.getRows(rows, "d-none d-md-block col-md-2", "col-3 col-md-2")}
+      </div>
+    );
+  }
+
+  getRows(rows, divClass, cellDivClass) {
+    return (
+      rows.map((row) => (
+        <div className="row">
+          {this.getRow(row, divClass, cellDivClass)}
+        </div>
+      ))
+    );
+  }
+
+  getRow(row, divClass, cellDivClass) {
+    return (
+      <div className="row">
+        <div className={divClass}/>
+        {row.map((piece) => this.buildCell(piece, cellDivClass))}
+        <div className={divClass}/>
+      </div>
+    );
+  }
+
+  buildCell(piece, divClass) {
+    return (
+      <div className={divClass}>
+        <Cell piece={piece} id={piece.id} move={this.move}/>
+      </div>
+    );
+  }
+
+  renderBoard(){
+    if(this.state.width > 1000) {
+      return (<div>{this.getBoardHoriz(this.state.board)}</div>);
+    } else {
+      return (<div>{this.getBoardVert(this.state.board)}</div>);
+    }
   }
 
   render() {
     let board = null;
-    if (this.state.board == null) {
-      board = (<div>No active games</div>);
+    if (this.state.board != null) {
+      board = this.renderBoard();
     } else {
-      board = this.renderGame();
+      board = (<div>Accept invite or select game.</div>);
     }
     return (
       <Panel name="Game" startCollapsed={true}>
-      {board}
+        {board}
       </Panel>
     );
   }

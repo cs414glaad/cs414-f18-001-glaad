@@ -5,20 +5,16 @@ class Cell extends Component{
   constructor(props){
     super(props);
     this.clickMove = this.clickMove.bind(this);
-    this.clickFlip = this.clickFlip.bind(this);
   }
   clickMove(){
-    this.props.move(this.props.x, this.props.y);
-  }
-  clickFlip(){
-    this.props.flip(this.props.x, this.props.y);
+    this.props.move(this.props.id);
   }
   render() {
     //Type coercion - to prevent null pieces being displayed as unflipped pieces.
     if(this.props.piece.isFlipped === false)
     {
       return (
-        <button className="btn btn-secondary square" onClick={this.clickFlip}/>
+        <button className="btn btn-secondary square" onClick={this.clickMove}/>
       )
     }
     else if(this.props.piece.type){
