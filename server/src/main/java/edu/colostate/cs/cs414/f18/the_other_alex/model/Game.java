@@ -47,10 +47,7 @@ public class Game extends Observable implements Observer, Serializable {
       gameRecord.setWinnerName(user2.getUsername());
       gameRecord.setLoserName(user1.getUsername());
     }
-  }
-
-  public Board getBoard() {
-    return board;
+    gameState = GameState.OVER;
   }
 
   public void endTurn() {
@@ -67,28 +64,29 @@ public class Game extends Observable implements Observer, Serializable {
 //check for firstMove. If true, set userColors according to flipped piece color. (assumes user1 plays first)
       if (firstMove) {
         board.move(fromCell, toCell);
-        user1Color = fromCell.getPiece().getColor();
+        setUser1Color(fromCell.getPiece().getColor());
         if (user1Color == PieceColor.BLACK) {
-          user2Color = PieceColor.RED;
+          setUser2Color(PieceColor.RED);
         } else {
-          user2Color = PieceColor.BLACK;
+          setUser2Color(PieceColor.BLACK);
         }
         firstMove = false;
         endTurn();
-        return GameState.IN_PROGRESS;
+        return gameState;
       }
 //subsequent moves.
-      if (fromCell.getPiece().getColor() == getUserColor(user)) { //make sure piece is right color
+      if (fromCell.getPiece().getColor() == getTurnColor(user)|| fromCell.getPiece().getIsFlipped() == false) { //make sure piece is right color
         board.move(fromCell, toCell);
         turn = user2;
         if (board.isGameOver(getOpponentColor(user))) {
           gameOver();
-          return GameState.OVER;
+          return gameState;
         } else {
           endTurn();
-          return GameState.IN_PROGRESS;
+          return gameState;
         }
-      } else {
+      }
+      else {
         throw new InvalidMoveException("Invalid move: Select a piece of your own color");
       }
     }
@@ -101,7 +99,7 @@ public class Game extends Observable implements Observer, Serializable {
     return (turn == user);
   }
 
-  public PieceColor getUserColor(User user) {
+  public PieceColor getTurnColor(User user) {
     if(user == user1) {
       return user1Color;
     }
@@ -153,5 +151,17 @@ public class Game extends Observable implements Observer, Serializable {
 
   public User getUser2() {
     return user2;
+  }
+
+  public Board getBoard() {
+    return board;
+  }
+
+  public void setUser1Color(PieceColor color) {
+    user1Color = color;
+  }
+
+  public void setUser2Color(PieceColor color) {
+    user2Color = color;
   }
 }
