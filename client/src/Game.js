@@ -129,7 +129,7 @@ class Game extends Component{
 
   cancelChoice() {
     if (this.state.start != null) {
-      if (this.state.cancel == true) {
+      if (this.state.cancel === true) {
         this.setState({start: null});
       } else {
         this.setState({cancel: true});
