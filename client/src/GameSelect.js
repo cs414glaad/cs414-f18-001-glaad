@@ -1,8 +1,93 @@
 import React, {Component} from 'react';
 import Panel from './Panel.js';
+import axios from 'axios';
 
 class GameSelect extends Component{
-  getGame(game){
+  constructor(props){
+    super(props);
+    this.state = {user: null, games: []};
+
+    // bindings
+    this.addGame = this.addGame.bind(this);
+    this.loadGame = this.loadGame.bind(this);
+    this.loadUserData = this.loadUserData.bind(this);
+  }
+
+  componentWillReceiveProps(props) {
+    this.setState({user: props.user, games: []});
+    this.loadUserData(props.user);
+  }
+
+  addGame(game) {
+    this.setState((prevState) => {
+      prevState.games.push(game);
+      return {games: prevState.games};
+    });
+  }
+
+  loadGame(gameId) {
+    axios.post(this.props.server + '/query', {
+      type: "game",
+      gameId: gameId,
+    }).then(function(response) {
+      let game = response.data.games[0];
+      let procGame = GameSelect.procGame(game);
+      this.addGame(procGame);
+    }.bind(this)).catch(function(error) {
+      if (error.response === undefined) {
+        alert(error);
+      } else {
+        alert(error.response.data.msg);
+      }
+    }.bind(this));
+  }
+
+  loadUserData(user) {
+    if (user == null) {
+      return;
+    }
+    axios.post(this.props.server + '/query', {
+      type: "user",
+      username: user,
+    }).then(function(response) {
+      let user = response.data.users[0];
+      let gameIds = user.games;
+      for (let idx in gameIds) {
+        this.loadGame(gameIds[idx]);
+      }
+    }.bind(this)).catch(function (error) {
+      alert(error.response.data.msg);
+    }.bind(this));
+  }
+
+  static procGame(game) {
+    let user1 = {username: game.user1};
+    let user2 = {username: game.user2};
+    if (game.user1Color === "red") {
+      return {blackUser: user2, redUser: user1, gameId: game.id};
+    } else {
+      return {blackUser: user1, redUser: user2, gameId: game.id};
+    }
+  }
+
+  renderGames(){
+    if (this.state.user === null) {
+        return (
+          <div>Not logged in</div>
+        );
+    }
+    let out = [];
+    for( let idx in this.state.games ){
+      out.push(this.renderGame(this.state.games[idx]));
+    }
+    return (
+      <ul className="card list-group list-group-flush">
+        {out}
+      </ul>
+    );
+  }
+
+  renderGame(game){
     return (
       <li className="list-group-item">
         <div className="row">
@@ -14,23 +99,11 @@ class GameSelect extends Component{
       </li>
     )
   }
-  getGames(){
-    //TODO: Make an API call to get the current user's invites.
-    let games = [{blackUser: {username: "1337h4x0r"}, redUser: {username: "banqiFreak123"}}, {blackUser: {username: "aboiuc234"}, redUser: {username: "1337h4x0r"}}];
-    let out = [];
-    for( let idx in games ){
-      out.push(this.getGame(games[idx]));
-    }
-    return (
-      <ul className="card list-group list-group-flush">
-        {out}
-      </ul>
-    );
-  }
+
   render() {
     return (
       <Panel name="Select Game" startCollapsed={true}>
-        {this.getGames()}
+        {this.renderGames()}
       </Panel>
     )
   }

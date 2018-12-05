@@ -6,7 +6,6 @@ import qs from 'qs';
 class Login extends Component {
   constructor(props){
     super(props);
-    this.props = props;
     this.state = {username:null, email:null, password:null};
     this.formUpdate = this.formUpdate.bind(this);
     this.logIn = this.logIn.bind(this);
@@ -18,11 +17,10 @@ class Login extends Component {
   }
   logIn(){
     let resp = function(response) {
-      this.props.updateUser({name: this.state.username});
+      this.props.updateUser(this.state.username);
     };
     let err = function(error) {
-      alert(error);
-      //alert(error.response.data.msg)
+      alert(error.response.data.msg)
     };
     resp = resp.bind(this);
     err = err.bind(this);

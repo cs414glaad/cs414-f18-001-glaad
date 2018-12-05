@@ -16,6 +16,7 @@ class Invites extends Component{
   handleChange(event){
     this.setState({userBox: event.target.value})
   }
+<<<<<<< HEAD
   sendInvite() {
       //TODO: API Call
       if (this.state.userBox) {
@@ -30,6 +31,23 @@ class Invites extends Component{
               alert(error.response.data.msg)
           });
      }
+=======
+  sendInvite(){
+    //TODO: API Call
+      console.log(this.props.server)
+    if( this.state.userBox ){
+        axios.post(this.props.server + '/user', {
+            type: "inv",
+            toUser: this.state.userBox
+        })
+            .then(function (response) {
+                alert(response.data.status)
+            }.bind(this))
+            .catch(function (error) {
+                alert(error.response.data.msg)
+            }.bind(this));
+    }
+>>>>>>> d06d42a4345cf28084f8f908bb8bc81f152b02f8
   }
   acceptInvite(invite){
     //TODO: API Call
@@ -71,6 +89,7 @@ class Invites extends Component{
   }
   getInvites() {
       //TODO: Make an API call to get the current user's invites.
+<<<<<<< HEAD
       //modifies state -> triggers rerender
 
       //making sure we arrive at the method
@@ -83,6 +102,19 @@ class Invites extends Component{
             let recvInvites = userObj.users.receivedInvites;
             let sentInvites = userObj.users.invites;
             // INVITES TEMPLATE: {{fromUser:"aboiuc234",toUsers:[{username: "ripharambe"},{username: "xXxELITESNIPERxXx"}]},{fromUser:"banqiFreak123", toUsers:[{username: "noscope419xD"}]}];
+=======
+          //getting the username
+          axios.post(this.props.server + '/query', {
+              type: "whoami"
+          })
+              .then(function (response) {
+                  this.state.username = response.data.msg;
+                  console.log(response.data.msg)
+              }.bind(this))
+              .catch(function (error) {
+                  alert(error.response.data.msg)
+              }.bind(this));
+>>>>>>> d06d42a4345cf28084f8f908bb8bc81f152b02f8
 
             let recvInvitesOut = [];
             for (let idx in recvInvites) {
@@ -117,8 +149,27 @@ class Invites extends Component{
           else{
               axios.post(this.props.server + '/query', {
                   type: "user",
+<<<<<<< HEAD
                   username: this.props.user
               }).then(resp1).catch(err);
+=======
+                  username: this.state.username
+              })
+                  .then(function (response) {
+                      this.state.userObj = JSON.parse(response.data.msg);
+                      console.log(this.state.userObj)
+                  }.bind(this))
+                  .catch(function (error) {
+                      alert(error.response.data.msg)
+                  }.bind(this));
+          }
+          /*
+          let invites = [{fromUser:"aboiuc234",toUsers:[{username: "ripharambe"},{username: "xXxELITESNIPERxXx"}]},{fromUser:"banqiFreak123", toUsers:[{username: "noscope419xD"}]}];
+          //this.state.userObj["invites"];
+          let out = [];
+          for (let idx in invites) {
+              out.push(invFunc(invites[idx]));
+>>>>>>> d06d42a4345cf28084f8f908bb8bc81f152b02f8
           }
     }
   render() {
