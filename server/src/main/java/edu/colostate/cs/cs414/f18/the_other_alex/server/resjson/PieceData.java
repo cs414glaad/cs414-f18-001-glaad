@@ -10,19 +10,20 @@ public class PieceData extends DataType {
   public String pieceType; // "blank" or defined by Piece class
 
   public PieceData(Piece piece) {
-    switch(piece.getColor()) {
-      case NONE:
-        color = null;
-      case BLACK:
-        color = "black";
-      case RED:
-        color = "red";
-    }
     if (piece.getIsFlipped()) {
       // values defined in Piece (e.g., NullPiece, Soldier, etc.)
       pieceType = piece.getType();
+      switch(piece.getColor()) {
+        case NONE:
+          color = null;
+        case BLACK:
+          color = "black";
+        case RED:
+          color = "red";
+      }
     } else {
-      pieceType = "Blank";
+      pieceType = "blank";
+      color = "blank";
     }
   }
 

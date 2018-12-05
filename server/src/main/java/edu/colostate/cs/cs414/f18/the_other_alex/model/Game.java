@@ -60,6 +60,7 @@ public class Game extends Observable implements Observer, Serializable {
   }
 
   public GameState makeMove(Cell fromCell, Cell toCell, User user) throws InvalidMoveException {
+    if(turn.equals(user)) {
 //check for firstMove. If true, set userColors according to flipped piece color. (assumes user1 plays first)
     if (firstMove) {
       board.move(fromCell, toCell);
@@ -81,14 +82,14 @@ public class Game extends Observable implements Observer, Serializable {
         return gameState;
       }
       else {
-        endTurn();
-        return GameState.IN_PROGRESS;
+          endTurn();
+          return GameState.IN_PROGRESS;
+        }
+      } 
+      else {
+        throw new InvalidMoveException("Invalid move: Select a piece of your own color");
       }
     }
-    else {
-      throw new InvalidMoveException("Invalid move: Select a piece of your own color");
-    }
-  }
 
   public boolean isUsersTurn(User user) {
     return (turn == user);
@@ -119,7 +120,6 @@ public class Game extends Observable implements Observer, Serializable {
   @Override
   public void update(Observable o, Object arg) {
   }
-
   public String getGameId() {
     return gameId;
   }
