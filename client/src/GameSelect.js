@@ -1,53 +1,93 @@
 import React, {Component} from 'react';
 import Panel from './Panel.js';
 import axios from 'axios';
-import qs from 'qs';
 
 class GameSelect extends Component{
   constructor(props){
     super(props);
-    this.state = {gameList: [], userdata: null, games: []};
-    this.getGame = this.getGame.bind(this);
-    this.setUser = this.setUser.bind(this);
-    this.setUserData = this.setUserData.bind(this);
-    this.setGameList = this.setGameList.bind(this);
-    this.getGames = this.getGames.bind(this);
-    this.load = this.load.bind(this);
+    this.state = {user: null, games: []};
 
-    //this.componentWillReceiveProps(props); // call this?
+    // bindings
+    this.addGame = this.addGame.bind(this);
+    this.loadGame = this.loadGame.bind(this);
+    this.loadUserData = this.loadUserData.bind(this);
   }
+
   componentWillReceiveProps(props) {
-    this.setState({user: props.user, gameList: [], userdata: null, games: []});
-    this.load()
+    this.setState({user: props.user, games: []});
+    this.loadUserData(props.user);
   }
-  load() {
-    this.setUser();
-    if (this.state.user === null || this.state.user === undefined) {
-      return;
-    }
-    this.setUserData();
-    console.log('this.state.userdata');
-    console.log(this.state.userdata);
-    if (this.state.userdata === null || this.state.userdata === undefined) {
-      return;
-    }
-    for (let idx in this.state.userdata.games) {
-      let gameId = this.state.userdata.games[idx];
-      console.log('game found: '+gameId);
-      this.setGameList(gameId);
-    }
-    for (let idx in this.state.gameList) {
-      let user1 = {username: this.state.gameList[idx].user1};
-      let user2 = {username: this.state.gameList[idx].user2};
-      let gameId = this.state.gameList[idx].id;
-      if (this.state.gameList[idx].user1Color === "red") {
-        this.games.push({blackUser: user2, redUser: user1, gameId: gameId});
+
+  addGame(game) {
+    this.setState((prevState) => {
+      prevState.games.push(game);
+      return {games: prevState.games};
+    });
+  }
+
+  loadGame(gameId) {
+    axios.post(this.props.server + '/query', {
+      type: "game",
+      gameId: gameId,
+    }).then(function(response) {
+      let game = response.data.games[0];
+      let procGame = GameSelect.procGame(game);
+      this.addGame(procGame);
+    }.bind(this)).catch(function(error) {
+      if (error.response === undefined) {
+        alert(error);
       } else {
-        this.games.push({blackUser: user1, redUser: user2, gameId: gameId});
+        alert(error.response.data.msg);
       }
+    }.bind(this));
+  }
+
+  loadUserData(user) {
+    if (user == null) {
+      return;
+    }
+    axios.post(this.props.server + '/query', {
+      type: "user",
+      username: user,
+    }).then(function(response) {
+      let user = response.data.users[0];
+      let gameIds = user.games;
+      for (let idx in gameIds) {
+        this.loadGame(gameIds[idx]);
+      }
+    }.bind(this)).catch(function (error) {
+      alert(error.response.data.msg);
+    }.bind(this));
+  }
+
+  static procGame(game) {
+    let user1 = {username: game.user1};
+    let user2 = {username: game.user2};
+    if (game.user1Color === "red") {
+      return {blackUser: user2, redUser: user1, gameId: game.id};
+    } else {
+      return {blackUser: user1, redUser: user2, gameId: game.id};
     }
   }
-  getGame(game){
+
+  renderGames(){
+    if (this.state.user === null) {
+        return (
+          <div>Not logged in</div>
+        );
+    }
+    let out = [];
+    for( let idx in this.state.games ){
+      out.push(this.renderGame(this.state.games[idx]));
+    }
+    return (
+      <ul className="card list-group list-group-flush">
+        {out}
+      </ul>
+    );
+  }
+
+  renderGame(game){
     return (
       <li className="list-group-item">
         <div className="row">
@@ -59,78 +99,11 @@ class GameSelect extends Component{
       </li>
     )
   }
-  setUser() {
-    let err = (function (error) {
-      alert(error.response.data.msg)
-    }).bind(this);
-    axios.post(this.props.server + '/query', qs.stringify({
-      type: "whoami"
-    }))
-    .then(function (response) {
-      console.log('getting user data');
-      console.log(response);
-      let user = response.data.user;
-      if (user === "") {
-        user = null;
-      }
-      this.setState({user: user});
-      console.log('userdata: '+this.state.userdata);
-    }.bind(this))
-    .catch(err);
-  }
-  setUserData() {
-    console.log('getting user data, pre post call');
-    console.log(this.state.user)
-    let then = (function (response) {
-      this.setState({userdata: response.data.users[0]});
-      console.log('userdata: '+this.state.userdata);
-    }).bind(this);
-    let err = (function (error) {
-      alert(error.response.data.msg)
-    }).bind(this);
-    axios.post(this.props.server + '/query', qs.stringify({
-      type: "user",
-      username: this.state.user,
-    }))
-    .then(then)
-    .catch(err);
-  }
-  setGameList(gameId) {
-    let then = (function(response) {
-      this.state.gameList.push(response.data[0]);
-      console.log('game');
-      console.log(response.data[0]);
-    }).bind(this);
-    let err = (function(error) {
-      alert(error.response.data.msg)
-    }).bind(this);
-    axios.post(this.props.server + '/game', qs.stringify({
-      type: "game",
-      gameId: gameId
-    }))
-    .then(then)
-    .catch(err);
-  }
-  getGames(){
-    if (this.state.user === null) {
-        return (
-          <div>Not logged in</div>
-        );
-    }
-    let out = [];
-    for( let idx in this.state.games ){
-      out.push(this.getGame(this.state.games[idx]));
-    }
-    return (
-      <ul className="card list-group list-group-flush">
-        {out}
-      </ul>
-    );
-  }
+
   render() {
     return (
       <Panel name="Select Game" startCollapsed={true}>
-        {this.getGames()}
+        {this.renderGames()}
       </Panel>
     )
   }
