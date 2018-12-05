@@ -1,33 +1,35 @@
 import React, {Component} from 'react';
 import Panel from './Panel.js';
 import axios from "axios";
-import qs from "qs";
+//import qs from "qs";
 
 class Invites extends Component{
   constructor(props){
     super(props);
-    this.state = {userBox: null};
+    this.state = {
+        userBox: null
+    };
     this.handleChange = this.handleChange.bind(this);
-    this.sendInvite = this.sendInvite.bind(this)
+    this.sendInvite = this.sendInvite.bind(this);
+    this.getInvites = this.getInvites.bind(this);
   }
   handleChange(event){
     this.setState({userBox: event.target.value})
   }
-  sendInvite(){
-    //TODO: API Call
-      console.log(this.props.server)
-    if( this.state.userBox ){
-        axios.post(this.props.server + '/user', {
-            type: "inv",
-            toUser: this.state.userBox
-        })
-            .then(function (response) {
-                alert(response.data.status)
-            })
-            .catch(function (error) {
-                alert(error.response.data.msg)
-            });
-    }
+  sendInvite() {
+      //TODO: API Call
+      if (this.state.userBox) {
+      axios.post(this.props.server + '/user', {
+          type: "inv",
+          toUser: this.state.userBox
+      })
+          .then(function (response) {
+              alert(response.data.status)
+          })
+          .catch(function (error) {
+              alert(error.response.data.msg)
+          });
+     }
   }
   acceptInvite(invite){
     //TODO: API Call
@@ -67,57 +69,63 @@ class Invites extends Component{
       </li>
     )
   }
-  getInvites(invFunc) {
+  getInvites() {
       //TODO: Make an API call to get the current user's invites.
-          //getting the username
-          axios.post(this.props.server + '/query', {
-              type: "whoami"
-          })
-              .then(function (response) {
-                  this.state.username = response.data.msg;
-                  console.log(response.data.msg)
-              })
-              .catch(function (error) {
-                  alert(error.response.data.msg)
-              });
+      //modifies state -> triggers rerender
 
-          //getting list of sent invites from username
-          if(this.state.username) {
+      //making sure we arrive at the method
+      console.log("attempting to get invites")
+
+      //username should be passed in props my app.js as this.props.user
+        let resp1 = function(response){
+            const userObj = JSON.parse(response.data.msg);
+            console.log(userObj)
+            let recvInvites = userObj.users.receivedInvites;
+            let sentInvites = userObj.users.invites;
+            // INVITES TEMPLATE: {{fromUser:"aboiuc234",toUsers:[{username: "ripharambe"},{username: "xXxELITESNIPERxXx"}]},{fromUser:"banqiFreak123", toUsers:[{username: "noscope419xD"}]}];
+
+            let recvInvitesOut = [];
+            for (let idx in recvInvites) {
+                recvInvitesOut.push(this.getReceivedInvite(recvInvites[idx]));
+            }
+            let sentInvitesOut = [];
+            for (let idx in sentInvites) {
+                recvInvitesOut.push(this.getSentInvite(sentInvites[idx]));
+            }
+
+            return (
+                <div>
+                <ul className="card list-group list-group-flush">
+                    {recvInvitesOut}
+                </ul>
+                <ul className="card list-group list-group-flush">
+                     {sentInvitesOut}
+                </ul>
+                </div>
+            );
+        }.bind(this);
+
+        let err = function(error){
+          alert(error.response.data.msg)
+        }.bind(this);
+
+      //getting list of sent invites from username
+          if(this.props.user==null) {
+              console.log("no user logged in")
+          return;
+          }
+          else{
               axios.post(this.props.server + '/query', {
                   type: "user",
-                  username: this.state.username
-              })
-                  .then(function (response) {
-                      this.state.userObj = JSON.parse(response.data.msg);
-                      console.log(this.state.userObj)
-                  })
-                  .catch(function (error) {
-                      alert(error.response.data.msg)
-                  });
+                  username: this.props.user
+              }).then(resp1).catch(err);
           }
-          /*
-          let invites = [{fromUser:"aboiuc234",toUsers:[{username: "ripharambe"},{username: "xXxELITESNIPERxXx"}]},{fromUser:"banqiFreak123", toUsers:[{username: "noscope419xD"}]}];
-          //this.state.userObj["invites"];
-          let out = [];
-          for (let idx in invites) {
-              out.push(invFunc(invites[idx]));
-          }
-          */
-      let out = [];
-          return (
-              <ul className="card list-group list-group-flush">
-                  {out}
-              </ul>
-          );
     }
   render() {
-      //{this.getInvites(this.getReceivedInvite)}
-      //{this.getInvites(this.getSentInvite)}
+      console.log("hey what's up")
     return (
       <Panel name="Invitations" startCollapsed={true}>
-        <button className="btn btn-primary" type="button" onClick={this.getInvites(this.getReceivedInvite)}>Refresh Received Invites</button>
-        <br/>
-          <button className="btn btn-primary" type="button" onClick={this.getInvites(this.getSentInvite)}>Refresh Sent Invites</button>
+          {this.getInvites()}
         <br/>
         <div className="input-group">
           <div className="input-group-prepend">
