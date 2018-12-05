@@ -1,8 +1,20 @@
 import React, {Component} from 'react';
 import Panel from './Panel.js';
-import axios from "axios";
-import qs from "qs";
+//import axios from "axios";
+//import qs from "qs";
 
+// this is to prevent errors. Uncomment when finished.
+class Invites extends Component{
+  constructor(props){
+    super(props);
+  }
+  render() {
+    <Panel name="Invitations" startCollapsed={true}>
+    </Panel>
+  }
+}
+
+/*
 class Invites extends Component{
   constructor(props){
     super(props);
@@ -102,7 +114,7 @@ class Invites extends Component{
           for (let idx in invites) {
               out.push(invFunc(invites[idx]));
           }
-          */
+          *//*
       let out = [];
           return (
               <ul className="card list-group list-group-flush">
@@ -132,5 +144,7 @@ class Invites extends Component{
     )
   }
 }
+*/
 
 export default Invites;
+
