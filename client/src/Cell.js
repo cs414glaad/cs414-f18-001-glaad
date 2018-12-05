@@ -17,7 +17,7 @@ class Cell extends Component{
         <button className="btn btn-secondary square" onClick={this.clickMove}/>
       )
     }
-    else if(this.props.piece.type){
+    else if(this.props.piece.type !== "Null piece"){
       let className = "btn square ";
       if(this.props.piece.color === "RED"){
         className += "btn-danger";

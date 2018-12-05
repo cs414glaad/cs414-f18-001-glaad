@@ -6,12 +6,14 @@ import axios from 'axios';
 class Game extends Component{
   constructor(props){
     super(props);
-    this.state = {start: null, width: window.innerWidth, board: null, game: null};
+    this.state = {start: null, width: window.innerWidth, board: null, game: null, cancel: false};
 
     // bindings
     this.move = this.move.bind(this);
     // board is horizontal row by col
     this.loadBoard = this.loadBoard.bind(this);
+    this.cancelChoice = this.cancelChoice.bind(this);
+    this.updateBoard = this.updateBoard.bind(this);
   }
 
   componentWillReceiveProps(props) {
@@ -24,9 +26,13 @@ class Game extends Component{
     if (game == null) {
       return;
     }
+    this.updateBoard(game.gameId);
+  }
+
+  updateBoard(gameId) {
     axios.post(this.props.server + '/query', {
       type: "board",
-      gameId: game.gameId,
+      gameId: gameId,
     }).then(function(response) {
       let board = response.data.boards[0];
       this.setState({board: board.cells});
@@ -46,12 +52,19 @@ class Game extends Component{
 
   move(id) {
     if (this.state.start != null) {
-      //TODO: Replace this with an API call.
-      console.log("Moving "+this.state.start+" to "+id);
-      this.setState({start: null})
+      axios.post(this.props.server + '/game', {
+        type: 'move',
+        gameId: this.state.game.gameId,
+        fromCell: this.state.start,
+        toCell: id,
+      }).then(function(response) {
+        this.setState({start: null});
+        this.updateBoard(this.state.game.gameId)
+      }.bind(this)).catch(this.props.error);
     } else {
-      this.setState({start: id})
+      this.setState({start: id});
     }
+    this.setState({cancel: false});
   }
 
   getRowVert(y, board){
@@ -114,9 +127,19 @@ class Game extends Component{
     }
   }
 
+  cancelChoice() {
+    if (this.state.start != null) {
+      if (this.state.cancel == true) {
+        this.setState({start: null});
+      } else {
+        this.setState({cancel: true});
+      }
+    }
+  }
+
   renderGame() {
     return (
-      <div>
+      <div onClick={this.cancelChoice}>
         <div>
           game state
         </div>
