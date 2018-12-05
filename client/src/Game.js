@@ -10,6 +10,11 @@ class Game extends Component{
     this.flip = this.flip.bind(this)
   }
 
+  componentWillReceiveProps(props) {
+    this.setState({game: props.game});
+    this.loadUserData(props.user);
+  }
+
   updateDimensions() {
     this.setState({ width: window.innerWidth });
   }
@@ -98,17 +103,22 @@ class Game extends Component{
     let fakeContents = [{type:"S", isFlipped:true, color: "RED"},{type:"S", isFlipped:true, color: "BLACK"},{isFlipped:false},{},{},{},{},{}];
     if(this.state.width > 1000) {
       return this.getBoardHoriz(fakeContents);
-    }
-    else{
+    } else {
       return this.getBoardVert(fakeContents);
     }
   }
   render() {
+    let board = null;
+    if (this.state.game == null) {
+      board = this.getBoard();
+    } else {
+      board = (<div>Accept invite or  </div>);
+    }
     return (
       <Panel name="Game" startCollapsed={true}>
-        {this.getBoard()}
+        {board}
       </Panel>
-    )
+    );
   }
 }
 
