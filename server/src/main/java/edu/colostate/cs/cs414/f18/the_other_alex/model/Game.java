@@ -77,7 +77,6 @@ public class Game extends Observable implements Observer, Serializable {
 //subsequent moves.
       if (fromCell.getPiece().getColor() == getTurnColor(user)|| fromCell.getPiece().getIsFlipped() == false) { //make sure piece is right color
         board.move(fromCell, toCell);
-        turn = user2;
         if (board.isGameOver(getOpponentColor(user))) {
           gameOver();
           return gameState;
