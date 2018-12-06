@@ -48,10 +48,12 @@ public class ModelManager {
     try {
       T t = validateRequest(request, classOfT);
       String username = getUsername(request);
-      if (username == null) {
-        username = "user not logged in";
+      // DEBUG
+      String output = username;
+      if (output == null) {
+        output = "user not logged in";
       }
-      System.out.printf("user sent request: %s%n", username);
+      System.out.printf("user sent request: %s%n", output);
       return t.handleRequest(request, response, username, modelFacade);
     } catch (InvalidApiCallException e) {
       return invalidApiCall(request, response, e.getMessage());

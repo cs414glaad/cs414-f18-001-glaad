@@ -9,6 +9,7 @@ public class BoardData extends DataType {
     for (int row = 0; row < Board.NUM_ROWS; row++) {
       for (int col = 0; col < Board.NUM_COLS; col++) {
         cells[row][col] = new PieceData(board.getCells()[row][col]);
+        cells[row][col].id = String.format("%s %s", row, col);
       }
     }
   }

@@ -144,11 +144,22 @@ public class Game extends Observable implements Observer, Serializable {
     return gameState;
   }
 
-  public Board getBoard() { return board; }
+  public User getUser1() {
+    return user1;
+  }
+
+  public User getUser2() {
+    return user2;
+  }
+
+  public Board getBoard() {
+    return board;
+  }
 
   public void setUser1Color(PieceColor color) {
     user1Color = color;
   }
+
   public void setUser2Color(PieceColor color) {
     user2Color = color;
   }
