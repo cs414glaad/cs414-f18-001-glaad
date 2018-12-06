@@ -6,30 +6,44 @@ import axios from 'axios';
 class Game extends Component{
   constructor(props){
     super(props);
-    this.state = {start: null, width: window.innerWidth, board: null, game: null, cancel: false};
+    this.state = {start: null, width: window.innerWidth, board: null, game: null, cancel: false, err: null};
 
     // bindings
     this.move = this.move.bind(this);
     // board is horizontal row by col
-    this.loadBoard = this.loadBoard.bind(this);
     this.cancelChoice = this.cancelChoice.bind(this);
     this.updateBoard = this.updateBoard.bind(this);
+    this.updateGame = this.updateGame.bind(this);
+    this.updateGameState = this.updateGameState.bind(this);
   }
 
+  // props.game must have gameId
   componentWillReceiveProps(props) {
-    let newState = {user: props.user};
-    if (props.user != null) {
-      newState.game = props.game;
-      this.loadBoard(props.game);
+    if (props.user != null && props.game != null) {
+      this.updateBoard(props.game.gameId);
+      this.updateGame(props.game.gameId);
     }
-    this.setState(newState);
   }
 
-  loadBoard(game) {
-    if (game == null) {
+  updateGameState() {
+    if (this.state.game == null || this.state.board == null) {
       return;
     }
-    this.updateBoard(game.gameId);
+    let gameId = this.state.game.id;
+    if (gameId != null) {
+      this.updateGame(gameId);
+      this.updateBoard(gameId);
+    }
+  }
+
+  updateGame(gameId) {
+    axios.post(this.props.server + '/query', {
+      type: "game",
+      gameId: gameId,
+    }).then(function(response) {
+      let game = response.data.games[0];
+      this.setState({game: game});
+    }.bind(this)).catch(this.props.error);
   }
 
   updateBoard(gameId) {
@@ -39,35 +53,42 @@ class Game extends Component{
     }).then(function(response) {
       let board = response.data.boards[0];
       this.setState({board: board.cells});
+      console.log(board.cells);
     }.bind(this)).catch(this.props.error);
   }
 
   updateDimensions() {
     this.setState({ width: window.innerWidth });
   }
+
   componentDidMount() {
     this.updateDimensions();
     window.addEventListener("resize", this.updateDimensions.bind(this));
+    this.timer = setInterval(this.updateGameState, 2000);
   }
+
   componentWillUnmount() {
     window.removeEventListener("resize", this.updateDimensions.bind(this));
+    clearInterval(this.timer);
   }
 
   move(id) {
     if (this.state.start != null) {
       axios.post(this.props.server + '/game', {
         type: 'move',
-        gameId: this.state.game.gameId,
+        gameId: this.state.game.id,
         fromCell: this.state.start,
         toCell: id,
       }).then(function(response) {
-        this.setState({start: null});
-        this.updateBoard(this.state.game.gameId)
-      }.bind(this)).catch(this.props.error);
+        this.setState({start: null, err: null});
+        this.updateGameState();
+      }.bind(this)).catch(function(error) {
+        this.setState({start: null, err: error.response.data.msg});
+      }.bind(this));
     } else {
-      this.setState({start: id});
+      this.setState({start: id, err: null});
     }
-    this.setState({cancel: false});
+    this.setState({cancel: false, err: null});
   }
 
   getRowVert(y, board){
@@ -133,29 +154,103 @@ class Game extends Component{
   cancelChoice() {
     if (this.state.start != null) {
       if (this.state.cancel === true) {
-        this.setState({start: null});
+        this.setState({start: null, err: null});
       } else {
         this.setState({cancel: true});
       }
     }
   }
 
+  formatColor(color) {
+    if (color === "") {
+      return "badge";
+    } else if (color === "black") {
+      return "badge badge-dark";
+    } else {
+      return "badge badge-danger";
+    }
+  }
+
+  formatPlayers() {
+    let players = {};
+    if (this.props.user === this.state.game.user1) {
+      players.user = this.state.game.user1;
+      players.userColor = this.formatColor(this.state.game.user1Color);
+      players.opp = this.state.game.user2;
+      players.oppColor = this.formatColor(this.state.game.user2Color);
+    } else {
+      players.user = this.state.game.user2;
+      players.userColor = this.formatColor(this.state.game.user2Color);
+      players.opp = this.state.game.user1;
+      players.oppColor = this.formatColor(this.state.game.user1Color);
+    }
+    return players;
+  }
+
+  getGameDetails() {
+    let players = this.formatPlayers();
+    return (
+      <div>
+        <div className={players.userColor}>{players.user} (you)</div> vs <div className={players.oppColor}>{players.opp}</div>
+      </div>
+    );
+  }
+
+  getInstructions() {
+    return (
+      <div>
+        <h4>
+          Rules:
+        </h4>
+        <ul>
+          <li>Double click pieces to flip them.</li>
+          <li>Click on the background to cancel move.</li>
+          <li>Click on Refresh to refresh the game.</li>
+        </ul>
+        <button className="btn btn-primary col-2" onClick={() => this.updateGameState()}>
+          Refresh
+        </button>
+      </div>
+    );
+  }
+
+  getGameHeader() {
+    if (this.state.board == null || this.state.game == null) {
+      return null;
+    }
+    let msg = null;
+    if (this.state.game.turn === this.props.user) {
+      msg = "Status: Your turn!";
+    } else {
+      msg = "Status: Wait for opponent's move!";
+    }
+    if (this.state.err != null) {
+      msg = "Error: "+this.state.err;
+    }
+    return (
+      <div>
+        <div> {this.getGameDetails()} </div>
+        <br />
+        <div> {msg} </div>
+      </div>
+    );
+  }
+
   renderGame() {
     return (
       <div onClick={this.cancelChoice}>
-        <div>
-          game state
-        </div>
-        <div>
-          {this.getBoard()}
-        </div>
+        <div> {this.getInstructions()} </div>
+        <br />
+        <div style={{textAlign: "center"}}> {this.getGameHeader()} </div>
+        <br />
+        <div> {this.getBoard()} </div>
       </div>
-    )
+    );
   }
 
   render() {
     let board = null;
-    if (this.state.user == null) {
+    if (this.props.user == null) {
       board = null;
     } else if (this.state.board == null) {
       board = (<div>No active games</div>);

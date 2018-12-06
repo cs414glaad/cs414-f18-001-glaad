@@ -18,15 +18,18 @@ public class PieceData extends DataType {
       switch(piece.getColor()) {
         case NONE:
           color = "";
+          break;
         case BLACK:
           color = "BLACK";
+          break;
         case RED:
           color = "RED";
+          break;
       }
     } else {
       type = "";
       color = "";
-      isFlipped = true;
+      isFlipped = false;
     }
   }
 
