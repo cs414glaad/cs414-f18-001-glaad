@@ -1,0 +1,526 @@
+{
+	"info": {
+		"_postman_id": "b6f3d60e-1fad-48bb-bb87-eae233c1c42e",
+		"name": "UI System Test Prep Banqi",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "create a-train",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "2d155792-3686-484a-91d2-fbc0001b282a",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"pm.test(\"response is ok\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"pm.test(\"status is good\", function () {",
+							"    pm.expect(\"success\").to.equal(jsonData.status); ",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"type\":\"user\",\n  \"username\":\"a-train\",\n  \"email\":\"defisanemail1@lol.com\",\n  \"password\":\"passwd\"\n}"
+				},
+				"url": {
+					"raw": "{{url}}:{{port}}/user",
+					"host": [
+						"{{url}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"user"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create b-train",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "2db08efe-8e0b-4cae-8a46-6b7a193e7a06",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"pm.test(\"response is ok\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"pm.test(\"status is good\", function () {",
+							"    pm.expect(\"success\").to.equal(jsonData.status); ",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"type\":\"user\",\n  \"username\":\"b-train\",\n  \"email\":\"defisanemail2@lol.com\",\n  \"password\":\"passwd\"\n}"
+				},
+				"url": {
+					"raw": "{{url}}:{{port}}/user",
+					"host": [
+						"{{url}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"user"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create c-train",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "9cdba19f-296b-4207-9cbc-7711a6e62c37",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"pm.test(\"response is ok\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"pm.test(\"status is good\", function () {",
+							"    pm.expect(\"success\").to.equal(jsonData.status); ",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"type\":\"user\",\n  \"username\":\"c-train\",\n  \"email\":\"defisanemail3@lol.com\",\n  \"password\":\"passwd\"\n}"
+				},
+				"url": {
+					"raw": "{{url}}:{{port}}/user",
+					"host": [
+						"{{url}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"user"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "login a-train",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "09d70bb5-fda3-4d36-b57b-b179ce402d6e",
+						"exec": [
+							"pm.test(\"response is ok\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{url}}:{{port}}/login?username=a-train&password=passwd",
+					"host": [
+						"{{url}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"login"
+					],
+					"query": [
+						{
+							"key": "username",
+							"value": "a-train"
+						},
+						{
+							"key": "password",
+							"value": "passwd"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "user inv ab",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "19430d4a-9c94-4b06-bf03-1f3e3e1686d7",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"pm.test(\"response is ok\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"pm.test(\"status is good\", function () {",
+							"    pm.expect(\"success\").to.equal(jsonData.status); ",
+							"});",
+							"postman.setEnvironmentVariable(\"ab\", jsonData.invites[0].id);",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"type\":\"inv\",\n  \"toUser\":\"b-train\"\n}"
+				},
+				"url": {
+					"raw": "{{url}}:{{port}}/user",
+					"host": [
+						"{{url}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"user"
+					]
+				},
+				"description": "Send user an invite"
+			},
+			"response": []
+		},
+		{
+			"name": "user inv ac",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "19430d4a-9c94-4b06-bf03-1f3e3e1686d7",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"pm.test(\"response is ok\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"pm.test(\"status is good\", function () {",
+							"    pm.expect(\"success\").to.equal(jsonData.status); ",
+							"});",
+							"postman.setEnvironmentVariable(\"ac\", jsonData.invites[0].id);",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"type\":\"inv\",\n  \"toUser\":\"c-train\"\n}"
+				},
+				"url": {
+					"raw": "{{url}}:{{port}}/user",
+					"host": [
+						"{{url}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"user"
+					]
+				},
+				"description": "Send user an invite"
+			},
+			"response": []
+		},
+		{
+			"name": "login b-train",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "09d70bb5-fda3-4d36-b57b-b179ce402d6e",
+						"exec": [
+							"pm.test(\"response is ok\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{url}}:{{port}}/login?username=b-train&password=passwd",
+					"host": [
+						"{{url}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"login"
+					],
+					"query": [
+						{
+							"key": "username",
+							"value": "b-train"
+						},
+						{
+							"key": "password",
+							"value": "passwd"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "user inv bc",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "19430d4a-9c94-4b06-bf03-1f3e3e1686d7",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"pm.test(\"response is ok\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"pm.test(\"status is good\", function () {",
+							"    pm.expect(\"success\").to.equal(jsonData.status); ",
+							"});",
+							"postman.setEnvironmentVariable(\"bc\", jsonData.invites[0].id);",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"type\":\"inv\",\n  \"toUser\":\"c-train\"\n}"
+				},
+				"url": {
+					"raw": "{{url}}:{{port}}/user",
+					"host": [
+						"{{url}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"user"
+					]
+				},
+				"description": "Send user an invite"
+			},
+			"response": []
+		},
+		{
+			"name": "user repl ab",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "3cffdd5a-6ba9-4b28-98dc-b6d0e6f73c44",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"pm.test(\"response is ok\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"pm.test(\"status is good\", function () {",
+							"    pm.expect(\"success\").to.equal(jsonData.status); ",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"type\":\"repl\",\n  \"inviteId\": \"{{ab}}\"\n}"
+				},
+				"url": {
+					"raw": "{{url}}:{{port}}/user",
+					"host": [
+						"{{url}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"user"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "login c-train",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "09d70bb5-fda3-4d36-b57b-b179ce402d6e",
+						"exec": [
+							"pm.test(\"response is ok\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{url}}:{{port}}/login?username=c-train&password=passwd",
+					"host": [
+						"{{url}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"login"
+					],
+					"query": [
+						{
+							"key": "username",
+							"value": "c-train"
+						},
+						{
+							"key": "password",
+							"value": "passwd"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "user repl ac",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "3cffdd5a-6ba9-4b28-98dc-b6d0e6f73c44",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"pm.test(\"response is ok\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"pm.test(\"status is good\", function () {",
+							"    pm.expect(\"success\").to.equal(jsonData.status); ",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"type\":\"repl\",\n  \"inviteId\": \"{{ac}}\"\n}"
+				},
+				"url": {
+					"raw": "{{url}}:{{port}}/user",
+					"host": [
+						"{{url}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"user"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "user repl bc",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "3cffdd5a-6ba9-4b28-98dc-b6d0e6f73c44",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"pm.test(\"response is ok\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"pm.test(\"status is good\", function () {",
+							"    pm.expect(\"success\").to.equal(jsonData.status); ",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"type\":\"repl\",\n  \"inviteId\": \"{{bc}}\"\n}"
+				},
+				"url": {
+					"raw": "{{url}}:{{port}}/user",
+					"host": [
+						"{{url}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"user"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
