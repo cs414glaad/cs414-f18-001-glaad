@@ -5,9 +5,6 @@ import Panel from './Panel.js';
 
 // this is to prevent errors. Uncomment when finished.
 class Invites extends Component{
-  constructor(props){
-    super(props);
-  }
   render() {
     return (
       <Panel name="Invitations" startCollapsed={true}>
