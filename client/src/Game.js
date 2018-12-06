@@ -6,7 +6,7 @@ import axios from 'axios';
 class Game extends Component{
   constructor(props){
     super(props);
-    this.state = {start: null, width: window.innerWidth, board: null, game: null, cancel: false};
+    this.state = {start: null, width: window.innerWidth, board: null, game: null, cancel: false, err: null};
 
     // bindings
     this.move = this.move.bind(this);
@@ -14,6 +14,7 @@ class Game extends Component{
     this.cancelChoice = this.cancelChoice.bind(this);
     this.updateBoard = this.updateBoard.bind(this);
     this.updateGame = this.updateGame.bind(this);
+    this.updateGameState = this.updateGameState.bind(this);
   }
 
   // props.game must have gameId
@@ -25,6 +26,9 @@ class Game extends Component{
   }
 
   updateGameState() {
+    if (this.state.game == null || this.state.board == null) {
+      return;
+    }
     let gameId = this.state.game.id;
     if (gameId != null) {
       this.updateGame(gameId);
@@ -49,39 +53,42 @@ class Game extends Component{
     }).then(function(response) {
       let board = response.data.boards[0];
       this.setState({board: board.cells});
+      console.log(board.cells);
     }.bind(this)).catch(this.props.error);
   }
 
   updateDimensions() {
     this.setState({ width: window.innerWidth });
   }
+
   componentDidMount() {
     this.updateDimensions();
     window.addEventListener("resize", this.updateDimensions.bind(this));
+    this.timer = setInterval(this.updateGameState, 2000);
   }
+
   componentWillUnmount() {
     window.removeEventListener("resize", this.updateDimensions.bind(this));
+    clearInterval(this.timer);
   }
 
   move(id) {
     if (this.state.start != null) {
-      console.log(this.state.game);
       axios.post(this.props.server + '/game', {
         type: 'move',
         gameId: this.state.game.id,
         fromCell: this.state.start,
         toCell: id,
       }).then(function(response) {
-        this.setState({start: null});
-        this.updateBoard(this.state.game.id);
+        this.setState({start: null, err: null});
+        this.updateGameState();
       }.bind(this)).catch(function(error) {
-        this.setState({start: null});
-        this.props.error(error);
+        this.setState({start: null, err: error.response.data.msg});
       }.bind(this));
     } else {
-      this.setState({start: id});
+      this.setState({start: id, err: null});
     }
-    this.setState({cancel: false});
+    this.setState({cancel: false, err: null});
   }
 
   getRowVert(y, board){
@@ -147,7 +154,7 @@ class Game extends Component{
   cancelChoice() {
     if (this.state.start != null) {
       if (this.state.cancel === true) {
-        this.setState({start: null});
+        this.setState({start: null, err: null});
       } else {
         this.setState({cancel: true});
       }
@@ -156,9 +163,11 @@ class Game extends Component{
 
   formatColor(color) {
     if (color === "") {
-      return "color not assigned yet";
+      return "badge";
+    } else if (color === "black") {
+      return "badge badge-dark";
     } else {
-      return color;
+      return "badge badge-danger";
     }
   }
 
@@ -179,27 +188,10 @@ class Game extends Component{
   }
 
   getGameDetails() {
-    if (this.state.game == null) {
-      return null;
-    }
     let players = this.formatPlayers();
     return (
       <div>
-        <div>
-          Turn: {this.state.game.turn}
-        </div>
-        <div>
-          You: {players.user}
-        </div>
-        <div>
-          Your color: {players.userColor}
-        </div>
-        <div>
-          Opponent: {players.opp}
-        </div>
-        <div>
-          Opponent color: {players.oppColor}
-        </div>
+        <div className={players.userColor}>{players.user} (you)</div> vs <div className={players.oppColor}>{players.opp}</div>
       </div>
     );
   }
@@ -207,38 +199,53 @@ class Game extends Component{
   getInstructions() {
     return (
       <div>
-        Double click pieces to flip them.
+        <h4>
+          Rules:
+        </h4>
+        <ul>
+          <li>Double click pieces to flip them.</li>
+          <li>Click on the background to cancel move.</li>
+          <li>Click on Refresh to refresh the game.</li>
+        </ul>
+        <button className="btn btn-primary col-2" onClick={() => this.updateGameState()}>
+          Refresh
+        </button>
+      </div>
+    );
+  }
+
+  getGameHeader() {
+    if (this.state.board == null || this.state.game == null) {
+      return null;
+    }
+    let msg = null;
+    if (this.state.game.turn === this.props.user) {
+      msg = "Status: Your turn!";
+    } else {
+      msg = "Status: Wait for opponent's move!";
+    }
+    if (this.state.err != null) {
+      msg = "Error: "+this.state.err;
+    }
+    return (
+      <div>
+        <div> {this.getGameDetails()} </div>
+        <br />
+        <div> {msg} </div>
       </div>
     );
   }
 
   renderGame() {
-    let refresh = null;
-    if (this.state.board != null) {
-      refresh = (
-        <button className="btn btn-primary col-2" onClick={() => this.updateGameState()}>
-          Refresh
-        </button>
-      );
-    }
     return (
       <div onClick={this.cancelChoice}>
-        <div>
-          {this.getGameDetails()}
-        </div>
-        <div>
-          {this.getInstructions()}
-        </div>
+        <div> {this.getInstructions()} </div>
         <br />
-        <div style={{textAlign: "center"}}>
-          {refresh}
-        </div>
+        <div style={{textAlign: "center"}}> {this.getGameHeader()} </div>
         <br />
-        <div>
-          {this.getBoard()}
-        </div>
+        <div> {this.getBoard()} </div>
       </div>
-    )
+    );
   }
 
   render() {

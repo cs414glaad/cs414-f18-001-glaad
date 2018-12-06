@@ -16,7 +16,10 @@ class App extends Component {
 
   error(error) {
     if (error.response === undefined) {
-      alert(error);
+      console.log(error);
+      if (error === "Network Error") {
+        this.setState({user: null, game: null})
+      }
     } else {
       alert(error.response.data.msg);
     }

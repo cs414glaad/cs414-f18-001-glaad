@@ -29,7 +29,7 @@ public class PieceData extends DataType {
     } else {
       type = "";
       color = "";
-      isFlipped = true;
+      isFlipped = false;
     }
   }
 
