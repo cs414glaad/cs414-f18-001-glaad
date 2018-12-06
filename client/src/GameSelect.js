@@ -93,9 +93,13 @@ class GameSelect extends Component{
   }
 
   render() {
+    let content = null;
+    if (this.state.user != null) {
+      content = this.renderGames();
+    }
     return (
       <Panel name="Select Game" startCollapsed={true}>
-        {this.renderGames()}
+        {content}
       </Panel>
     )
   }

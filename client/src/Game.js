@@ -17,9 +17,12 @@ class Game extends Component{
   }
 
   componentWillReceiveProps(props) {
-    // Assumes props.game.gameId is set.
-    this.setState({game: props.game});
-    this.loadBoard(props.game);
+    let newState = {user: props.user};
+    if (props.user != null) {
+      newState.game = props.game;
+      this.loadBoard(props.game);
+    }
+    this.setState(newState);
   }
 
   loadBoard(game) {
@@ -152,7 +155,9 @@ class Game extends Component{
 
   render() {
     let board = null;
-    if (this.state.board == null) {
+    if (this.state.user == null) {
+      board = null;
+    } else if (this.state.board == null) {
       board = (<div>No active games</div>);
     } else {
       board = this.renderGame();

@@ -9,8 +9,10 @@ class Invites extends Component{
     super(props);
   }
   render() {
-    <Panel name="Invitations" startCollapsed={true}>
-    </Panel>
+    return (
+      <Panel name="Invitations" startCollapsed={true}>
+      </Panel>
+    );
   }
 }
 
