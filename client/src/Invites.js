@@ -68,16 +68,24 @@ class Invites extends Component {
             inviteId: invite.id
         })
             .then(function (response) {
-                alert(response.data.status)
+                console.log(response.data.status)
             }.bind(this))
             .catch(function (error) {
-                alert(error.response.data.msg)
+                console.log(error.response.data.msg)
             }.bind(this));
     }
 
     cancelInvite(invite) {
-        //TODO: API Call
-        console.log(invite)
+        axios.post(this.props.server + '/user', {
+            type: "replcancel",
+            inviteId: invite.id
+        })
+            .then(function (response) {
+                console.log(response.data.status)
+            }.bind(this))
+            .catch(function (error) {
+                console.log(error.response.data.msg)
+            }.bind(this));
     }
 
     getReceivedInvite(invite) {
@@ -159,7 +167,6 @@ class Invites extends Component {
     }
 
     render() {
-        console.log("hey what's up")
         return (
             <Panel name="Invitations" startCollapsed={true}>
                 {this.getInvites()}

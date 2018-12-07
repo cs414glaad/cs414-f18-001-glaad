@@ -20,6 +20,12 @@ import spark.Response;
  *     requires inviteId
  *     rejects invite
  *     returns ResponseData
+ *
+ * - 'replcancel':
+ *     requires inviteId
+ *     cancels invite
+ *     returns ResponseData
+ *
  * - 'repl':
  *     requires inviteId
  *     accepts invite
@@ -56,6 +62,12 @@ public class UserRequest extends RestRequest {
     return responseData.toString();
   }
 
+  private String handleUserReplcancel(Request request, Response response, String currentUser, ModelFacade modelFacade) throws FailedApiCallException {
+    modelFacade.cancelInvite(currentUser, inviteId);
+    ResponseData responseData = new ResponseData(ResponseData.SUCCESS, "cancelled invite");
+    return responseData.toString();
+  }
+
   private String handleUserRepl(Request request, Response response, String currentUser, ModelFacade modelFacade) throws FailedApiCallException {
     modelFacade.acceptInvite(currentUser, inviteId);
     ResponseData responseData = new ResponseData(ResponseData.SUCCESS, "accepted invite");
@@ -84,6 +96,8 @@ public class UserRequest extends RestRequest {
   @Override
   protected String handleRequest(Request request, Response response, String currentUser, ModelFacade modelFacade) throws FailedApiCallException, InvalidApiCallException {
     switch(type) {
+      case "replcancel"://cancel invite
+        return handleUserReplcancel(request, response, currentUser, modelFacade);
       case "replno": // reject invite
         return handleUserReplno(request, response, currentUser, modelFacade);
       case "repl": // accept invite
@@ -100,6 +114,7 @@ public class UserRequest extends RestRequest {
   public void validate(String currentUser) throws InvalidApiCallException, FailedApiCallException {
     super.validate(currentUser);
     switch (type) {
+      case "replcancel": //cancel invite
       case "replno": // reject invite
       case "repl": // accept invite
         assertNotNull(inviteId, "inviteId");
