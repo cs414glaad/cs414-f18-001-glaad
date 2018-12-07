@@ -7,23 +7,29 @@ import edu.colostate.cs.cs414.f18.the_other_alex.server.DataType;
 public class PieceData extends DataType {
   // row and column are stored in id
   public String color;
-  public String pieceType; // "blank" or defined by Piece class
+  public String type; // "blank" or defined by Piece class
+  public boolean isFlipped;
 
   public PieceData(Piece piece) {
-    if (piece.getIsFlipped()) {
+    isFlipped = piece.getIsFlipped();
+    if (isFlipped) {
       // values defined in Piece (e.g., NullPiece, Soldier, etc.)
-      pieceType = piece.getType();
+      type = piece.getType();
       switch(piece.getColor()) {
         case NONE:
-          color = null;
+          color = "";
+          break;
         case BLACK:
-          color = "black";
+          color = "BLACK";
+          break;
         case RED:
-          color = "red";
+          color = "RED";
+          break;
       }
     } else {
-      pieceType = "blank";
-      color = "blank";
+      type = "";
+      color = "";
+      isFlipped = false;
     }
   }
 

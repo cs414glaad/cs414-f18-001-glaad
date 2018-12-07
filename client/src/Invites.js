@@ -126,8 +126,8 @@ class Invites extends Component {
             sInvitesOut.push(this.getSentInvite(this.state.sInvites[idx]));
         }
 
-        //if there are received and sent invites, generate html for both
-        if (this.state.rInvites.length != 0 && this.state.sInvites.length != 0) {
+        //avoid generating html if no invites are available
+        if (this.state.rInvites.length != 0 || this.state.sInvites.length != 0) {
             console.log("building sent and received invites")
             return (
                 <div>
@@ -139,34 +139,7 @@ class Invites extends Component {
                     </ul>
                 </div>
             );
-        }
-        //only received invites are found
-        if (this.state.rInvites.length != 0 && this.state.sInvites.length == 0) {
-            console.log("building received invites")
-            return (
-                <div>
-                    <ul className="card list-group list-group-flush">
-                        {rInvitesOut}
-                    </ul>
-                    <ul className="card list-group list-group-flush">
-                        {sInvitesOut}
-                    </ul>
-                </div>
-            );
-        }
-        //only sent invites are found
-        if (this.state.rInvites.length == 0 && this.state.sInvites.length != 0) {
-            console.log("building sent invites")
-            return (
-                <div>
-                    <ul className="card list-group list-group-flush">
-                        {rInvitesOut}
-                    </ul>
-                    <ul className="card list-group list-group-flush">
-                        {sInvitesOut}
-                    </ul>
-                </div>
-            );
+
         }
     }
 
@@ -191,4 +164,6 @@ class Invites extends Component {
     }
 }
 
+
 export default Invites;
+
