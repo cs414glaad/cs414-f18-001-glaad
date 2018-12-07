@@ -51,13 +51,28 @@ class Invites extends Component {
     }
 
     acceptInvite(invite) {
-        //TODO: API Call
-        console.log(invite)
+        axios.post(this.props.server + '/user', {
+            type: "repl",
+            inviteId: invite.id
+        })
+            .then(function (response) {
+                console.log(response.data.status)
+            }.bind(this)).catch(function (error) {
+                alert(error.response.data.msg)
+            }.bind(this));
     }
 
     rejectInvite(invite) {
-        //TODO: API Call
-        console.log(invite)
+        axios.post(this.props.server + '/user', {
+            type: "replno",
+            inviteId: invite.id
+        })
+            .then(function (response) {
+                alert(response.data.status)
+            }.bind(this))
+            .catch(function (error) {
+                alert(error.response.data.msg)
+            }.bind(this));
     }
 
     cancelInvite(invite) {
