@@ -40,6 +40,10 @@ public class ModelFacade {
     return modelService.getUserService().rejectInvite(currentUser, inviteId);
   }
 
+  public String cancelInvite(String currentUser, String inviteId) throws FailedApiCallException {
+    return modelService.getUserService().cancelInvite(currentUser,inviteId);
+  }
+
   public User createUser(String username, String email, String password) throws FailedApiCallException, InvalidInputException {
     return modelService.getUserService().registerUser(username, email, password);
   }

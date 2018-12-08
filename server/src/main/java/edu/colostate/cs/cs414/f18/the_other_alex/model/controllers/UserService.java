@@ -198,4 +198,20 @@ public class UserService extends Observable {
     }
     return inviteId;
   }
+
+  public String cancelInvite(String currentUser, String inviteId) throws FailedApiCallException {
+    try {
+      //get invite
+      Invite invite = getUser(currentUser).getSendInvite(inviteId);
+      //find everyone who has this invite and reject that invite
+      for(String user : invite.getToUsers()) {
+        getUser(user).rejectInvite(invite);
+      }
+      //finally remove that invite from the current users list of pending invites
+      getUser(currentUser).removeInviteFromPendingInvites(invite);
+    } catch (UserNotFoundException e) {
+      throw new FailedApiCallException(e.getMessage());
+    }
+    return inviteId;
+  }
 }
