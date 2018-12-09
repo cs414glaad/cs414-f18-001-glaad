@@ -11,6 +11,7 @@ class GameSelect extends Component{
     this.addGame = this.addGame.bind(this);
     this.loadGame = this.loadGame.bind(this);
     this.loadUserData = this.loadUserData.bind(this);
+    this.updateGameSelectState = this.updateGameSelectState.bind(this);
   }
 
   componentWillReceiveProps(props) {
@@ -24,6 +25,14 @@ class GameSelect extends Component{
       return {games: prevState.games};
     });
   }
+
+    updateGameSelectState(){
+        if(this.props.user == null){
+            return;
+        }
+        this.setState({games:[]});
+        this.loadUserData(this.props.user)
+    }
 
   loadGame(gameId) {
     axios.post(this.props.server + '/query', {
@@ -99,6 +108,15 @@ class GameSelect extends Component{
     }
     return (
       <Panel name="Select Game" startCollapsed={true}>
+          <div className="row">
+            <div className="col-4">
+            </div>
+              <button className="btn btn-primary col-4" onClick={() => this.updateGameSelectState(this.props.user)}>Refresh</button>
+              <div className="col-4">
+              </div>
+          </div>
+          <div className="row">
+          </div>
         {content}
       </Panel>
     )

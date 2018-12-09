@@ -9,6 +9,7 @@ class Invites extends Component {
         super(props);
         this.state = {
             userBox: null,
+            username: null,
             rInvites: [],
             sInvites: []
         };
@@ -17,6 +18,7 @@ class Invites extends Component {
         this.sendInvite = this.sendInvite.bind(this);
         this.getInvites = this.getInvites.bind(this);
         this.updateInvites = this.updateInvites.bind(this);
+        this.updateInviteState = this.updateInviteState.bind(this);
     }
 
     handleChange(event) {
@@ -48,6 +50,7 @@ class Invites extends Component {
             .catch(function (error) {
                 alert(error.response.data.msg)
             }.bind(this));
+        this.updateInviteState();
     }
 
     acceptInvite(invite) {
@@ -60,6 +63,7 @@ class Invites extends Component {
             }.bind(this)).catch(function (error) {
                 alert(error.response.data.msg)
             }.bind(this));
+        this.updateInviteState();
     }
 
     rejectInvite(invite) {
@@ -73,6 +77,7 @@ class Invites extends Component {
             .catch(function (error) {
                 console.log(error.response.data.msg)
             }.bind(this));
+        this.updateInviteState();
     }
 
     cancelInvite(invite) {
@@ -86,6 +91,23 @@ class Invites extends Component {
             .catch(function (error) {
                 console.log(error.response.data.msg)
             }.bind(this));
+        this.updateInviteState();
+
+    }
+
+
+    componentDidMount() {
+        this.timer = setInterval(this.updateInviteState, 2000);
+    }
+
+    componentWillUnmount() {
+        clearInterval(this.timer);
+    }
+    updateInviteState(){
+        if(this.state.username == null){
+            return;
+        }
+        this.updateInvites(this.state.username)
     }
 
     getReceivedInvite(invite) {
@@ -123,6 +145,7 @@ class Invites extends Component {
             //recInvites and sentInvites are arrays of objects
             console.log("setting state inside updateInvites")
             this.setState({
+                username: username,
                 rInvites: response.data.users[0].receivedInvites,
                 sInvites: response.data.users[0].invites
             });
