@@ -14,7 +14,7 @@ public class ModelService implements Observer {
   private Database database;
 
   public ModelService() {
-    database = null;
+    database = new Database();
     userService = new UserService(database);
     gameService = new GameService(database);
   }
