@@ -21,6 +21,7 @@ public class UserHistory implements Serializable {
           throws ClassNotFoundException, IOException {
           ois.defaultReadObject();
   }
+
   public int getWins() {
     return wins;
   }

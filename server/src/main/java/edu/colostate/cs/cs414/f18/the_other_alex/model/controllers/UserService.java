@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Observable;
 
 public class UserService extends Observable {
+  // TODO: set changed followed by notify for any changes (save to database)
   private Database database;
   private ArrayList<User> cachedUsers;
 
@@ -65,31 +66,46 @@ public class UserService extends Observable {
       throw new UserNotFoundException();
     }
   }
-
+  /**
+    This method creates and cashes a user if that user has valid credentials and doesn't already exist
+   */
   public User registerUser(String username, String email, String password) throws FailedApiCallException, InvalidInputException {
     try {
       getUser(username); // throws exception
-      getUserByEmail(email);
       throw new FailedApiCallException("user already exists");
     } catch (UserNotFoundException e) {
       // user doesn't exist
     }
-    // Create user
+    try {
+      getUserByEmail(email); // throws exception
+      throw new FailedApiCallException("user already exists");
+    } catch (UserNotFoundException e) {
+      // user doesn't exist
+    }
+      //validate email
+      if(!isValidEmailAddress(email)) {
+        throw new InvalidInputException("invalid email");
+      }
+
+    // Create user if user doesn't already exist under the given username/email and if email is valid
     User user = new User(username, email, password);
     cachedUsers.add(user);
+    setChanged();
     notifyObservers();
     return user;
   }
 
   public User unregisterUser(User user) {
-    return null; // TODO
+    return null; // TODO remove user from users and database
   }
 
   public User[] searchUser(String query, int limit) {
-    return null; // TODO
+    // TODO incorporate limit and return multiple users
+    return new User[]{database.searchUser(query)};
   }
 
   private User loadUser(User user) {
+    // TODO load user from database
     if (cachedUsers.indexOf(user) == -1) {
       cachedUsers.add(user);
     }
@@ -97,7 +113,7 @@ public class UserService extends Observable {
   }
 
   private User saveUser(User user) {
-    return null; // TODO
+    return null; // TODO save user to database
   }
 
   /**
@@ -118,11 +134,13 @@ public class UserService extends Observable {
     }
     fromUserObj.sendInvite(invite);
     toUserObj.receiveInvite(invite);
+    setChanged();
     notifyObservers();
     return invite;
   }
 
   public void shutdown() {
+    setChanged();
     notifyObservers();
   }
 
@@ -147,6 +165,17 @@ public class UserService extends Observable {
       throw new FailedApiCallException("credentials invalid");
     }
   }
+  /**
+   * Checks if email passed in by user is of the correct form
+   * @param email
+   * returns true if email is valid
+   */
+    public boolean isValidEmailAddress(String email){
+      String ePattern = "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$";
+      java.util.regex.Pattern p = java.util.regex.Pattern.compile(ePattern);
+      java.util.regex.Matcher m = p.matcher(email);
+      return m.matches();
+    }
 
   /**
    * Returns
@@ -158,9 +187,37 @@ public class UserService extends Observable {
   public String acceptInvite(String currentUser, String inviteId) throws FailedApiCallException {
     try {
       Invite invite = getUser(currentUser).getReceivedInvite(inviteId);
-      if (!invite.acceptInvite(currentUser)) {
+      if (!invite.acceptInvite(currentUser, this)) {
         throw new FailedApiCallException("unable to accept invitation");
       }
+    } catch (UserNotFoundException e) {
+      throw new FailedApiCallException(e.getMessage());
+    }
+    return inviteId;
+  }
+
+  public String rejectInvite(String currentUser, String inviteId) throws FailedApiCallException {
+    try {
+      Invite invite = getUser(currentUser).getReceivedInvite(inviteId);
+      if (!invite.rejectInvite(currentUser, this)) {
+        throw new FailedApiCallException("unable to reject invitation");
+      }
+    } catch (UserNotFoundException e) {
+      throw new FailedApiCallException(e.getMessage());
+    }
+    return inviteId;
+  }
+
+  public String cancelInvite(String currentUser, String inviteId) throws FailedApiCallException {
+    try {
+      //get invite
+      Invite invite = getUser(currentUser).getSendInvite(inviteId);
+      //find everyone who has this invite and reject that invite
+      for(String user : invite.getToUsers()) {
+        getUser(user).rejectInvite(invite);
+      }
+      //finally remove that invite from the current users list of pending invites
+      getUser(currentUser).removeInviteFromPendingInvites(invite);
     } catch (UserNotFoundException e) {
       throw new FailedApiCallException(e.getMessage());
     }

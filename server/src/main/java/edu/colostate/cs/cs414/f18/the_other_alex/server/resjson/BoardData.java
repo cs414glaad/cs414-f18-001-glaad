@@ -5,10 +5,11 @@ import edu.colostate.cs.cs414.f18.the_other_alex.server.DataType;
 
 public class BoardData extends DataType {
   public BoardData(Board board) {
-    cells = new PieceData[8][4];
-    for (int row = 0; row < cells.length; row++) {
-      for (int col = 0; col < cells[row].length; col++) {
+    cells = new PieceData[Board.NUM_ROWS][Board.NUM_COLS];
+    for (int row = 0; row < Board.NUM_ROWS; row++) {
+      for (int col = 0; col < Board.NUM_COLS; col++) {
         cells[row][col] = new PieceData(board.getCells()[row][col]);
+        cells[row][col].id = String.format("%s %s", row, col);
       }
     }
   }

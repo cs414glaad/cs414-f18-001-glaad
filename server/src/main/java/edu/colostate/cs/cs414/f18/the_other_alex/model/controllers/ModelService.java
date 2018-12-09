@@ -9,14 +9,27 @@ import java.util.Observable;
 import java.util.Observer;
 
 public class ModelService implements Observer {
+  // TODO: make this a singleton
   private UserService userService;
   private GameService gameService;
   private Database database;
 
-  public ModelService() {
-    database = new Database();
+  public ModelService(boolean useDatabase) {
+    database = null;
+    if (useDatabase) {
+      database = new Database();
+    }
     userService = new UserService(database);
     gameService = new GameService(database);
+      if (useDatabase) {
+          userService.addObserver(database);
+          gameService.addObserver(database);
+      }
+
+  }
+
+  public ModelService() {
+    this(true);
   }
 
   public UserService getUserService() {
@@ -41,7 +54,7 @@ public class ModelService implements Observer {
       User toUser = userService.getUser(invite.getToUser());
       gameService.createGame(invite.getFromUser(), toUser, invite.getInviteId());
     } catch (UserNotFoundException e) {
-      invite.rejectInvite(invite.getToUser());
+      invite.rejectInvite(invite.getToUser(), userService);
       invite.clearAcceptance();
       return;
     }
@@ -50,6 +63,10 @@ public class ModelService implements Observer {
   @Override
   public synchronized void update(Observable o, Object arg) {
     if (o.getClass() == Invite.class) {
+      Invite invite = (Invite)o;
+      if (invite.getFromUser() == null) {
+        return;
+      }
       createGame((Invite)o);
     }
   }

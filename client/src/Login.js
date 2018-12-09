@@ -1,5 +1,7 @@
 import React, {Component} from 'react';
 import Panel from './Panel.js';
+import axios from 'axios';
+import qs from 'qs';
 
 class Login extends Component {
   constructor(props){
@@ -8,17 +10,40 @@ class Login extends Component {
     this.formUpdate = this.formUpdate.bind(this);
     this.logIn = this.logIn.bind(this);
     this.logOut = this.logOut.bind(this);
+    this.createAccount = this.createAccount.bind(this)
   }
   formUpdate(event){
     this.setState({[event.target.id]: event.target.value});
   }
   logIn(){
-    //TODO: Make an API call to in and populate a real user
-    this.props.updateUser({name: this.state.username});
+    let resp = function(response) {
+      this.props.updateUser(this.state.username);
+    };
+    let err = function(error) {
+      alert(error.response.data.msg)
+    };
+    resp = resp.bind(this);
+    err = err.bind(this);
+    axios.post(this.props.server + '/login', qs.stringify({
+      username: this.state.username,
+      password: this.state.password,
+      email: this.state.email
+    })).then(resp).catch(err);
   }
   logOut(){
-    //TODO: Make an API call to log out (if we decide we need to - blanking the user in client might be enough)
+    axios.get(this.props.server + '/logout');
     this.props.updateUser(null);
+  }
+  createAccount(){
+    axios.post(this.props.server + '/user', {
+      type: "user",
+      username: this.state.username,
+      password: this.state.password,
+      email: this.state.email
+    })
+      .catch(function (error) {
+        alert(error.response.data.msg)
+      });
   }
   getForms() {
     return (
@@ -55,7 +80,7 @@ class Login extends Component {
           <button className="btn btn-primary btn-block" disabled={!this.props.user} onClick={this.logOut}>Log Out</button>
         </div>
         <div className="col-4">
-          <button className="btn btn-primary btn-block" disabled={!(this.state.email && this.state.username && this.state.password)}>Create Account</button>
+          <button className="btn btn-primary btn-block" disabled={!(this.state.email && this.state.username && this.state.password)} onClick={this.createAccount}>Create Account</button>
         </div>
       </div>
     )

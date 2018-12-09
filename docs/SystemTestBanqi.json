@@ -1,0 +1,871 @@
+{
+	"info": {
+		"_postman_id": "e62acbf5-ee9c-4672-9731-677ae5220ba8",
+		"name": "System Test Banqi",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "create user1",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "2d155792-3686-484a-91d2-fbc0001b282a",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"pm.test(\"response is ok\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"pm.test(\"status is good\", function () {",
+							"    pm.expect(\"success\").to.equal(jsonData.status); ",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"type\":\"user\",\n  \"username\":\"user1\",\n  \"email\":\"defisanemail1@lol.com\",\n  \"password\":\"passwd\"\n}"
+				},
+				"url": {
+					"raw": "localhost:3001/user",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"user"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create user2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "2db08efe-8e0b-4cae-8a46-6b7a193e7a06",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"pm.test(\"response is ok\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"pm.test(\"status is good\", function () {",
+							"    pm.expect(\"success\").to.equal(jsonData.status); ",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"type\":\"user\",\n  \"username\":\"user2\",\n  \"email\":\"defisanemail2@lol.com\",\n  \"password\":\"passwd\"\n}"
+				},
+				"url": {
+					"raw": "localhost:3001/user",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"user"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create user3",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "9cdba19f-296b-4207-9cbc-7711a6e62c37",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"pm.test(\"response is ok\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"pm.test(\"status is good\", function () {",
+							"    pm.expect(\"success\").to.equal(jsonData.status); ",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"type\":\"user\",\n  \"username\":\"user3\",\n  \"email\":\"defisanemail3@lol.com\",\n  \"password\":\"passwd\"\n}"
+				},
+				"url": {
+					"raw": "localhost:3001/user",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"user"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "login user1",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "09d70bb5-fda3-4d36-b57b-b179ce402d6e",
+						"exec": [
+							"pm.test(\"response is ok\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "localhost:3001/login?username=user1&password=passwd",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"login"
+					],
+					"query": [
+						{
+							"key": "username",
+							"value": "user1"
+						},
+						{
+							"key": "password",
+							"value": "passwd"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "user inv",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "19430d4a-9c94-4b06-bf03-1f3e3e1686d7",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"pm.test(\"response is ok\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"pm.test(\"status is good\", function () {",
+							"    pm.expect(\"success\").to.equal(jsonData.status); ",
+							"});",
+							"postman.setEnvironmentVariable(\"token\", jsonData.invites[0].id);",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"type\":\"inv\",\n  \"toUser\":\"user2\"\n}"
+				},
+				"url": {
+					"raw": "localhost:3001/user",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"user"
+					]
+				},
+				"description": "Send user an invite"
+			},
+			"response": []
+		},
+		{
+			"name": "user inv add",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "4c5fd3c7-daab-47c6-95bd-9e18370b7058",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"pm.test(\"response is ok\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"pm.test(\"status is good\", function () {",
+							"    pm.expect(\"success\").to.equal(jsonData.status); ",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"type\":\"inv\",\n  \"toUser\":\"user3\",\n  \"inviteId\":\"{{token}}\"\n}"
+				},
+				"url": {
+					"raw": "localhost:3001/user",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"user"
+					]
+				},
+				"description": "SET inviteId to the inviteId from the first invite\n\nTest user inv add to existing invite. Ensure returned inviteId is the same as previous."
+			},
+			"response": []
+		},
+		{
+			"name": "user inv new",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "af0ea633-b4b8-44eb-a578-ae4f6a420cf7",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"pm.test(\"response is ok\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"pm.test(\"status is good\", function () {",
+							"    pm.expect(\"success\").to.equal(jsonData.status); ",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"type\":\"inv\",\n  \"toUser\":\"user2\"\n}"
+				},
+				"url": {
+					"raw": "localhost:3001/user",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"user"
+					]
+				},
+				"description": "Test user inv add to existing invite. Ensure that inviteId is different than from before."
+			},
+			"response": []
+		},
+		{
+			"name": "login user3",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "168b3c40-3302-4e7d-97ed-aa40c01c83eb",
+						"exec": [
+							"pm.test(\"response is ok\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "localhost:3001/login?username=user3&password=passwd",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"login"
+					],
+					"query": [
+						{
+							"key": "username",
+							"value": "user3"
+						},
+						{
+							"key": "password",
+							"value": "passwd"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "user replno from user3",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "850c8ea9-8998-488f-8394-cfd77177902b",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"pm.test(\"response is ok\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"pm.test(\"status is good\", function () {",
+							"    pm.expect(\"success\").to.equal(jsonData.status); ",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"type\":\"replno\",\n  \"inviteId\": \"{{token}}\"\n}"
+				},
+				"url": {
+					"raw": "localhost:3001/user",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"user"
+					]
+				},
+				"description": "SET inviteId to first inviteId"
+			},
+			"response": []
+		},
+		{
+			"name": "login user2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "fd5e5a31-9ccc-4fb1-bdf3-36007b0a3e34",
+						"exec": [
+							"pm.test(\"response is ok\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"type\":\"user\",\n  \"username\":\"user2\",\n  \"email\":\"def not a email lol\",\n  \"password\":\"passwd\"\n}"
+				},
+				"url": {
+					"raw": "localhost:3001/login?username=user2&password=passwd",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"login"
+					],
+					"query": [
+						{
+							"key": "username",
+							"value": "user2"
+						},
+						{
+							"key": "password",
+							"value": "passwd"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "user repl from user2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "3cffdd5a-6ba9-4b28-98dc-b6d0e6f73c44",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"pm.test(\"response is ok\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"pm.test(\"status is good\", function () {",
+							"    pm.expect(\"success\").to.equal(jsonData.status); ",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"type\":\"repl\",\n  \"inviteId\": \"{{token}}\"\n}"
+				},
+				"url": {
+					"raw": "localhost:3001/user",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"user"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "query game",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "52538ba9-d665-473e-bd24-f966f1da5a2a",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"pm.test(\"response is ok\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"pm.test(\"status is good\", function () {",
+							"    pm.expect(\"success\").to.equal(jsonData.status); ",
+							"});",
+							"postman.setEnvironmentVariable(\"turn\", jsonData.games[0].turn);",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"type\":\"game\",\n  \"gameId\":\"{{token}}\"\n}"
+				},
+				"url": {
+					"raw": "localhost:3001/query",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"query"
+					]
+				},
+				"description": "SET gameId to the inviteId from before.\n\nEnsure that the game returned."
+			},
+			"response": []
+		},
+		{
+			"name": "login user's turn",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "a05d6b87-281d-49f9-903b-8d2a07c1fe09",
+						"exec": [
+							"pm.test(\"response is ok\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"type\":\"user\",\n  \"username\":\"user2\",\n  \"email\":\"def not a email lol\",\n  \"password\":\"passwd\"\n}"
+				},
+				"url": {
+					"raw": "localhost:3001/login?username={{turn}}&password=passwd",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"login"
+					],
+					"query": [
+						{
+							"key": "username",
+							"value": "{{turn}}"
+						},
+						{
+							"key": "password",
+							"value": "passwd"
+						}
+					]
+				},
+				"description": "SET username to the user whose turn it is\nUse the one before to get whose turn it is. Login as that user here."
+			},
+			"response": []
+		},
+		{
+			"name": "game move",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "02167916-42ba-44b0-a92b-a224bd55fa60",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"pm.test(\"response is ok\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"pm.test(\"status is good\", function () {",
+							"    pm.expect(\"success\").to.equal(jsonData.status); ",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"type\":\"move\",\n  \"gameId\": \"{{token}}\",\n  \"fromCell\":\"0 0\",\n  \"toCell\":\"0 0\"\n}"
+				},
+				"url": {
+					"raw": "localhost:3001/game",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"game"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "login user1",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "23802573-0cd1-4392-8d55-81791b08c734",
+						"exec": [
+							"pm.test(\"response is ok\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"type\":\"user\",\n  \"username\":\"user2\",\n  \"email\":\"def not a email lol\",\n  \"password\":\"passwd\"\n}"
+				},
+				"url": {
+					"raw": "localhost:3001/login?username=user1&password=passwd",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"login"
+					],
+					"query": [
+						{
+							"key": "username",
+							"value": "user1"
+						},
+						{
+							"key": "password",
+							"value": "passwd"
+						}
+					]
+				},
+				"description": "SET username to the user whose turn it is\nUse the one before to get whose turn it is. Login as that user here."
+			},
+			"response": []
+		},
+		{
+			"name": "query user",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "9ffcbe8d-2e48-47cc-9311-7d76d0e671c3",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"pm.test(\"response is ok\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"pm.test(\"status is good\", function () {",
+							"    pm.expect(\"success\").to.equal(jsonData.status); ",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"type\":\"user\",\n  \"username\":\"user1\"\n}"
+				},
+				"url": {
+					"raw": "localhost:3001/query",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"query"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "query hist",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "d6c82b12-47fd-46c1-a341-04938a010f1f",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"pm.test(\"response is ok\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"pm.test(\"status is good\", function () {",
+							"    pm.expect(\"success\").to.equal(jsonData.status); ",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"type\":\"hist\",\n  \"username\":\"user1\"\n}"
+				},
+				"url": {
+					"raw": "localhost:3001/query",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"query"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "query record",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "c17db5f4-d742-4c88-b7e3-9e606a7dce14",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"pm.test(\"response is ok\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"pm.test(\"status is good\", function () {",
+							"    pm.expect(\"success\").to.equal(jsonData.status); ",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"type\":\"record\",\n  \"gameId\":\"{{token}}\"\n}"
+				},
+				"url": {
+					"raw": "localhost:3001/query",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"query"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "query board",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "06f09193-9dd5-4aab-81cc-f6f2f8286f71",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"pm.test(\"response is ok\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"pm.test(\"status is good\", function () {",
+							"    pm.expect(\"success\").to.equal(jsonData.status); ",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"type\":\"board\",\n  \"gameId\":\"{{token}}\"\n}"
+				},
+				"url": {
+					"raw": "localhost:3001/query",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"query"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "query whoami",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "06f09193-9dd5-4aab-81cc-f6f2f8286f71",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"pm.test(\"response is ok\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"pm.test(\"status is good\", function () {",
+							"    pm.expect(\"success\").to.equal(jsonData.status); ",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"type\":\"whoami\"\n}"
+				},
+				"url": {
+					"raw": "localhost:3001/query",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"query"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

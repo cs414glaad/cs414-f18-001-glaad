@@ -25,7 +25,7 @@ public abstract class Piece implements Serializable {
 	private static final long serialVersionUID = 4L;
 
 	protected static final List<String> generalCanCapture = Arrays.asList(
-			GENERAL, ADVISOR, ELEPHANT, CHARIOT, HORSE, CANNON, SOLDIER, NULL);
+			GENERAL, ADVISOR, ELEPHANT, CHARIOT, HORSE, CANNON, NULL);
 	protected static final List<String> advisorCanCapture = Arrays.asList(
 			ADVISOR, ELEPHANT, CHARIOT, HORSE, CANNON, SOLDIER, NULL);
 	protected static final List<String> elephantCanCapture = Arrays.asList(
@@ -61,7 +61,7 @@ public abstract class Piece implements Serializable {
 		this.color = color;
 	}
 	public Piece(){
-		isFlipped = false;
+		isFlipped = true;
 		this.color = PieceColor.NONE;
 	}
 
@@ -88,10 +88,10 @@ public abstract class Piece implements Serializable {
 			return false;
 		}
 
-		if ((toCell.getPiece() instanceof NullPiece)
-				|| toCell.getPiece().getIsFlipped() == true
-				&& toCell.getPiece().getIsFlipped() == true) {
-			
+//		if ((toCell.getPiece() instanceof NullPiece)
+//				|| toCell.getPiece().getIsFlipped() == true
+//				&& toCell.getPiece().getIsFlipped() == true) {
+		if(toCell.getPiece() instanceof NullPiece || toCell.getPiece().getIsFlipped() == true) {
 			return ensureMoveIsNotDiagonalOrTooFar(toCell, fromCell);
 
 		}

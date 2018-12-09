@@ -16,8 +16,28 @@ import spark.Response;
 /**
  * Available game types are:
  *
- * - 'inv': requires toUser
- * - 'user': requires username, email, password
+ * - 'replno':
+ *     requires inviteId
+ *     rejects invite
+ *     returns ResponseData
+ *
+ * - 'replcancel':
+ *     requires inviteId
+ *     cancels invite
+ *     returns ResponseData
+ *
+ * - 'repl':
+ *     requires inviteId
+ *     accepts invite
+ *     returns ResponseData
+ * - 'inv':
+ *     requires toUser, optional: inviteId
+ *     sends invite to toUser
+ *     returns InviteList
+ * - 'user':
+ *     requires username, email, password
+ *     creates new user
+ *     returns UserList
  *
  * Json format:
  * {
@@ -37,16 +57,25 @@ public class UserRequest extends RestRequest {
   public String inviteId;
 
   private String handleUserReplno(Request request, Response response, String currentUser, ModelFacade modelFacade) throws FailedApiCallException {
-    throw new FailedApiCallException("not implemented"); // TODO
+    modelFacade.rejectInvite(currentUser, inviteId);
+    ResponseData responseData = new ResponseData(ResponseData.SUCCESS, "rejected invite");
+    return responseData.toString();
+  }
+
+  private String handleUserReplcancel(Request request, Response response, String currentUser, ModelFacade modelFacade) throws FailedApiCallException {
+    modelFacade.cancelInvite(currentUser, inviteId);
+    ResponseData responseData = new ResponseData(ResponseData.SUCCESS, "cancelled invite");
+    return responseData.toString();
   }
 
   private String handleUserRepl(Request request, Response response, String currentUser, ModelFacade modelFacade) throws FailedApiCallException {
     modelFacade.acceptInvite(currentUser, inviteId);
-    return (new ResponseData(ResponseData.SUCCESS, "accepted invite")).toString();
+    ResponseData responseData = new ResponseData(ResponseData.SUCCESS, "accepted invite");
+    return responseData.toString();
   }
 
   private String handleUserInv(Request request, Response response, String currentUser, ModelFacade modelFacade) throws FailedApiCallException {
-    Invite invite = modelFacade.sendInvite(currentUser, toUser, null);
+    Invite invite = modelFacade.sendInvite(currentUser, toUser, inviteId);
     InviteList inviteList = new InviteList(invite);
     return inviteList.toString();
   }
@@ -67,28 +96,33 @@ public class UserRequest extends RestRequest {
   @Override
   protected String handleRequest(Request request, Response response, String currentUser, ModelFacade modelFacade) throws FailedApiCallException, InvalidApiCallException {
     switch(type) {
+      case "replcancel"://cancel invite
+        return handleUserReplcancel(request, response, currentUser, modelFacade);
       case "replno": // reject invite
         return handleUserReplno(request, response, currentUser, modelFacade);
       case "repl": // accept invite
         return handleUserRepl(request, response, currentUser, modelFacade);
-      case "inv": // send
+      case "inv": // send invite
         return handleUserInv(request, response, currentUser, modelFacade);
-      case "user":
+      case "user": // create user
         return handleUserUser(request, response, currentUser, modelFacade);
     }
     return null;
   }
 
   @Override
-  public void validate() throws InvalidApiCallException, FailedApiCallException {
-    super.validate();
+  public void validate(String currentUser) throws InvalidApiCallException, FailedApiCallException {
+    super.validate(currentUser);
     switch (type) {
+      case "replcancel": //cancel invite
       case "replno": // reject invite
       case "repl": // accept invite
         assertNotNull(inviteId, "inviteId");
+        requireLoggedIn(currentUser);
         break;
       case "inv": // create invite
         assertNotNullOrEmpty(toUser, "toUser");
+        requireLoggedIn(currentUser);
         break;
       case "user": // create user
         assertNotNullOrEmpty(username, "username");

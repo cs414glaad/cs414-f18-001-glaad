@@ -1,7 +1,6 @@
 package edu.colostate.cs.cs414.f18.the_other_alex.server;
 
 import spark.Spark;
-
 import static spark.Spark.*;
 
 public class Server {
@@ -47,6 +46,7 @@ public class Server {
     loadState();
     setPort(port);
     linkRoutes();
+    setAccessControl();
   }
 
   private void setPort(int port) {
@@ -56,5 +56,29 @@ public class Server {
 
   private void loadState() {
     modelManager = new ModelManager();
+  }
+
+  private void setAccessControl() {
+    options("/*",
+            (request, response) -> {
+
+              String accessControlRequestHeaders = request
+                      .headers("Access-Control-Request-Headers");
+              if (accessControlRequestHeaders != null) {
+                response.header("Access-Control-Allow-Headers",
+                        accessControlRequestHeaders);
+              }
+
+              String accessControlRequestMethod = request
+                      .headers("Access-Control-Request-Method");
+              if (accessControlRequestMethod != null) {
+                response.header("Access-Control-Allow-Methods",
+                        accessControlRequestMethod);
+              }
+
+              return "OK";
+            });
+
+    before((request, response) -> response.header("Access-Control-Allow-Origin", "*"));
   }
 }

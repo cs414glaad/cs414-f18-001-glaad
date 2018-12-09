@@ -35,6 +35,9 @@ public class Game extends Observable implements Observer, Serializable {
     turn = user1;
     firstMove = true;
     gameState = GameState.IN_PROGRESS;
+
+    user1.addGame(id);
+    user2.addGame(id);
   }
 
   private void writeObject(ObjectOutputStream oos)
@@ -57,10 +60,7 @@ public class Game extends Observable implements Observer, Serializable {
       gameRecord.setWinnerName(user2.getUsername());
       gameRecord.setLoserName(user1.getUsername());
     }
-  }
-
-  public Board getBoard() {
-    return board;
+    gameState = GameState.OVER;
   }
 
   public void endTurn() {
@@ -73,33 +73,37 @@ public class Game extends Observable implements Observer, Serializable {
   }
 
   public GameState makeMove(Cell fromCell, Cell toCell, User user) throws InvalidMoveException {
+    if(turn.equals(user)) {
 //check for firstMove. If true, set userColors according to flipped piece color. (assumes user1 plays first)
-    if (firstMove) {
-      board.move(fromCell, toCell);
-      user1Color = fromCell.getPiece().getColor();
-      if (user1Color == PieceColor.BLACK) {
-        user2Color = PieceColor.RED;
-      } else {
-        user2Color = PieceColor.BLACK;
+      if (firstMove) {
+        board.move(fromCell, toCell);
+        setUser1Color(fromCell.getPiece().getColor());
+        if (user1Color == PieceColor.BLACK) {
+          setUser2Color(PieceColor.RED);
+        } else {
+          setUser2Color(PieceColor.BLACK);
+        }
+        firstMove = false;
+        endTurn();
+        return gameState;
       }
-      firstMove = false;
-      endTurn();
-      return GameState.IN_PROGRESS;
-    }
 //subsequent moves.
-    if(fromCell.getPiece().getColor() == getUserColor(user)) { //make sure piece is right color
-      board.move(fromCell, toCell);
-      if (board.isGameOver(getOpponentColor(user))) {
-        gameOver();
-        return GameState.OVER;
+      if (fromCell.getPiece().getColor() == getTurnColor(user)|| fromCell.getPiece().getIsFlipped() == false) { //make sure piece is right color
+        board.move(fromCell, toCell);
+        if (board.isGameOver(getOpponentColor(user))) {
+          gameOver();
+          return gameState;
+        } else {
+          endTurn();
+          return gameState;
+        }
       }
       else {
-        endTurn();
-        return GameState.IN_PROGRESS;
+        throw new InvalidMoveException("Invalid move: Select a piece of your own color");
       }
     }
-    else {
-      throw new InvalidMoveException("Invalid move: Select a piece of your own color");
+    else{
+      throw new InvalidMoveException("It is not your turn to move");
     }
   }
 
@@ -107,7 +111,7 @@ public class Game extends Observable implements Observer, Serializable {
     return (turn == user);
   }
 
-  public PieceColor getUserColor(User user) {
+  public PieceColor getTurnColor(User user) {
     if(user == user1) {
       return user1Color;
     }
@@ -133,7 +137,6 @@ public class Game extends Observable implements Observer, Serializable {
   public void update(Observable o, Object arg) {
 
   }
-
   public String getGameId() {
     return gameId;
   }
@@ -152,5 +155,25 @@ public class Game extends Observable implements Observer, Serializable {
 
   public GameState getGameState() {
     return gameState;
+  }
+
+  public User getUser1() {
+    return user1;
+  }
+
+  public User getUser2() {
+    return user2;
+  }
+
+  public Board getBoard() {
+    return board;
+  }
+
+  public void setUser1Color(PieceColor color) {
+    user1Color = color;
+  }
+
+  public void setUser2Color(PieceColor color) {
+    user2Color = color;
   }
 }

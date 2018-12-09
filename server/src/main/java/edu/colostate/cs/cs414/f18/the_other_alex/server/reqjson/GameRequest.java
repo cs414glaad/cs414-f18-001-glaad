@@ -13,7 +13,10 @@ import spark.Response;
  *
  * Available types are:
  *
- * - 'move': requires gameId, fromCell, toCell
+ * - 'move':
+ *     requires gameId, fromCell, toCell
+ *     makes a move
+ *     returns ResponseData
  *
  * Json format:
  * {
@@ -22,6 +25,8 @@ import spark.Response;
  *   fromCell: {cellId},
  *   toCell: {cellId},
  * }
+ * cell id's are specified in GameService makeMove method: "row col" where row
+ * and col are the row and column of piece's position
  */
 public class GameRequest extends RestRequest {
   public String gameId;
@@ -41,7 +46,17 @@ public class GameRequest extends RestRequest {
   }
 
   @Override
-  protected void validate() throws InvalidApiCallException, FailedApiCallException {
-    super.validate();
+  protected void validate(String currentUser) throws InvalidApiCallException, FailedApiCallException {
+    super.validate(currentUser);
+    requireLoggedIn(currentUser);
+    switch (type) {
+      case "move":
+        assertNotNull(gameId, "gameId");
+        assertNotNull(toCell, "toCell");
+        assertNotNull(fromCell, "fromCell");
+        break;
+      default:
+        throw new InvalidApiCallException("invalid type for game");
+    }
   }
 }
