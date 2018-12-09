@@ -11,6 +11,9 @@ import edu.colostate.cs.cs414.f18.the_other_alex.server.exceptions.InvalidApiCal
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
+import java.sql.SQLException;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class TestModelFacade {
@@ -22,7 +25,8 @@ class TestModelFacade {
   ModelFacade modelFacade;
 
   @BeforeEach
-  void setUp() throws InvalidInputException, FailedApiCallException {
+  void setUp() throws InvalidInputException, FailedApiCallException, SQLException, IOException,
+          ClassNotFoundException , IllegalAccessException, InstantiationException {
     modelFacade = new ModelFacade(false);
     user1 = modelFacade.createUser("user1", "user1@email.com", "passwd");
     user2 = modelFacade.createUser("user2", "user2@email.com", "passwd");

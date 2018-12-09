@@ -4,6 +4,10 @@ import java.sql.*;
 import java.io.ObjectInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.Observer;
+import edu.colostate.cs.cs414.f18.the_other_alex.model.controllers.GameService;
+import edu.colostate.cs.cs414.f18.the_other_alex.model.controllers.ModelService;
+import edu.colostate.cs.cs414.f18.the_other_alex.model.controllers.UserService;
 
 public class Database {
     private String username;
@@ -57,7 +61,7 @@ public class Database {
 
 
     public User getUser(String username) throws SQLException, IOException,
-            ClassNotFoundException , IllegalAccessException, InstantiationException{
+            ClassNotFoundException , IllegalAccessException, InstantiationException {
         try {
             String deserializeUserSearchString = "SELECT SerializedObject FROM UserTable WHERE Username = ?;";
 //        Class.forName(myDriver).newInstance();
@@ -209,7 +213,7 @@ public class Database {
             String serializeGameHistory = "INSERT INTO Game(GameID, SerializedObject) VALUES (?, ?);";
 
             st = conn.prepareStatement(serializeGameHistory, Statement.RETURN_GENERATED_KEYS);
-            st.setInt(1, g.getGameId().hashCode());
+            st.setLong(1, g.getGameId().hashCode());
             st.setObject(2, g);
             st.executeUpdate();
             rs = st.getGeneratedKeys();
@@ -276,6 +280,31 @@ public class Database {
                 rs.close();
             }
             if (st != null && st.isClosed() == false ) {
+                st.close();
+            }
+            if (conn != null && conn.isClosed() == false) {
+                conn.close();
+            }
+        }
+    }
+
+    public void deleteUserEntryUsingUsername(String deletionUsername) throws SQLException, IOException,
+            ClassNotFoundException, IllegalAccessException, InstantiationException{
+
+//        Class.forName(myDriver).newInstance()
+        try {
+            conn = DriverManager.getConnection(myUrl, username, password);
+            String userDeletionString = "DELETE FROM UserTable WHERE Username = ?;";
+
+            st = conn.prepareStatement(userDeletionString);
+            st.setString(1, deletionUsername);
+            st.executeUpdate();
+        }
+        finally {
+            if (rs != null && rs.isClosed() == false) {
+                rs.close();
+            }
+            if (st != null && st.isClosed() == false) {
                 st.close();
             }
             if (conn != null && conn.isClosed() == false) {

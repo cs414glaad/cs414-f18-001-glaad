@@ -10,6 +10,8 @@ import edu.colostate.cs.cs414.f18.the_other_alex.server.exceptions.InvalidApiCal
 import edu.colostate.cs.cs414.f18.the_other_alex.server.resjson.InviteList;
 import edu.colostate.cs.cs414.f18.the_other_alex.server.resjson.ResponseData;
 import edu.colostate.cs.cs414.f18.the_other_alex.server.resjson.UserList;
+import java.io.IOException;
+import java.sql.SQLException;
 import spark.Request;
 import spark.Response;
 
@@ -80,7 +82,9 @@ public class UserRequest extends RestRequest {
     return inviteList.toString();
   }
 
-  private String handleUserUser(Request request, Response response, String currentUser, ModelFacade modelFacade) throws FailedApiCallException, InvalidApiCallException {
+  private String handleUserUser(Request request, Response response, String currentUser, ModelFacade modelFacade) throws FailedApiCallException, InvalidApiCallException,
+          SQLException, IOException, ClassNotFoundException , IllegalAccessException, InstantiationException
+  {
     try {
       User user = modelFacade.createUser(
           username,
@@ -94,7 +98,8 @@ public class UserRequest extends RestRequest {
   }
 
   @Override
-  protected String handleRequest(Request request, Response response, String currentUser, ModelFacade modelFacade) throws FailedApiCallException, InvalidApiCallException {
+  protected String handleRequest(Request request, Response response, String currentUser, ModelFacade modelFacade) throws FailedApiCallException, InvalidApiCallException,
+          SQLException, IOException, ClassNotFoundException , IllegalAccessException, InstantiationException {
     switch(type) {
       case "replcancel"://cancel invite
         return handleUserReplcancel(request, response, currentUser, modelFacade);

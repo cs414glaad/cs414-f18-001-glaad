@@ -39,9 +39,6 @@ public class Invite extends Observable implements Serializable {
     return false;
   }
 
-  public User[] findPlayers(String username, UserService userService) {
-    return userService.searchUser(username, 5);
-  }
 
   /**
    *

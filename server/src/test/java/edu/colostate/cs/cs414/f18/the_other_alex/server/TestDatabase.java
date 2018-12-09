@@ -2,8 +2,10 @@ package edu.colostate.cs.cs414.f18.the_other_alex.server;
 
 import edu.colostate.cs.cs414.f18.the_other_alex.model.*;
 import edu.colostate.cs.cs414.f18.the_other_alex.model.controllers.ModelFacade;
+import edu.colostate.cs.cs414.f18.the_other_alex.model.exceptions.GameNotFoundException;
 import edu.colostate.cs.cs414.f18.the_other_alex.model.exceptions.InvalidInputException;
 import edu.colostate.cs.cs414.f18.the_other_alex.model.exceptions.InvalidMoveException;
+import edu.colostate.cs.cs414.f18.the_other_alex.model.exceptions.UserNotFoundException;
 import edu.colostate.cs.cs414.f18.the_other_alex.server.exceptions.FailedApiCallException;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -194,8 +196,9 @@ public class TestDatabase {
 
     @Test
     public void ensureInviteSerialization() throws InvalidInputException, ClassNotFoundException, SQLException,
-            InstantiationException, IllegalAccessException, IOException, InvalidMoveException, FailedApiCallException {
-        ModelFacade m = new ModelFacade();
+            InstantiationException, IllegalAccessException, IOException, InvalidMoveException, FailedApiCallException,
+            UserNotFoundException, GameNotFoundException {
+        ModelFacade m = new ModelFacade(true);
         long u1ID = -1;
         long u2ID = -1;
         Game g = null;
@@ -204,19 +207,17 @@ public class TestDatabase {
             User testUser2 = m.createUser("User2", "user2@gmail.com",
                     "TheArtistFormallyKnownAsPooprat");
 
+
             Invite i = m.sendInvite("User1", "User2", null);
 
-            u1ID = database.addSerializedObject(testUser1);
-            u2ID = database.addSerializedObject(testUser2);
-
-            User u = database.getUser("User1");
+            User u = m.getUser("User1");
 
             assertEquals("User2", u.getPendingInvites().get(0).getToUsers().get(0));
 
         }
         finally {
-            database.deleteUserEntryUsingID((int) u1ID);
-            database.deleteUserEntryUsingID((int) u2ID);
+            m.deleteUserEntryUsingUsername("User1");
+            m.deleteUserEntryUsingUsername("User2");
         }
     }
 }

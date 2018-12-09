@@ -5,6 +5,8 @@ import edu.colostate.cs.cs414.f18.the_other_alex.model.exceptions.GameNotFoundEx
 import edu.colostate.cs.cs414.f18.the_other_alex.model.Database;
 import edu.colostate.cs.cs414.f18.the_other_alex.server.exceptions.FailedApiCallException;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Observable;
 
@@ -24,9 +26,13 @@ public class GameService extends Observable {
    * @param p2 the second player
    * @return Returns the created game
    */
-  public Game createGame(User p1, User p2, String id) {
+  public Game createGame(User p1, User p2, String id) throws ClassNotFoundException, IOException,
+          SQLException, IllegalAccessException, InstantiationException {
     Game game = new Game(p1, p2, id);
     cachedGames.add(game);
+    if (database != null) {
+      database.addSerializedObject(game);
+    }
     return game;
   }
 
@@ -42,7 +48,7 @@ public class GameService extends Observable {
     }
     if (database != null) {
       try {
-        database.getGame(gameId.hashCode());
+        return database.getGame(gameId.hashCode());
       } catch(Exception e) {
         throw new GameNotFoundException();
       }
@@ -80,6 +86,10 @@ public class GameService extends Observable {
       Cell fromCell = getCellFromId(cells, fromCellId);
       Cell toCell = getCellFromId(cells, toCellId);
       game.makeMove(fromCell, toCell, user);
+      if (database != null) {
+        database.deleteGameEntryUsingID(gameId.hashCode());
+        database.addSerializedObject(game);
+      }
     } catch (Exception e) {
       throw new FailedApiCallException(e.getMessage());
     }

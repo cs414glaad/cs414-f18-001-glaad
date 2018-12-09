@@ -8,6 +8,8 @@ import edu.colostate.cs.cs414.f18.the_other_alex.model.Database;
 import edu.colostate.cs.cs414.f18.the_other_alex.server.exceptions.FailedApiCallException;
 import edu.colostate.cs.cs414.f18.the_other_alex.server.exceptions.InvalidApiCallException;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Observable;
 
@@ -69,7 +71,8 @@ public class UserService extends Observable {
   /**
     This method creates and cashes a user if that user has valid credentials and doesn't already exist
    */
-  public User registerUser(String username, String email, String password) throws FailedApiCallException, InvalidInputException {
+  public User registerUser(String username, String email, String password) throws FailedApiCallException, InvalidInputException,
+          SQLException, ClassNotFoundException, IllegalAccessException, IOException, InstantiationException {
     try {
       getUser(username); // throws exception
       throw new FailedApiCallException("user already exists");
@@ -92,16 +95,14 @@ public class UserService extends Observable {
     cachedUsers.add(user);
     setChanged();
     notifyObservers();
+    if (database != null) {
+      database.addSerializedObject(user);
+    }
     return user;
   }
 
   public User unregisterUser(User user) {
     return null; // TODO remove user from users and database
-  }
-
-  public User[] searchUser(String query, int limit) {
-    // TODO incorporate limit and return multiple users
-    return new User[]{database.searchUser(query)};
   }
 
   private User loadUser(User user) {
@@ -222,5 +223,10 @@ public class UserService extends Observable {
       throw new FailedApiCallException(e.getMessage());
     }
     return inviteId;
+  }
+
+  public void deleteUserEntryUsingUsername(String username) throws FailedApiCallException, InvalidInputException,
+          SQLException, ClassNotFoundException, IllegalAccessException, IOException, InstantiationException {
+    database.deleteUserEntryUsingUsername(username);
   }
 }

@@ -6,6 +6,8 @@ import edu.colostate.cs.cs414.f18.the_other_alex.model.exceptions.InvalidInputEx
 import edu.colostate.cs.cs414.f18.the_other_alex.model.exceptions.UserNotFoundException;
 import edu.colostate.cs.cs414.f18.the_other_alex.server.exceptions.FailedApiCallException;
 import edu.colostate.cs.cs414.f18.the_other_alex.server.exceptions.InvalidApiCallException;
+import java.io.IOException;
+import java.sql.SQLException;
 
 public class ModelFacade {
   private ModelService modelService;
@@ -44,7 +46,8 @@ public class ModelFacade {
     return modelService.getUserService().cancelInvite(currentUser,inviteId);
   }
 
-  public User createUser(String username, String email, String password) throws FailedApiCallException, InvalidInputException {
+  public User createUser(String username, String email, String password) throws FailedApiCallException, InvalidInputException,
+          SQLException, IOException, ClassNotFoundException, IllegalAccessException, InstantiationException {
     return modelService.getUserService().registerUser(username, email, password);
   }
 
@@ -95,4 +98,10 @@ public class ModelFacade {
   public Invite sendInvite(String user1, String user2) throws FailedApiCallException {
     return sendInvite(user1, user2, null);
   }
+
+  public void deleteUserEntryUsingUsername(String username) throws FailedApiCallException, InvalidInputException,
+          SQLException, ClassNotFoundException, IllegalAccessException, IOException, InstantiationException {
+      modelService.getUserService().deleteUserEntryUsingUsername(username);
+  }
 }
+
