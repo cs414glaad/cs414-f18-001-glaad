@@ -9,6 +9,7 @@ class Invites extends Component {
         super(props);
         this.state = {
             userBox: null,
+            username: null,
             rInvites: [],
             sInvites: []
         };
@@ -17,6 +18,7 @@ class Invites extends Component {
         this.sendInvite = this.sendInvite.bind(this);
         this.getInvites = this.getInvites.bind(this);
         this.updateInvites = this.updateInvites.bind(this);
+        this.updateInviteState = this.updateInviteState.bind(this);
     }
 
     handleChange(event) {
@@ -44,10 +46,11 @@ class Invites extends Component {
         })
             .then(function (response) {
                 alert(response.data.status)
-            }.bind(this))
+            })
             .catch(function (error) {
                 alert(error.response.data.msg)
-            }.bind(this));
+            });
+        this.updateInviteState();
     }
 
     acceptInvite(invite) {
@@ -57,9 +60,10 @@ class Invites extends Component {
         })
             .then(function (response) {
                 console.log(response.data.status)
-            }.bind(this)).catch(function (error) {
+            }).catch(function (error) {
                 alert(error.response.data.msg)
-            }.bind(this));
+            });
+        this.updateInviteState();
     }
 
     rejectInvite(invite) {
@@ -69,10 +73,11 @@ class Invites extends Component {
         })
             .then(function (response) {
                 console.log(response.data.status)
-            }.bind(this))
+            })
             .catch(function (error) {
                 console.log(error.response.data.msg)
-            }.bind(this));
+            });
+        this.updateInviteState();
     }
 
     cancelInvite(invite) {
@@ -82,10 +87,27 @@ class Invites extends Component {
         })
             .then(function (response) {
                 console.log(response.data.status)
-            }.bind(this))
+            })
             .catch(function (error) {
                 console.log(error.response.data.msg)
-            }.bind(this));
+            });
+        this.updateInviteState();
+
+    }
+
+
+    componentDidMount() {
+        this.timer = setInterval(this.updateInviteState, 2000);
+    }
+
+    componentWillUnmount() {
+        clearInterval(this.timer);
+    }
+    updateInviteState(){
+        if(this.state.username == null){
+            return;
+        }
+        this.updateInvites(this.state.username)
     }
 
     getReceivedInvite(invite) {
@@ -123,6 +145,7 @@ class Invites extends Component {
             //recInvites and sentInvites are arrays of objects
             console.log("setting state inside updateInvites")
             this.setState({
+                username: username,
                 rInvites: response.data.users[0].receivedInvites,
                 sInvites: response.data.users[0].invites
             });
@@ -130,7 +153,7 @@ class Invites extends Component {
 
         let err = function (error) {
             console.log(error)
-        }.bind(this);
+        };
         axios.post(this.props.server + '/query', {
             type: "user",
             username: username
@@ -150,7 +173,7 @@ class Invites extends Component {
         }
 
         //avoid generating html if no invites are available
-        if (this.state.rInvites.length != 0 || this.state.sInvites.length != 0) {
+        if (this.state.rInvites.length !== 0 || this.state.sInvites.length !== 0) {
             console.log("building sent and received invites")
             return (
                 <div>
