@@ -167,6 +167,7 @@ public class Database {
             conn = DriverManager.getConnection(myUrl, username, password);
             st = conn.prepareStatement(deserializeGameSearchString);
             st.setInt(1, GameID);
+            System.out.println(GameID);
             rs = st.executeQuery();
             rs.next();
 
@@ -213,7 +214,7 @@ public class Database {
             String serializeGameHistory = "INSERT INTO Game(GameID, SerializedObject) VALUES (?, ?);";
 
             st = conn.prepareStatement(serializeGameHistory, Statement.RETURN_GENERATED_KEYS);
-            st.setLong(1, g.getGameId().hashCode());
+            st.setInt(1, g.getGameId().hashCode());
             st.setObject(2, g);
             st.executeUpdate();
             rs = st.getGeneratedKeys();
