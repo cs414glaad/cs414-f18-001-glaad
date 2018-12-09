@@ -46,10 +46,10 @@ class Invites extends Component {
         })
             .then(function (response) {
                 alert(response.data.status)
-            }.bind(this))
+            })
             .catch(function (error) {
                 alert(error.response.data.msg)
-            }.bind(this));
+            });
         this.updateInviteState();
     }
 
@@ -60,9 +60,9 @@ class Invites extends Component {
         })
             .then(function (response) {
                 console.log(response.data.status)
-            }.bind(this)).catch(function (error) {
+            }).catch(function (error) {
                 alert(error.response.data.msg)
-            }.bind(this));
+            });
         this.updateInviteState();
     }
 
@@ -73,10 +73,10 @@ class Invites extends Component {
         })
             .then(function (response) {
                 console.log(response.data.status)
-            }.bind(this))
+            })
             .catch(function (error) {
                 console.log(error.response.data.msg)
-            }.bind(this));
+            });
         this.updateInviteState();
     }
 
@@ -87,10 +87,10 @@ class Invites extends Component {
         })
             .then(function (response) {
                 console.log(response.data.status)
-            }.bind(this))
+            })
             .catch(function (error) {
                 console.log(error.response.data.msg)
-            }.bind(this));
+            });
         this.updateInviteState();
 
     }
@@ -153,7 +153,7 @@ class Invites extends Component {
 
         let err = function (error) {
             console.log(error)
-        }.bind(this);
+        };
         axios.post(this.props.server + '/query', {
             type: "user",
             username: username
@@ -173,7 +173,7 @@ class Invites extends Component {
         }
 
         //avoid generating html if no invites are available
-        if (this.state.rInvites.length != 0 || this.state.sInvites.length != 0) {
+        if (this.state.rInvites.length !== 0 || this.state.sInvites.length !== 0) {
             console.log("building sent and received invites")
             return (
                 <div>
