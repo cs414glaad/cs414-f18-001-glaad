@@ -13,7 +13,8 @@ public class Invite extends Observable implements Serializable {
   private User fromUser;
   private ArrayList<String> toUsers;
   private String toUser;
-  private static final long serialVersionUID = 8L;
+
+    private static final long serialVersionUID = 200L;
 
   public Invite(User user) {
     this(user, generateId());
@@ -24,16 +25,6 @@ public class Invite extends Observable implements Serializable {
     this.inviteId = inviteId;
     toUsers = new ArrayList<>();
     toUser = null;
-  }
-
-  private void writeObject(ObjectOutputStream oos)
-          throws IOException {
-    oos.defaultWriteObject();
-  }
-
-  private void readObject(ObjectInputStream ois)
-          throws ClassNotFoundException, IOException {
-    ois.defaultReadObject();
   }
 
   public boolean send(String username) {
@@ -89,7 +80,17 @@ public class Invite extends Observable implements Serializable {
     return toUser;
   }
 
-  public void clearAcceptance() {
+  public void clearAcceptance()
+  {
     toUsers = null;
   }
+    private void writeObject(ObjectOutputStream oos)
+            throws IOException {
+        oos.defaultWriteObject();
+    }
+
+    private void readObject(ObjectInputStream ois)
+            throws ClassNotFoundException, IOException {
+        ois.defaultReadObject();
+    }
 }

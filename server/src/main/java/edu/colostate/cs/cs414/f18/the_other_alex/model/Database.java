@@ -6,10 +6,9 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
 public class Database {
-    String username;
-    String password;
-    String myUrl;
-    String myDriver;
+    private String username;
+    private String password;
+    private String myUrl;
     Connection conn;
     PreparedStatement st;
     ResultSet rs;
