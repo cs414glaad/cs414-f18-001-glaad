@@ -27,7 +27,7 @@ public class ModelService implements Observer {
   }
 
   public ModelService() {
-    this(true);
+    this(false);
   }
 
   public UserService getUserService() {
