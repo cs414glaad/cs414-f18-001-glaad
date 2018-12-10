@@ -7,6 +7,7 @@ import edu.colostate.cs.cs414.f18.the_other_alex.model.exceptions.InvalidInputEx
 import edu.colostate.cs.cs414.f18.the_other_alex.model.exceptions.InvalidMoveException;
 import edu.colostate.cs.cs414.f18.the_other_alex.model.exceptions.UserNotFoundException;
 import edu.colostate.cs.cs414.f18.the_other_alex.server.exceptions.FailedApiCallException;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -18,6 +19,7 @@ public class TestDatabase {
     private Database database = new Database();
 
     @Test
+    @Disabled
     public void testAddingAndFindingGame() throws InvalidInputException, ClassNotFoundException, SQLException,
             InstantiationException, IllegalAccessException, IOException{
         long u1ID = -1;
@@ -44,6 +46,7 @@ public class TestDatabase {
     }
 
     @Test
+    @Disabled
     public void testAddingAndFindingUserByEmail() throws InvalidInputException, ClassNotFoundException, SQLException,
             InstantiationException, IllegalAccessException, IOException {
         long uID = -1;
@@ -62,6 +65,7 @@ public class TestDatabase {
     }
 
     @Test
+    @Disabled
     public void testAddingAndFindingUserByUsername() throws InvalidInputException, ClassNotFoundException, SQLException,
             InstantiationException, IllegalAccessException, IOException {
         long uID = -1;
@@ -81,6 +85,7 @@ public class TestDatabase {
 
 
     @Test
+    @Disabled
     public void testAddingAndFindingUserByUserID() throws InvalidInputException, ClassNotFoundException, SQLException,
             InstantiationException, IllegalAccessException, IOException {
         int uID = -1;
@@ -99,6 +104,7 @@ public class TestDatabase {
     }
 
     @Test
+    @Disabled
     public void ensureBoardAndCellSerialization() throws InvalidInputException, ClassNotFoundException, SQLException,
             InstantiationException, IllegalAccessException, IOException, InvalidMoveException {
         long u1ID = -1;
@@ -133,6 +139,7 @@ public class TestDatabase {
     }
 
     @Test
+    @Disabled
     public void ensureGameStateSerialization() throws InvalidInputException, ClassNotFoundException, SQLException,
             InstantiationException, IllegalAccessException, IOException, InvalidMoveException {
         long u1ID = -1;
@@ -163,6 +170,7 @@ public class TestDatabase {
     }
 
     @Test
+    @Disabled
     public void ensurePieceSerialization() throws InvalidInputException, ClassNotFoundException, SQLException,
             InstantiationException, IllegalAccessException, IOException, InvalidMoveException {
         long u1ID = -1;
@@ -195,6 +203,7 @@ public class TestDatabase {
     }
 
     @Test
+    @Disabled
     public void ensureInviteSerialization() throws InvalidInputException, ClassNotFoundException, SQLException,
             InstantiationException, IllegalAccessException, IOException, InvalidMoveException, FailedApiCallException,
             UserNotFoundException, GameNotFoundException {
