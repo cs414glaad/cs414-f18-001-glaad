@@ -8,6 +8,7 @@ import edu.colostate.cs.cs414.f18.the_other_alex.model.controllers.UserService;
 import edu.colostate.cs.cs414.f18.the_other_alex.model.exceptions.UserNotFoundException;
 
 import java.io.Serializable;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Observable;
@@ -45,7 +46,8 @@ public class Invite extends Observable implements Serializable {
    * @param username username of the user accepting
    * @return
    */
-  public synchronized boolean acceptInvite(String username, UserService userService) throws UserNotFoundException {
+  public synchronized boolean acceptInvite(String username, UserService userService, Database d) throws UserNotFoundException,
+          ClassNotFoundException, IOException, SQLException, IllegalAccessException, InstantiationException{
     if(toUser == null && toUsers.contains(username)) {
       toUser = username;
       ArrayList<String> toRemove = new ArrayList<>();
@@ -55,7 +57,7 @@ public class Invite extends Observable implements Serializable {
         }
       }
       for (String user : toRemove) {
-        rejectInvite(user, userService);
+        rejectInvite(user, userService, d);
       }
       remove(userService);
       setChanged();
@@ -66,12 +68,16 @@ public class Invite extends Observable implements Serializable {
     }
   }
 
-  public synchronized boolean rejectInvite(String username, UserService userService) {
+  public synchronized boolean rejectInvite(String username, UserService userService, Database d) throws ClassNotFoundException,
+   IOException, SQLException, IllegalAccessException, InstantiationException{
     int i = toUsers.indexOf(username);
     if (i != -1) {
       toUsers.remove(username);
       try {
-        userService.getUser(username).rejectInvite(this);
+        User u = userService.getUser(username);
+        u.rejectInvite(this);
+        d.updateUserObject(u);
+
       } catch (UserNotFoundException e) {
         // can happen when the user unregisters. we didn't need them anyway..
       }

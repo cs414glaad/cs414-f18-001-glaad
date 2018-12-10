@@ -24,7 +24,8 @@ public class ModelFacade {
     return modelService.getUserService().getUser(username).getUserHistory();
   }
 
-  public Invite sendInvite(String fromUser, String toUser, String inviteId) throws FailedApiCallException {
+  public Invite sendInvite(String fromUser, String toUser, String inviteId) throws FailedApiCallException, FailedApiCallException, InvalidInputException,
+          SQLException, ClassNotFoundException, IllegalAccessException, IOException, InstantiationException {
     try {
       Invite invite = modelService.getUserService().sendInvite(fromUser, inviteId, toUser);
       invite.addObserver(modelService);
@@ -34,15 +35,18 @@ public class ModelFacade {
     }
   }
 
-  public String acceptInvite(String currentUser, String inviteId) throws FailedApiCallException {
+  public String acceptInvite(String currentUser, String inviteId) throws FailedApiCallException, FailedApiCallException, InvalidInputException,
+          SQLException, ClassNotFoundException, IllegalAccessException, IOException, InstantiationException, UserNotFoundException {
     return modelService.getUserService().acceptInvite(currentUser, inviteId);
   }
 
-  public String rejectInvite(String currentUser, String inviteId) throws FailedApiCallException {
+  public String rejectInvite(String currentUser, String inviteId) throws FailedApiCallException, FailedApiCallException, InvalidInputException,
+          SQLException, ClassNotFoundException, IllegalAccessException, IOException, InstantiationException, UserNotFoundException {
     return modelService.getUserService().rejectInvite(currentUser, inviteId);
   }
 
-  public String cancelInvite(String currentUser, String inviteId) throws FailedApiCallException {
+  public String cancelInvite(String currentUser, String inviteId) throws FailedApiCallException,  FailedApiCallException, InvalidInputException,
+          SQLException, ClassNotFoundException, IllegalAccessException, IOException, InstantiationException,  UserNotFoundException{
     return modelService.getUserService().cancelInvite(currentUser,inviteId);
   }
 
@@ -95,7 +99,8 @@ public class ModelFacade {
     }
   }
 
-  public Invite sendInvite(String user1, String user2) throws FailedApiCallException {
+  public Invite sendInvite(String user1, String user2) throws FailedApiCallException, FailedApiCallException, InvalidInputException,
+          SQLException, ClassNotFoundException, IllegalAccessException, IOException, InstantiationException {
     return sendInvite(user1, user2, null);
   }
 

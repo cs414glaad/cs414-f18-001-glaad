@@ -126,7 +126,8 @@ public class UserService extends Observable {
    * @param inviteId The invite id to send, null if new invite
    * @return Returns the created invite
    */
-  public synchronized Invite sendInvite(String fromUser, String inviteId, String toUser) throws UserNotFoundException {
+  public synchronized Invite sendInvite(String fromUser, String inviteId, String toUser) throws FailedApiCallException, InvalidInputException,
+          SQLException, ClassNotFoundException, IllegalAccessException, IOException, InstantiationException, UserNotFoundException {
     User fromUserObj = getUser(fromUser);
     User toUserObj = getUser(toUser);
     Invite invite = fromUserObj.getSendInvite(inviteId);
@@ -137,6 +138,10 @@ public class UserService extends Observable {
     toUserObj.receiveInvite(invite);
     setChanged();
     notifyObservers();
+    if (database != null) {
+      database.updateUserObject(fromUserObj);
+      database.updateUserObject(toUserObj);
+    }
     return invite;
   }
 
@@ -185,42 +190,63 @@ public class UserService extends Observable {
    * @return returns gameId (which is really just inviteId)
    * @throws FailedApiCallException
    */
-  public String acceptInvite(String currentUser, String inviteId) throws FailedApiCallException {
+  public synchronized String acceptInvite(String currentUser, String inviteId) throws FailedApiCallException, FailedApiCallException, InvalidInputException,
+  SQLException, ClassNotFoundException, IllegalAccessException, IOException, InstantiationException, UserNotFoundException {
+    Invite invite;
     try {
-      Invite invite = getUser(currentUser).getReceivedInvite(inviteId);
-      if (!invite.acceptInvite(currentUser, this)) {
+      invite = getUser(currentUser).getReceivedInvite(inviteId);
+      if (!invite.acceptInvite(currentUser, this, database)) {
         throw new FailedApiCallException("unable to accept invitation");
       }
     } catch (UserNotFoundException e) {
       throw new FailedApiCallException(e.getMessage());
     }
+    if (database != null) {
+      User u = getUser(currentUser);
+      User toUser = getUser(invite.getToUser());
+      database.updateUserObject(u);
+      database.updateUserObject(toUser);
+    }
     return inviteId;
   }
 
-  public String rejectInvite(String currentUser, String inviteId) throws FailedApiCallException {
+  public synchronized String rejectInvite(String currentUser, String inviteId) throws FailedApiCallException, FailedApiCallException, InvalidInputException,
+  SQLException, ClassNotFoundException, IllegalAccessException, IOException, InstantiationException, UserNotFoundException {
     try {
       Invite invite = getUser(currentUser).getReceivedInvite(inviteId);
-      if (!invite.rejectInvite(currentUser, this)) {
+      if (!invite.rejectInvite(currentUser, this, database)) {
         throw new FailedApiCallException("unable to reject invitation");
       }
     } catch (UserNotFoundException e) {
       throw new FailedApiCallException(e.getMessage());
     }
+    if (database != null) {
+        User u = getUser(currentUser);
+        database.updateUserObject(u);
+    }
     return inviteId;
   }
 
-  public String cancelInvite(String currentUser, String inviteId) throws FailedApiCallException {
+  public synchronized String cancelInvite(String currentUser, String inviteId) throws FailedApiCallException, FailedApiCallException, InvalidInputException,
+          SQLException, ClassNotFoundException, IllegalAccessException, IOException, InstantiationException, UserNotFoundException {
     try {
       //get invite
       Invite invite = getUser(currentUser).getSendInvite(inviteId);
+
       //find everyone who has this invite and reject that invite
       for(String user : invite.getToUsers()) {
-        getUser(user).rejectInvite(invite);
+        User person = getUser(user);
+        person.rejectInvite(invite);
+        database.updateUserObject(person);
       }
       //finally remove that invite from the current users list of pending invites
       getUser(currentUser).removeInviteFromPendingInvites(invite);
     } catch (UserNotFoundException e) {
       throw new FailedApiCallException(e.getMessage());
+    }
+    if (database != null) {
+      User u = getUser(currentUser);
+      database.updateUserObject(u);
     }
     return inviteId;
   }

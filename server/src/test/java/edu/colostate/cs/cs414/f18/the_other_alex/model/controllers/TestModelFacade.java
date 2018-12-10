@@ -40,7 +40,8 @@ class TestModelFacade {
   }
 
   @Test
-  void sendInvite() throws FailedApiCallException {
+  void sendInvite() throws FailedApiCallException, FailedApiCallException, InvalidInputException,
+          SQLException, ClassNotFoundException, IllegalAccessException, IOException, InstantiationException {
     Invite invite = modelFacade.sendInvite("user1", "user2", null);
     assertEquals(user1, invite.getFromUser(), "fromUser set properly");
     assertTrue(invite.getToUsers().contains("user2"));
@@ -50,21 +51,24 @@ class TestModelFacade {
   }
 
   @Test
-  void sendInviteDoubleSame() throws FailedApiCallException {
+  void sendInviteDoubleSame() throws FailedApiCallException, FailedApiCallException, InvalidInputException,
+          SQLException, ClassNotFoundException, IllegalAccessException, IOException, InstantiationException {
     Invite invite = modelFacade.sendInvite("user1", "user2", null);
     Invite secondSend = modelFacade.sendInvite("user1", "user2", invite.getInviteId());
     assertEquals(invite, secondSend);
   }
 
   @Test
-  void sendInviteDoubleDiff() throws FailedApiCallException {
+  void sendInviteDoubleDiff() throws FailedApiCallException, FailedApiCallException, InvalidInputException,
+          SQLException, ClassNotFoundException, IllegalAccessException, IOException, InstantiationException {
     Invite invite = modelFacade.sendInvite("user1", "user2", null);
     Invite secondSend = modelFacade.sendInvite("user1", "user2", null);
     assertNotEquals(invite, secondSend);
   }
 
   @Test
-  void acceptInvite() throws FailedApiCallException {
+  void acceptInvite() throws FailedApiCallException, FailedApiCallException, InvalidInputException,
+          SQLException, ClassNotFoundException, IllegalAccessException, IOException, InstantiationException, UserNotFoundException {
     Invite invite = modelFacade.sendInvite("user1", "user2", null);
     modelFacade.sendInvite("user1", "user3", invite.getInviteId());
     modelFacade.acceptInvite("user2", invite.getInviteId());
@@ -85,7 +89,8 @@ class TestModelFacade {
   }
 
   @Test
-  void acceptInviteMulti() throws FailedApiCallException {
+  void acceptInviteMulti() throws FailedApiCallException, FailedApiCallException, InvalidInputException,
+          SQLException, ClassNotFoundException, IllegalAccessException, IOException, InstantiationException, UserNotFoundException {
     Invite invite = modelFacade.sendInvite("user1", "user2", null);
     modelFacade.sendInvite("user1", "user3", invite.getInviteId());
     modelFacade.acceptInvite("user2", invite.getInviteId());
@@ -94,7 +99,8 @@ class TestModelFacade {
   }
 
   @Test
-  void rejectInvite() throws FailedApiCallException {
+  void rejectInvite() throws FailedApiCallException, FailedApiCallException, InvalidInputException,
+          SQLException, ClassNotFoundException, IllegalAccessException, IOException, InstantiationException, UserNotFoundException {
     Invite invite = modelFacade.sendInvite("user1", "user2", null);
     modelFacade.rejectInvite("user2", invite.getInviteId());
     assertTrue(invite.getToUsers().isEmpty());
@@ -102,7 +108,8 @@ class TestModelFacade {
   }
 
   @Test
-  void rejectInviteMultiInvite() throws FailedApiCallException {
+  void rejectInviteMultiInvite() throws FailedApiCallException, FailedApiCallException, InvalidInputException,
+          SQLException, ClassNotFoundException, IllegalAccessException, IOException, InstantiationException, UserNotFoundException {
     Invite invite = modelFacade.sendInvite("user1", "user2", null);
     modelFacade.sendInvite("user1", "user3", invite.getInviteId());
     modelFacade.rejectInvite("user2", invite.getInviteId());
@@ -143,25 +150,29 @@ class TestModelFacade {
     assertEquals(user1, modelFacade.getUser(user1.getUsername()));
   }
 
-  private String generateGame() throws FailedApiCallException {
+  private String generateGame() throws FailedApiCallException, FailedApiCallException, InvalidInputException,
+          SQLException, ClassNotFoundException, IllegalAccessException, IOException, InstantiationException, UserNotFoundException {
     Invite invite = modelFacade.sendInvite("user1", "user2", null);
     return modelFacade.acceptInvite("user2", invite.getInviteId());
   }
 
   @Test
-  void getGame() throws FailedApiCallException, GameNotFoundException {
+  void getGame() throws FailedApiCallException, GameNotFoundException, FailedApiCallException, InvalidInputException,
+          SQLException, ClassNotFoundException, IllegalAccessException, IOException, InstantiationException, UserNotFoundException {
     String gameId = generateGame();
     assertEquals(gameId, modelFacade.getGame(gameId).getGameId());
   }
 
   @Test
-  void getGameRecord() throws FailedApiCallException {
+  void getGameRecord() throws FailedApiCallException, FailedApiCallException, InvalidInputException,
+          SQLException, ClassNotFoundException, IllegalAccessException, IOException, InstantiationException, UserNotFoundException {
     String gameId = generateGame();
     modelFacade.getGameRecord(gameId);
   }
 
   @Test
-  void getBoard() throws FailedApiCallException {
+  void getBoard() throws FailedApiCallException, FailedApiCallException, InvalidInputException,
+          SQLException, ClassNotFoundException, IllegalAccessException, IOException, InstantiationException, UserNotFoundException {
     modelFacade.getBoard(generateGame());
   }
 
@@ -186,7 +197,8 @@ class TestModelFacade {
   }
 
   @Test
-  void makeMove() throws FailedApiCallException, GameNotFoundException {
+  void makeMove() throws FailedApiCallException, GameNotFoundException, FailedApiCallException, InvalidInputException,
+          SQLException, ClassNotFoundException, IllegalAccessException, IOException, InstantiationException, UserNotFoundException {
     Game game = modelFacade.getGame(generateGame());
     User turn = game.getTurn();
     modelFacade.makeMove(game.getGameId(), "0 0", "0 0", turn.getUsername());

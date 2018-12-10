@@ -4,6 +4,7 @@ import edu.colostate.cs.cs414.f18.the_other_alex.model.Invite;
 import edu.colostate.cs.cs414.f18.the_other_alex.model.User;
 import edu.colostate.cs.cs414.f18.the_other_alex.model.controllers.ModelFacade;
 import edu.colostate.cs.cs414.f18.the_other_alex.model.exceptions.InvalidInputException;
+import edu.colostate.cs.cs414.f18.the_other_alex.model.exceptions.UserNotFoundException;
 import edu.colostate.cs.cs414.f18.the_other_alex.server.RestRequest;
 import edu.colostate.cs.cs414.f18.the_other_alex.server.exceptions.FailedApiCallException;
 import edu.colostate.cs.cs414.f18.the_other_alex.server.exceptions.InvalidApiCallException;
@@ -58,25 +59,46 @@ public class UserRequest extends RestRequest {
   public String toUser; // username of new user
   public String inviteId;
 
-  private String handleUserReplno(Request request, Response response, String currentUser, ModelFacade modelFacade) throws FailedApiCallException {
-    modelFacade.rejectInvite(currentUser, inviteId);
+  private String handleUserReplno(Request request, Response response, String currentUser, ModelFacade modelFacade) throws FailedApiCallException,
+          FailedApiCallException, InvalidInputException,
+          SQLException, ClassNotFoundException, IllegalAccessException, IOException, InstantiationException{
+    try {
+      modelFacade.rejectInvite(currentUser, inviteId);
+    } catch ( UserNotFoundException e) {
+      throw new IllegalAccessException();
+    }
     ResponseData responseData = new ResponseData(ResponseData.SUCCESS, "rejected invite");
     return responseData.toString();
   }
 
-  private String handleUserReplcancel(Request request, Response response, String currentUser, ModelFacade modelFacade) throws FailedApiCallException {
-    modelFacade.cancelInvite(currentUser, inviteId);
+  private String handleUserReplcancel(Request request, Response response, String currentUser, ModelFacade modelFacade) throws FailedApiCallException,
+          FailedApiCallException, InvalidInputException,
+          SQLException, ClassNotFoundException, IllegalAccessException, IOException, InstantiationException{
+    try {
+      modelFacade.cancelInvite(currentUser, inviteId);
+    }
+    catch ( UserNotFoundException e) {
+      throw new IllegalAccessException();
+    }
     ResponseData responseData = new ResponseData(ResponseData.SUCCESS, "cancelled invite");
     return responseData.toString();
   }
 
-  private String handleUserRepl(Request request, Response response, String currentUser, ModelFacade modelFacade) throws FailedApiCallException {
-    modelFacade.acceptInvite(currentUser, inviteId);
+  private String handleUserRepl(Request request, Response response, String currentUser, ModelFacade modelFacade) throws FailedApiCallException,
+          FailedApiCallException, InvalidInputException,
+          SQLException, ClassNotFoundException, IllegalAccessException, IOException, InstantiationException{
+    try {
+      modelFacade.acceptInvite(currentUser, inviteId);
+    } catch ( UserNotFoundException e) {
+      throw new IllegalAccessException();
+    }
     ResponseData responseData = new ResponseData(ResponseData.SUCCESS, "accepted invite");
     return responseData.toString();
   }
 
-  private String handleUserInv(Request request, Response response, String currentUser, ModelFacade modelFacade) throws FailedApiCallException {
+  private String handleUserInv(Request request, Response response, String currentUser, ModelFacade modelFacade) throws FailedApiCallException,
+          FailedApiCallException, InvalidInputException,
+          SQLException, ClassNotFoundException, IllegalAccessException, IOException, InstantiationException{
     Invite invite = modelFacade.sendInvite(currentUser, toUser, inviteId);
     InviteList inviteList = new InviteList(invite);
     return inviteList.toString();
@@ -99,7 +121,7 @@ public class UserRequest extends RestRequest {
 
   @Override
   protected String handleRequest(Request request, Response response, String currentUser, ModelFacade modelFacade) throws FailedApiCallException, InvalidApiCallException,
-          SQLException, IOException, ClassNotFoundException , IllegalAccessException, InstantiationException {
+          SQLException, IOException, ClassNotFoundException , IllegalAccessException, InstantiationException, InvalidInputException {
     switch(type) {
       case "replcancel"://cancel invite
         return handleUserReplcancel(request, response, currentUser, modelFacade);

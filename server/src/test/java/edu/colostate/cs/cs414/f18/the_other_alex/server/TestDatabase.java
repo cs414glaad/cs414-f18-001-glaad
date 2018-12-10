@@ -210,16 +210,18 @@ public class TestDatabase {
 
             Invite i = m.sendInvite("User1", "User2", null);
 
-            m.acceptInvite("User2", i.getInviteId());
+            /*m.acceptInvite("User2", i.getInviteId());
             System.out.println("------------------------------" + i.getInviteId() + "----------------");
             System.out.println("------------------------------" + m.getGame(testUser1.getGames().get(0)).getGameId()
-                    + "---------------------");
+                    + "---------------------");*/
+            //92a949c9-b19d-41a6-a663-d94de26da1b5
+            //57487215-6b01-4b70-bfa2-e065c12a8765
 
             User u = m.getUser("User1");
 
 
-            //assertEquals("User2", u.getPendingInvites().get(0).getToUsers().get(0));
-            assertEquals("User2", m.getGame(u.getGames().get(0)).getUser2().getUsername());
+            assertEquals("User2", u.getPendingInvites().get(0).getToUsers().get(0));
+            //assertEquals("User2", m.getGame(u.getGames().get(0)).getUser2().getUsername());
 
 
         } finally {

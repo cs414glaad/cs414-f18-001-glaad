@@ -306,4 +306,56 @@ public class Database {
             }
         }
     }
+
+    public void updateGameObject(Game g) throws SQLException, IOException,
+            ClassNotFoundException, IllegalAccessException, InstantiationException {
+//        Class.forName(myDriver).newInstance();
+        try {
+            conn = DriverManager.getConnection(myUrl, username, password);
+            String serializeGameHistory = "UPDATE Game SET SerializedObject = ? WHERE GameID = ?;";
+
+            st = conn.prepareStatement(serializeGameHistory);
+            st.setObject(1, g);
+            st.setString(2, g.getGameId());
+            st.executeUpdate();
+        }
+        finally {
+            if (rs != null && rs.isClosed() == false) {
+                rs.close();
+            }
+            if (st != null && st.isClosed() == false) {
+                st.close();
+            }
+            if (conn != null && conn.isClosed() == false) {
+                conn.close();
+            }
+        }
+
+    }
+
+    public void updateUserObject(User u) throws SQLException, IOException,
+            ClassNotFoundException, IllegalAccessException, InstantiationException {
+//        Class.forName(myDriver).newInstance();
+        try {
+            conn = DriverManager.getConnection(myUrl, username, password);
+            String serializeGameHistory = "UPDATE UserTable SET SerializedObject = ? WHERE Username = ?;";
+
+            st = conn.prepareStatement(serializeGameHistory);
+            st.setObject(1, u);
+            st.setString(2, u.getUsername());
+            st.executeUpdate();
+        }
+        finally {
+            if (rs != null && rs.isClosed() == false) {
+                rs.close();
+            }
+            if (st != null && st.isClosed() == false) {
+                st.close();
+            }
+            if (conn != null && conn.isClosed() == false) {
+                conn.close();
+            }
+        }
+
+    }
 }

@@ -1,5 +1,6 @@
 package edu.colostate.cs.cs414.f18.the_other_alex.server;
 
+import edu.colostate.cs.cs414.f18.the_other_alex.model.exceptions.InvalidInputException;
 import spark.Spark;
 import static spark.Spark.*;
 
@@ -23,7 +24,7 @@ public class Server {
     modelManager.shutdown();
   }
 
-  public static void main(String[] args) {
+  public static void main(String[] args) throws InvalidInputException{
     int port = 3001;
     Server server = new Server(port);
     addShutdownHook(server);
@@ -33,16 +34,16 @@ public class Server {
   private void linkRoutes() {
     String path = "/public"; // ?
     Spark.staticFileLocation(path); // ?
+  get("/", modelManager::root);
+  get("/logout", modelManager::logout);
+  post("/login", modelManager::login);
+  post("/query", modelManager::query);
+  post("/user", modelManager::user);
+  post("/game", modelManager::game);
 
-    get("/", modelManager::root);
-    get("/logout", modelManager::logout);
-    post("/login", modelManager::login);
-    post("/query", modelManager::query);
-    post("/user", modelManager::user);
-    post("/game", modelManager::game);
   }
 
-  public Server(int port) {
+  public Server(int port) throws InvalidInputException {
     loadState();
     setPort(port);
     linkRoutes();

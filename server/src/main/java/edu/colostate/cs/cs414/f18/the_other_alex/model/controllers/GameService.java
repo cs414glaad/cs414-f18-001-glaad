@@ -41,11 +41,11 @@ public class GameService extends Observable {
   }
 
   public Game getGame(String gameId) throws GameNotFoundException {
-    for (Game game : cachedGames) {
-      if (game.getGameId().equals(gameId)) {
-        return game;
+      for (Game game : cachedGames) {
+        if (game.getGameId().equals(gameId)) {
+          return game;
+        }
       }
-    }
     if (database != null) {
       try {
         return database.getGame(gameId);
@@ -79,7 +79,7 @@ public class GameService extends Observable {
    * @param user The username of the user making the move
    * @throws FailedApiCallException if the user can't make a move
    */
-  public void makeMove(String gameId, String fromCellId, String toCellId, User user) throws FailedApiCallException {
+  public synchronized void makeMove(String gameId, String fromCellId, String toCellId, User user) throws FailedApiCallException {
     try {
       Game game = getGame(gameId);
       Cell[][] cells = game.getBoard().getCells();
@@ -87,8 +87,7 @@ public class GameService extends Observable {
       Cell toCell = getCellFromId(cells, toCellId);
       game.makeMove(fromCell, toCell, user);
       if (database != null) {
-        database.deleteGameEntryUsingID(gameId);
-        database.addSerializedObject(game);
+        database.updateGameObject(game);
       }
     } catch (Exception e) {
       throw new FailedApiCallException(e.getMessage());

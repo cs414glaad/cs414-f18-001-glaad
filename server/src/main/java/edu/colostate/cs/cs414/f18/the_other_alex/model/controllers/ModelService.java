@@ -53,7 +53,7 @@ public class ModelService implements Observer {
       User toUser = userService.getUser(invite.getToUser());
       gameService.createGame(invite.getFromUser(), toUser, invite.getInviteId());
     } catch (UserNotFoundException e) {
-      invite.rejectInvite(invite.getToUser(), userService);
+      invite.rejectInvite(invite.getToUser(), userService, database);
       invite.clearAcceptance();
       return;
     }
