@@ -3,8 +3,10 @@ package edu.colostate.cs.cs414.f18.the_other_alex.model.controllers;
 import edu.colostate.cs.cs414.f18.the_other_alex.model.Invite;
 import edu.colostate.cs.cs414.f18.the_other_alex.model.User;
 import edu.colostate.cs.cs414.f18.the_other_alex.model.exceptions.UserNotFoundException;
-import edu.colostate.cs.cs414.f18.the_other_alex.server.Database;
+import edu.colostate.cs.cs414.f18.the_other_alex.model.Database;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -17,14 +19,11 @@ public class ModelService implements Observer {
   public ModelService(boolean useDatabase) {
     database = null;
     if (useDatabase) {
-      database = new Database(this);
+      database = new Database();
     }
     userService = new UserService(database);
     gameService = new GameService(database);
-    if (useDatabase) {
-      userService.addObserver(database);
-      gameService.addObserver(database);
-    }
+
   }
 
   public ModelService() {
@@ -48,12 +47,13 @@ public class ModelService implements Observer {
    * When invites are accepted, ModelService will handle them.
    * @param invite
    */
-  private void createGame(Invite invite) {
+  private void createGame(Invite invite) throws ClassNotFoundException, IOException, SQLException,
+   IllegalAccessException, InstantiationException {
     try {
       User toUser = userService.getUser(invite.getToUser());
       gameService.createGame(invite.getFromUser(), toUser, invite.getInviteId());
     } catch (UserNotFoundException e) {
-      invite.rejectInvite(invite.getToUser(), userService);
+      invite.rejectInvite(invite.getToUser(), userService, database);
       invite.clearAcceptance();
       return;
     }
@@ -66,7 +66,11 @@ public class ModelService implements Observer {
       if (invite.getFromUser() == null) {
         return;
       }
-      createGame((Invite)o);
+      try {
+        createGame((Invite) o);
+      } catch (Exception e) {
+
+      }
     }
   }
 }

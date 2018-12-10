@@ -6,6 +6,7 @@ import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
 import edu.colostate.cs.cs414.f18.the_other_alex.model.User;
 import edu.colostate.cs.cs414.f18.the_other_alex.model.controllers.ModelFacade;
+import edu.colostate.cs.cs414.f18.the_other_alex.model.exceptions.InvalidInputException;
 import edu.colostate.cs.cs414.f18.the_other_alex.server.exceptions.FailedApiCallException;
 import edu.colostate.cs.cs414.f18.the_other_alex.server.exceptions.InvalidApiCallException;
 import edu.colostate.cs.cs414.f18.the_other_alex.server.reqjson.GameRequest;
@@ -44,7 +45,7 @@ public class ModelManager {
     return request.session().attribute(SESSION_NAME);
   }
 
-  private <T extends RestRequest> String handleRequest(Request request, Response response, Class<T> classOfT) {
+  private <T extends RestRequest> String handleRequest(Request request, Response response, Class<T> classOfT) throws InvalidInputException {
     try {
       T t = validateRequest(request, classOfT);
       String username = getUsername(request);
@@ -155,8 +156,13 @@ public class ModelManager {
    * @return The HTTP body
    */
   public String query(Request request, Response response) {
-    response.type("application/json");
-    return handleRequest(request, response, QueryRequest.class);
+    try {
+      response.type("application/json");
+      return handleRequest(request, response, QueryRequest.class);
+    } catch(InvalidInputException e) {
+
+    }
+    return null;
   }
   /**
    * This route forwards to the following methods from the ModelFacade:
@@ -171,8 +177,14 @@ public class ModelManager {
    * @return The HTTP body
    */
   public String user(Request request, Response response) {
-    response.type("application/json");
-    return handleRequest(request, response, UserRequest.class);
+    try {
+      response.type("application/json");
+      return handleRequest(request, response, UserRequest.class);
+    }
+    catch (InvalidInputException e) {
+
+    }
+    return null;
   }
 
   /**
@@ -187,8 +199,14 @@ public class ModelManager {
    * @return The HTTP body
    */
   public String game(Request request, Response response) {
-    response.type("application/json");
-    return handleRequest(request, response, GameRequest.class);
+    try {
+      response.type("application/json");
+      return handleRequest(request, response, GameRequest.class);
+    }
+    catch (InvalidInputException e) {
+
+    }
+    return null;
   }
 
   public void shutdown() {

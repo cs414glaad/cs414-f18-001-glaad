@@ -1,20 +1,26 @@
 package edu.colostate.cs.cs414.f18.the_other_alex.model;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import edu.colostate.cs.cs414.f18.the_other_alex.model.controllers.ModelService;
 import edu.colostate.cs.cs414.f18.the_other_alex.model.controllers.UserService;
 import edu.colostate.cs.cs414.f18.the_other_alex.model.exceptions.UserNotFoundException;
 
 import java.io.Serializable;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Observable;
 import java.util.UUID;
 
-public class Invite extends Observable {
+public class Invite extends Observable implements Serializable {
   private String inviteId;
   private User fromUser;
   private ArrayList<String> toUsers;
   private String toUser;
+
+    private static final long serialVersionUID = 200L;
 
   public Invite(User user) {
     this(user, generateId());
@@ -34,16 +40,14 @@ public class Invite extends Observable {
     return false;
   }
 
-  public User[] findPlayers(String username, UserService userService) {
-    return userService.searchUser(username, 5);
-  }
 
   /**
    *
    * @param username username of the user accepting
    * @return
    */
-  public synchronized boolean acceptInvite(String username, UserService userService) throws UserNotFoundException {
+  public synchronized boolean acceptInvite(String username, UserService userService, Database d) throws UserNotFoundException,
+          ClassNotFoundException, IOException, SQLException, IllegalAccessException, InstantiationException{
     if(toUser == null && toUsers.contains(username)) {
       toUser = username;
       ArrayList<String> toRemove = new ArrayList<>();
@@ -53,7 +57,7 @@ public class Invite extends Observable {
         }
       }
       for (String user : toRemove) {
-        rejectInvite(user, userService);
+        rejectInvite(user, userService, d);
       }
       remove(userService);
       setChanged();
@@ -64,12 +68,18 @@ public class Invite extends Observable {
     }
   }
 
-  public synchronized boolean rejectInvite(String username, UserService userService) {
+  public synchronized boolean rejectInvite(String username, UserService userService, Database d) throws ClassNotFoundException,
+   IOException, SQLException, IllegalAccessException, InstantiationException{
     int i = toUsers.indexOf(username);
     if (i != -1) {
       toUsers.remove(username);
       try {
-        userService.getUser(username).rejectInvite(this);
+        User u = userService.getUser(username);
+        u.rejectInvite(this);
+        if (d != null) {
+            d.updateUserObject(u);
+        }
+
       } catch (UserNotFoundException e) {
         // can happen when the user unregisters. we didn't need them anyway..
       }
@@ -97,9 +107,19 @@ public class Invite extends Observable {
     return toUser;
   }
 
-  public void clearAcceptance() {
+  public void clearAcceptance()
+  {
     toUsers = null;
   }
+    private void writeObject(ObjectOutputStream oos)
+            throws IOException {
+        oos.defaultWriteObject();
+    }
+
+    private void readObject(ObjectInputStream ois)
+            throws ClassNotFoundException, IOException {
+        ois.defaultReadObject();
+    }
 
   private void remove(UserService userService) {
     fromUser.removeInviteFromPendingInvites(this);

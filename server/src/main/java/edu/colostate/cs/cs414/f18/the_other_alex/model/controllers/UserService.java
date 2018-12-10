@@ -4,10 +4,12 @@ import edu.colostate.cs.cs414.f18.the_other_alex.model.Invite;
 import edu.colostate.cs.cs414.f18.the_other_alex.model.User;
 import edu.colostate.cs.cs414.f18.the_other_alex.model.exceptions.InvalidInputException;
 import edu.colostate.cs.cs414.f18.the_other_alex.model.exceptions.UserNotFoundException;
-import edu.colostate.cs.cs414.f18.the_other_alex.server.Database;
+import edu.colostate.cs.cs414.f18.the_other_alex.model.Database;
 import edu.colostate.cs.cs414.f18.the_other_alex.server.exceptions.FailedApiCallException;
 import edu.colostate.cs.cs414.f18.the_other_alex.server.exceptions.InvalidApiCallException;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Observable;
 
@@ -34,7 +36,11 @@ public class UserService extends Observable {
       }
     }
     if (database != null) {
-      return database.getUser(username);
+      try {
+        return database.getUser(username);
+      } catch (Exception e) {
+        throw new UserNotFoundException();
+      }
     } else {
       throw new UserNotFoundException();
     }
@@ -53,14 +59,20 @@ public class UserService extends Observable {
       }
     }
     if (database != null) {
-      return database.getUserByEmail(email);
+      try {
+        return database.getUserByEmail(email);
+      } catch (Exception e) {
+        throw new UserNotFoundException();
+      }
+    } else {
+      throw new UserNotFoundException();
     }
-    throw new UserNotFoundException();
   }
   /**
     This method creates and cashes a user if that user has valid credentials and doesn't already exist
    */
-  public User registerUser(String username, String email, String password) throws FailedApiCallException, InvalidInputException {
+  public User registerUser(String username, String email, String password) throws FailedApiCallException, InvalidInputException,
+          SQLException, ClassNotFoundException, IllegalAccessException, IOException, InstantiationException {
     try {
       getUser(username); // throws exception
       throw new FailedApiCallException("user already exists");
@@ -83,16 +95,14 @@ public class UserService extends Observable {
     cachedUsers.add(user);
     setChanged();
     notifyObservers();
+    if (database != null) {
+      database.addSerializedObject(user);
+    }
     return user;
   }
 
   public User unregisterUser(User user) {
     return null; // TODO remove user from users and database
-  }
-
-  public User[] searchUser(String query, int limit) {
-    // TODO incorporate limit and return multiple users
-    return new User[]{database.searchUser(query)};
   }
 
   private User loadUser(User user) {
@@ -116,7 +126,8 @@ public class UserService extends Observable {
    * @param inviteId The invite id to send, null if new invite
    * @return Returns the created invite
    */
-  public synchronized Invite sendInvite(String fromUser, String inviteId, String toUser) throws UserNotFoundException {
+  public synchronized Invite sendInvite(String fromUser, String inviteId, String toUser) throws FailedApiCallException, InvalidInputException,
+          SQLException, ClassNotFoundException, IllegalAccessException, IOException, InstantiationException, UserNotFoundException {
     User fromUserObj = getUser(fromUser);
     User toUserObj = getUser(toUser);
     Invite invite = fromUserObj.getSendInvite(inviteId);
@@ -127,6 +138,10 @@ public class UserService extends Observable {
     toUserObj.receiveInvite(invite);
     setChanged();
     notifyObservers();
+    if (database != null) {
+      database.updateUserObject(fromUserObj);
+      database.updateUserObject(toUserObj);
+    }
     return invite;
   }
 
@@ -175,43 +190,69 @@ public class UserService extends Observable {
    * @return returns gameId (which is really just inviteId)
    * @throws FailedApiCallException
    */
-  public String acceptInvite(String currentUser, String inviteId) throws FailedApiCallException {
+  public synchronized String acceptInvite(String currentUser, String inviteId) throws FailedApiCallException, FailedApiCallException, InvalidInputException,
+  SQLException, ClassNotFoundException, IllegalAccessException, IOException, InstantiationException, UserNotFoundException {
+    Invite invite;
     try {
-      Invite invite = getUser(currentUser).getReceivedInvite(inviteId);
-      if (!invite.acceptInvite(currentUser, this)) {
+      invite = getUser(currentUser).getReceivedInvite(inviteId);
+      if (!invite.acceptInvite(currentUser, this, database)) {
         throw new FailedApiCallException("unable to accept invitation");
       }
     } catch (UserNotFoundException e) {
       throw new FailedApiCallException(e.getMessage());
     }
+    if (database != null) {
+      User u = getUser(currentUser);
+      User toUser = getUser(invite.getToUser());
+      database.updateUserObject(u);
+      database.updateUserObject(toUser);
+    }
     return inviteId;
   }
 
-  public String rejectInvite(String currentUser, String inviteId) throws FailedApiCallException {
+  public synchronized String rejectInvite(String currentUser, String inviteId) throws FailedApiCallException, FailedApiCallException, InvalidInputException,
+  SQLException, ClassNotFoundException, IllegalAccessException, IOException, InstantiationException, UserNotFoundException {
     try {
       Invite invite = getUser(currentUser).getReceivedInvite(inviteId);
-      if (!invite.rejectInvite(currentUser, this)) {
+      if (!invite.rejectInvite(currentUser, this, database)) {
         throw new FailedApiCallException("unable to reject invitation");
       }
     } catch (UserNotFoundException e) {
       throw new FailedApiCallException(e.getMessage());
     }
+    if (database != null) {
+        User u = getUser(currentUser);
+        database.updateUserObject(u);
+    }
     return inviteId;
   }
 
-  public String cancelInvite(String currentUser, String inviteId) throws FailedApiCallException {
+  public synchronized String cancelInvite(String currentUser, String inviteId) throws FailedApiCallException, FailedApiCallException, InvalidInputException,
+          SQLException, ClassNotFoundException, IllegalAccessException, IOException, InstantiationException, UserNotFoundException {
     try {
       //get invite
       Invite invite = getUser(currentUser).getSendInvite(inviteId);
+
       //find everyone who has this invite and reject that invite
       for(String user : invite.getToUsers()) {
-        getUser(user).rejectInvite(invite);
+        User person = getUser(user);
+        person.rejectInvite(invite);
+        database.updateUserObject(person);
       }
       //finally remove that invite from the current users list of pending invites
       getUser(currentUser).removeInviteFromPendingInvites(invite);
     } catch (UserNotFoundException e) {
       throw new FailedApiCallException(e.getMessage());
     }
+    if (database != null) {
+      User u = getUser(currentUser);
+      database.updateUserObject(u);
+    }
     return inviteId;
+  }
+
+  public void deleteUserEntryUsingUsername(String username) throws FailedApiCallException, InvalidInputException,
+          SQLException, ClassNotFoundException, IllegalAccessException, IOException, InstantiationException {
+    database.deleteUserEntryUsingUsername(username);
   }
 }
