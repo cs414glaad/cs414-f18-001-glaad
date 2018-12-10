@@ -1,5 +1,8 @@
 package edu.colostate.cs.cs414.f18.the_other_alex.model;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.Date;
 import java.io.Serializable;
 
@@ -8,7 +11,17 @@ public class GameRecord implements Serializable {
   private Date gameEndTime;
   private String winnerName;
   private String loserName;
-  private static final long serialVersionUID = 7526472295622776143L;
+  private static final long serialVersionUID = 6L;
+
+  private void writeObject(ObjectOutputStream oos)
+          throws IOException {
+    oos.defaultWriteObject();
+  }
+
+  private void readObject(ObjectInputStream ois)
+          throws ClassNotFoundException, IOException {
+    ois.defaultReadObject();
+  }
 
   public GameRecord(Date StartTime) {
     gameStartTime = StartTime;

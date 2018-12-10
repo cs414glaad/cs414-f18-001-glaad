@@ -3,15 +3,20 @@ package edu.colostate.cs.cs414.f18.the_other_alex.model;
 import edu.colostate.cs.cs414.f18.the_other_alex.model.exceptions.InvalidMoveException;
 import edu.colostate.cs.cs414.f18.the_other_alex.model.pieces.*;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class Board {
+public class Board implements Serializable{
   private Cell[][] cells;
   private List<Piece> pieces;
   public static final int NUM_ROWS = 4;
   public static final int NUM_COLS = 8;
+  private static final long serialVersionUID = 5L;
 
 
 
@@ -20,6 +25,16 @@ public class Board {
     pieces = new ArrayList<Piece>();
     loadPieces();
     loadCells();
+  }
+
+  private void writeObject(ObjectOutputStream oos)
+          throws IOException {
+    oos.defaultWriteObject();
+  }
+
+  private void readObject(ObjectInputStream ois)
+          throws ClassNotFoundException, IOException {
+    ois.defaultReadObject();
   }
 
 

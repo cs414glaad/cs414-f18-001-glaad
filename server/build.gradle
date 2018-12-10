@@ -15,6 +15,7 @@ dependencies {
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.3.0'
     implementation 'com.google.code.gson:gson:2.8.5'
     compile 'com.sparkjava:spark-core:2.2'
+    compile 'mysql:mysql-connector-java:8.0.13'
 }
 
 jar {
