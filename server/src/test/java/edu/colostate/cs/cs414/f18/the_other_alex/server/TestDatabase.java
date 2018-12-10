@@ -33,13 +33,13 @@ public class TestDatabase {
             u2ID = database.addSerializedObject(testUser2);
             database.addSerializedObject(testGame);
 
-            g = database.getGame(testGame.getGameId().hashCode());
+            g = database.getGame(testGame.getGameId());
             assertEquals("1", g.getGameId());
         }
         finally {
             database.deleteUserEntryUsingID((int) u1ID);
             database.deleteUserEntryUsingID((int) u2ID);
-            database.deleteGameEntryUsingID(g.getGameId().hashCode());
+            database.deleteGameEntryUsingID(g.getGameId());
         }
     }
 
@@ -118,7 +118,7 @@ public class TestDatabase {
             u2ID = database.addSerializedObject(testUser2);
             database.addSerializedObject(testGame);
 
-            g = database.getGame(testGame.getGameId().hashCode());
+            g = database.getGame(testGame.getGameId());
 
 
             assertTrue(g.getBoard().getCells()[1][1].getPiece().getIsFlipped());
@@ -128,7 +128,7 @@ public class TestDatabase {
         finally {
             database.deleteUserEntryUsingID((int) u1ID);
             database.deleteUserEntryUsingID((int) u2ID);
-            database.deleteGameEntryUsingID(g.getGameId().hashCode());
+            database.deleteGameEntryUsingID(g.getGameId());
         }
     }
 
@@ -148,7 +148,7 @@ public class TestDatabase {
             u2ID = database.addSerializedObject(testUser2);
             database.addSerializedObject(testGame);
 
-            g = database.getGame(testGame.getGameId().hashCode());
+            g = database.getGame(testGame.getGameId());
 
             g.getBoard().move(g.getBoard().getCells()[1][1], g.getBoard().getCells()[1][1]);
 
@@ -158,7 +158,7 @@ public class TestDatabase {
         finally {
             database.deleteUserEntryUsingID((int) u1ID);
             database.deleteUserEntryUsingID((int) u2ID);
-            database.deleteGameEntryUsingID(g.getGameId().hashCode());
+            database.deleteGameEntryUsingID(g.getGameId());
         }
     }
 
@@ -180,7 +180,7 @@ public class TestDatabase {
             u2ID = database.addSerializedObject(testUser2);
             database.addSerializedObject(testGame);
 
-            g = database.getGame(testGame.getGameId().hashCode());
+            g = database.getGame(testGame.getGameId());
 
             g.getBoard().move(g.getBoard().getCells()[1][1], g.getBoard().getCells()[1][1]);
 
@@ -190,7 +190,7 @@ public class TestDatabase {
         finally {
             database.deleteUserEntryUsingID((int) u1ID);
             database.deleteUserEntryUsingID((int) u2ID);
-            database.deleteGameEntryUsingID(g.getGameId().hashCode());
+            database.deleteGameEntryUsingID(g.getGameId());
         }
     }
 
@@ -210,12 +210,19 @@ public class TestDatabase {
 
             Invite i = m.sendInvite("User1", "User2", null);
 
+            m.acceptInvite("User2", i.getInviteId());
+            System.out.println("------------------------------" + i.getInviteId() + "----------------");
+            System.out.println("------------------------------" + m.getGame(testUser1.getGames().get(0)).getGameId()
+                    + "---------------------");
+
             User u = m.getUser("User1");
 
-            assertEquals("User2", u.getPendingInvites().get(0).getToUsers().get(0));
 
-        }
-        finally {
+            //assertEquals("User2", u.getPendingInvites().get(0).getToUsers().get(0));
+            assertEquals("User2", m.getGame(u.getGames().get(0)).getUser2().getUsername());
+
+
+        } finally {
             m.deleteUserEntryUsingUsername("User1");
             m.deleteUserEntryUsingUsername("User2");
         }

@@ -48,7 +48,7 @@ public class GameService extends Observable {
     }
     if (database != null) {
       try {
-        return database.getGame(gameId.hashCode());
+        return database.getGame(gameId);
       } catch(Exception e) {
         throw new GameNotFoundException();
       }
@@ -87,7 +87,7 @@ public class GameService extends Observable {
       Cell toCell = getCellFromId(cells, toCellId);
       game.makeMove(fromCell, toCell, user);
       if (database != null) {
-        database.deleteGameEntryUsingID(gameId.hashCode());
+        database.deleteGameEntryUsingID(gameId);
         database.addSerializedObject(game);
       }
     } catch (Exception e) {

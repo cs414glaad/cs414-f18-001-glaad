@@ -159,15 +159,13 @@ public class Database {
 
     }
 
-    public Game getGame(int GameID) throws SQLException, IOException,
+    public Game getGame(String GameID) throws SQLException, IOException,
             ClassNotFoundException , IllegalAccessException, InstantiationException{
         String deserializeGameSearchString = "SELECT SerializedObject FROM Game WHERE GameID = ?;";
-//        Class.forName(myDriver).newInstance();
         try {
             conn = DriverManager.getConnection(myUrl, username, password);
             st = conn.prepareStatement(deserializeGameSearchString);
-            st.setInt(1, GameID);
-            System.out.println(GameID);
+            st.setString(1, GameID);
             rs = st.executeQuery();
             rs.next();
 
@@ -199,30 +197,25 @@ public class Database {
             return addSerializedUser((User) o);
         }
         else if (o instanceof Game) {
-            return addGameObjectToTable((Game) o);
+            addGameObjectToTable((Game) o);
+            return 0;
         }
         else {
             throw new ClassNotFoundException("The object passed to addSerializedObject is of an unsupported type.");
         }
     }
 
-    private int addGameObjectToTable(Game g) throws SQLException, IOException,
+    private void addGameObjectToTable(Game g) throws SQLException, IOException,
             ClassNotFoundException, IllegalAccessException, InstantiationException {
 //        Class.forName(myDriver).newInstance();
         try {
             conn = DriverManager.getConnection(myUrl, username, password);
             String serializeGameHistory = "INSERT INTO Game(GameID, SerializedObject) VALUES (?, ?);";
 
-            st = conn.prepareStatement(serializeGameHistory, Statement.RETURN_GENERATED_KEYS);
-            st.setInt(1, g.getGameId().hashCode());
+            st = conn.prepareStatement(serializeGameHistory);
+            st.setString(1, g.getGameId());
             st.setObject(2, g);
             st.executeUpdate();
-            rs = st.getGeneratedKeys();
-            int serializedID = -1;
-            if (rs.next()) {
-                serializedID = rs.getInt(1);
-            }
-            return serializedID;
         }
         finally {
             if (rs != null && rs.isClosed() == false) {
@@ -264,7 +257,7 @@ public class Database {
     }
 
     //FOR TESTING PURPOSES ONLY
-    public void deleteGameEntryUsingID(int gameID) throws SQLException, IOException,
+    public void deleteGameEntryUsingID(String gameID) throws SQLException, IOException,
             ClassNotFoundException, IllegalAccessException, InstantiationException {
 
 //        Class.forName(myDriver).newInstance();
@@ -273,7 +266,7 @@ public class Database {
             String gameDeletionString = "DELETE FROM Game WHERE GameID = ?;";
 
             st = conn.prepareStatement(gameDeletionString);
-            st.setInt(1, gameID);
+            st.setString(1, gameID);
             st.executeUpdate();
         }
         finally {
