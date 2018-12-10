@@ -76,7 +76,9 @@ public class Invite extends Observable implements Serializable {
       try {
         User u = userService.getUser(username);
         u.rejectInvite(this);
-        d.updateUserObject(u);
+        if (d != null) {
+            d.updateUserObject(u);
+        }
 
       } catch (UserNotFoundException e) {
         // can happen when the user unregisters. we didn't need them anyway..
